@@ -21,3 +21,18 @@ void	User::appendBuffer(std::string msg)
 {
 	this->buffer += msg;
 }
+
+int User::getFd(void) const
+{
+	return (this->_fd.fd);
+}
+
+const std::string	&User::getUsername(void) const
+{
+	return (this->_username);
+}
+
+const std::string	&User::getNickname(void) const
+{
+	return (this->_nickname);
+}

@@ -22,5 +22,8 @@ public:
 	~User();
 	void	resetBuffer(void);
 	void	appendBuffer(std::string msg);
-	int	getFd(void) const {return (this->_fd.fd);};
+
+	int					getFd(void) const;
+	const std::string	&getUsername(void) const;
+	const std::string	&getNickname(void) const;
 };
