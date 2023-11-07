@@ -18,12 +18,6 @@ Socket::Socket(void)
 		perror("setsockopt");
 		throw std::runtime_error("setsockopt: fail");
 	}
-	// if (fcntl(this->_fd, F_SETFL, O_NONBLOCK) < 0)
-	// {
-	// 	perror("fcntl");
-	// 	close(this->_fd);
-	// 	exit(-1);
-	// }
 }
 
 Socket::Socket(int port): _port(port)
@@ -42,12 +36,6 @@ Socket::Socket(int port): _port(port)
 		perror("setsockopt");
 		throw std::runtime_error("setsockopt: fail");
 	}
-	// if (fcntl(this->_fd, F_SETFL, O_NONBLOCK) < 0) // !?!?!?!?!??!!??!?!?!?
-	// {
-	// 	perror("fcntl");
-	// 	close(this->_fd);
-	// 	exit(-1);
-	// }
 	this->Init(this->_port);
 }
 
@@ -87,11 +75,11 @@ int	Socket::Listen(uint n)
 sockfd_t	Socket::Accept(void)
 {
 	sockfd_t	ret = accept(this->_fd, (sockaddr *)&this->_addr, &this->_addrLen);
-	// if (ret < 0)
-	// {
-	// 	perror("accept");
-	// 	throw std::runtime_error("accept: fail");
-	// }
+	if (ret < 0)
+	{
+		perror("accept");
+		throw std::runtime_error("accept: fail");
+	}
 	return (ret);
 }
 

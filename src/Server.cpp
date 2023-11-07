@@ -4,7 +4,7 @@ static pollfd initPFD(sockfd_t fd)
 {
 	pollfd ret;
 	ret.fd = fd;
-	ret.events = POLLIN;
+	ret.events = POLLIN | POLLOUT;
 	return (ret);
 }
 
@@ -17,7 +17,7 @@ Server::Server(const std::string &port, const std::string &password)try : _port(
 	if (this->_port < 0 || this->_port > 65536)
 		throw std::out_of_range("");
 		this->_pfds.push_back(initPFD(this->_sock.getFd()));
-	
+	// this->_pfds[0].events = POLLIN;
 	this->_sock.Init(this->_port);
 	this->_sock.Bind();
 	this->_sock.Listen(32);
@@ -48,33 +48,55 @@ void	Server::_relayMsg(std::string &msg, int i)
 	std::cout << msg;
 	for (int j = 1; j < npfd; j++)
 	{
-		this->_sock.Send(this->_pfds[j].fd, msg);
+		// add msg to users msg backlog
+		this->_getUser(j).toSend.push_back(msg);
 	}
-}
-
-bool	Server::_checkDc(int i)
-{
-	if (this->_pfds[i].revents & POLLHUP)
-	{
-		std::cout << this->_pfds[i].fd << " hung up" << std::endl;
-		delete &this->_getUser(i);
-		this->_pfds.erase(this->_pfds.begin() + i);
-		return (true);
-	}
-	return (false);
 }
 
 void	Server::_acceptConn(void)
 {
 	pollfd	newSock = initPFD(this->_sock.Accept());
-	User	*newUser = new User(newSock);
 
 	if (newSock.fd < 0)
 		throw std::runtime_error("Accept");
+	User	*newUser = new User(newSock);
+	// add fd to pfds
 	this->_pfds.push_back(newSock);
+	// add User fd pair to map
 	this->_users.insert(std::pair<sockfd_t, User &>(newSock.fd, *newUser));
-	std::cout << "Socket fd " << newSock.fd << " accepted" << std::endl;
 	this->_sock.Send(newSock.fd, "Welcome!\n");
+}
+
+void	Server::_disconnectUser(int i)
+{
+	// delete User class
+	delete &this->_getUser(i);
+	// remove User fd pair from map
+	this->_users.erase(this->_pfds[i].fd);
+	// remove fd from pfds
+	this->_pfds.erase(this->_pfds.begin() + i);
+}
+
+bool	Server::_checkDc(int bRead, int i)
+{
+	if (bRead > 0)
+		return (false);
+	this->_disconnectUser(i);
+	return (true);
+}
+
+void	Server::_pollOut(int i)
+{
+
+	if (!(this->_pfds[i].revents & POLLOUT))
+		return ;
+	// User is ready to recieve messages
+	User	&user = this->_getUser(i);
+	// send all stored messages
+	for (std::vector<std::string>::iterator it = user.toSend.begin(); it != user.toSend.end(); it++)
+		this->_sock.Send(user.getFd(), *it);
+	// clear all the messages
+	user.toSend.clear();
 }
 
 void	Server::_pollIn(int i)
@@ -84,21 +106,26 @@ void	Server::_pollIn(int i)
 	char 		buffer[1024];
 	std::string	msg;
 
+	if (!(this->_pfds[i].revents & POLLIN))
+		return ;
+	// check if it's the server socket
 	if (fd == this->_sock.getFd())
 	{
 		this->_acceptConn();
 		return ;
 	}
-	User	&user = this->_getUser(i);
-	msg = std::to_string(fd) + ": ";
 	bRead = recv(fd, buffer, 1024 - 1, 0);
+	// check whether recv returned 0 and disconnect user if it did
+	if (this->_checkDc(bRead, i))
+		return ;
 	buffer[bRead] = '\0';
-	user.buffer += buffer;
+	User	&user = this->_getUser(i);
+	user.appendBuffer(buffer);
 	// if newline is found, stop recv() and relay the message
 	if (user.buffer.find('\n') != std::string::npos)
 	{
-		// std::cout << user.buffer << std::endl;
 		this->_relayMsg(user.buffer, i);
+		user.resetBuffer();
 	}
 }
 
@@ -108,19 +135,8 @@ void	Server::_checkPoll(void)
 
 	for (int i = 0; i < npfd; i++)
 	{
-		this->_checkDc(i);
-		switch (this->_pfds[i].revents)
-		{
-		case POLLIN:
-			this->_pollIn(i);
-			break ;
-		case POLLOUT:
-			throw std::runtime_error("poll: invalid event");
-		case 0:
-			break ;
-		default:
-			break ;
-		}
+		this->_pollOut(i);
+		this->_pollIn(i);
 	}
 }
 
@@ -134,11 +150,13 @@ void	Server::Start(void)
 	int rc;
 	while (true)
 	{
+		// poll all the pfds for any events
 		rc = poll(this->_pfds.data(), this->_pfds.size(), 100000);
 		if (rc < 0)
 			throw std::runtime_error("poll");
 		else if (rc == 0)
 			break ;
+		// check what events happened
 		this->_checkPoll();
 	}
 	std::cout << "timeout" << std::endl;

@@ -13,11 +13,14 @@ private:
 	std::string					_nickname;
 	bool						_op = false;
 	bool						_registered = false;
-	std::vector<std::string> 	_toSend;
 	//Channel					&_channel;
 
 public:
-	std::string					buffer = "";
+	std::string					buffer;
+	std::vector<std::string> 	toSend;
 	User(pollfd fd);
 	~User();
+	void	resetBuffer(void);
+	void	appendBuffer(std::string msg);
+	int	getFd(void) const {return (this->_fd.fd);};
 };

@@ -20,9 +20,14 @@ private:
 
 	void						_checkPoll(void);
 	void						_pollIn(int i);
+	void						_pollOut(int i);
+
+	void						_disconnectUser(int i);
+	bool						_checkDc(int bRead, int i);
 	void						_acceptConn(void);
-	bool						_checkDc(int i);
+
 	void						_relayMsg(std::string &msg, int i);
+
 	User						&_getUser(int i);
 
 public:

@@ -2,11 +2,22 @@
 
 User::User(pollfd fd): _fd(fd)
 {
-
+	std::cout << "User #" << this->_fd.fd << " Connected." << std::endl;
+	this->resetBuffer();
 }
 
 User::~User()
 {
-	std::cout << "bye bye " << this->_fd.fd << std::endl;
+	std::cout << "User #" << this->_fd.fd << " Disconnected." << std::endl;
 	close(this->_fd.fd);
+}
+
+void	User::resetBuffer(void)
+{
+	this->buffer = std::to_string(this->_fd.fd) + ": ";
+}
+
+void	User::appendBuffer(std::string msg)
+{
+	this->buffer += msg;
 }
