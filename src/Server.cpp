@@ -166,6 +166,10 @@ void	Server::Start(void)
 	std::cout << "timeout" << std::endl;
 }
 
+bool	Server::checkPassword(const std::string &password) const
+{
+	return (this->_password == password);
+}
 
 // Getters
 Config	&Server::getConfig(void)

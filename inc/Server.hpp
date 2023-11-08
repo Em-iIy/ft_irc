@@ -39,6 +39,8 @@ public:
 	Server(const std::string &port, const std::string &password);
 	void	Start(void);
 
+	bool	checkPassword(const std::string &password) const;
+
 	Config	&getConfig(void);
 	Socket	&getSocket(void);
 };
