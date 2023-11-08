@@ -80,6 +80,8 @@ sockfd_t	Socket::Accept(void)
 		perror("accept");
 		throw std::runtime_error("accept: fail");
 	}
+	uint32_t address = this->_addr.sin_addr.s_addr;
+	std::cout << ((address >> 24) & 0xf) << "." << ((address >> 16) & 0xf) << "." << ((address >> 8) & 0xf) << "." << ((address) & 0xf) << ":" << this->_addr.sin_port << std::endl;
 	return (ret);
 }
 

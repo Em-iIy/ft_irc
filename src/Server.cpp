@@ -64,7 +64,10 @@ void	Server::_acceptConn(void)
 	this->_pfds.push_back(newSock);
 	// add User fd pair to map
 	this->_users.insert(std::pair<sockfd_t, User &>(newSock.fd, *newUser));
-	this->_sock.Send(newSock.fd, "Welcome!\n");
+	newUser->toSend.push_back(":default 001 Emily :welcome Emily!Em_iIy@default\r\n");
+	newUser->toSend.push_back(":default 002 Emily :welcome\r\n");
+	newUser->toSend.push_back(":default 003 Emily :welcome\r\n");
+	newUser->toSend.push_back(":default 004 Emily :welcome\r\n");
 }
 
 void	Server::_disconnectUser(int i)
@@ -103,7 +106,7 @@ void	Server::_pollIn(int i)
 {
 	int			fd = this->_pfds[i].fd;
 	int			bRead = 1;
-	char 		buffer[1024];
+	char 		buffer[512];
 	std::string	msg;
 
 	if (!(this->_pfds[i].revents & POLLIN))
@@ -114,15 +117,16 @@ void	Server::_pollIn(int i)
 		this->_acceptConn();
 		return ;
 	}
-	bRead = recv(fd, buffer, 1024 - 1, 0);
+	bRead = recv(fd, buffer, 512 - 1, 0);
 	// check whether recv returned 0 and disconnect user if it did
 	if (this->_checkDc(bRead, i))
 		return ;
+	std::cout << "recvd " << bRead << " bytes" << std::endl;
 	buffer[bRead] = '\0';
 	User	&user = this->_getUser(i);
 	user.appendBuffer(buffer);
 	// if newline is found, stop recv() and relay the message
-	if (user.buffer.find('\n') != std::string::npos)
+	if (user.buffer.find("\r\n") != std::string::npos)
 	{
 		this->_relayMsg(user.buffer, i);
 		user.resetBuffer();

@@ -14,7 +14,8 @@ User::~User()
 
 void	User::resetBuffer(void)
 {
-	this->buffer = std::to_string(this->_fd.fd) + ": ";
+	// this->buffer = std::to_string(this->_fd.fd) + ": ";
+	this->buffer = "";
 }
 
 void	User::appendBuffer(std::string msg)
