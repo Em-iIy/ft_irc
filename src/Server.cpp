@@ -59,15 +59,15 @@ void	Server::_acceptConn(void)
 
 	if (newSock.fd < 0)
 		throw std::runtime_error("Accept");
-	User	*newUser = new User(newSock);
+	User	*newUser = new User(*this, newSock);
 	// add fd to pfds
 	this->_pfds.push_back(newSock);
 	// add User fd pair to map
 	this->_users.insert(std::pair<sockfd_t, User &>(newSock.fd, *newUser));
-	newUser->toSend.push_back(":default 001 Emily :welcome Emily!Em_iIy@default\r\n");
-	newUser->toSend.push_back(":default 002 Emily :welcome\r\n");
-	newUser->toSend.push_back(":default 003 Emily :welcome\r\n");
-	newUser->toSend.push_back(":default 004 Emily :welcome\r\n");
+	newUser->toSend.push_back(":" + this->_config.getServerName() + " 001 Emily :welcome Emily!Em_iIy@default\r\n");
+	newUser->toSend.push_back(":" + this->_config.getServerName() + " 002 Emily :welcome\r\n");
+	newUser->toSend.push_back(":" + this->_config.getServerName() + " 003 Emily :welcome\r\n");
+	newUser->toSend.push_back(":" + this->_config.getServerName() + " 004 Emily :welcome\r\n");
 }
 
 void	Server::_disconnectUser(int i)
@@ -164,4 +164,16 @@ void	Server::Start(void)
 		this->_checkPoll();
 	}
 	std::cout << "timeout" << std::endl;
+}
+
+
+// Getters
+Config	&Server::getConfig(void)
+{
+	return (this->_config);
+}
+
+Socket	&Server::getSocket(void)
+{
+	return (this->_sock);
 }

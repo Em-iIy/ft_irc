@@ -9,14 +9,18 @@
 #include <exception>
 #include "Socket.hpp"
 #include "User.hpp"
+#include "Config.hpp"
+
+class User;
 
 class Server {
 private:
+	Config						_config;
 	std::vector<pollfd> 		_pfds;
 	std::map<sockfd_t, User &>	_users;
 	Socket						_sock;
-	std::string					_password;
 	int							_port;
+	std::string					_password;
 
 	void						_checkPoll(void);
 	void						_pollIn(int i);
@@ -34,4 +38,7 @@ public:
 	~Server();
 	Server(const std::string &port, const std::string &password);
 	void	Start(void);
+
+	Config	&getConfig(void);
+	Socket	&getSocket(void);
 };
