@@ -6,6 +6,7 @@ FILES_SRCS =	main.cpp \
 				Server.cpp \
 				Socket.cpp \
 				User.cpp \
+				Config.cpp \
 
 FILES_OBJS = $(FILES_SRCS:.cpp=.o)
 
