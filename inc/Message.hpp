@@ -14,7 +14,9 @@ private:
 	const std::vector<std::string>	_allCommands{"PASS", "NICK", "USER", "QUIT"};
 	std::string						_response;
 
+	void	_respondUser(void);
 	void	_checkCommand(void);
+	void	_pass(void);
 
 public:
 	Message(std::string &msg, User &user, Server &server);

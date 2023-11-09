@@ -128,6 +128,7 @@ void	Server::_pollIn(int i)
 	// if newline is found, stop recv() and relay the message
 	if (user.buffer.find("\r\n") != std::string::npos)
 	{
+		Message	msg(user.buffer, user, *this);
 		this->_relayMsg(user.buffer, i);
 		user.resetBuffer();
 	}

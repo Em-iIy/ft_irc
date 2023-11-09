@@ -58,6 +58,11 @@ const bool			&User::getRegistered(void) const
 	return (this->_registered);
 }
 
+const bool			&User::getPassword(void) const
+{
+	return (this->_password);
+}
+
 
 
 
@@ -75,4 +80,9 @@ void				User::setNickname(const std::string &nickname)
 void				User::setRegistered(const bool &registered)
 {
 	this->_registered = registered;
+}
+
+void				User::setPassword(const bool &password)
+{
+	this->_password = password;
 }

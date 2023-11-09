@@ -10,6 +10,7 @@
 #include "Socket.hpp"
 #include "User.hpp"
 #include "Config.hpp"
+#include "Message.hpp"
 
 class User;
 

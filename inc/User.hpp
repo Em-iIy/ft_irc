@@ -18,6 +18,7 @@ private:
 	std::string					_fullRef;
 	bool						_op = false;
 	bool						_registered = false;
+	bool						_password = false;
 	//Channel					&_channel;
 
 public:
@@ -34,9 +35,11 @@ public:
 	const std::string	&getNickname(void) const;
 	const std::string	&getFullRef(void) const;
 	const bool			&getRegistered(void) const;
+	const bool			&getPassword(void) const;
 
 	void				setUsername(const std::string &username);
 	void				setNickname(const std::string &nickname);
 	void				setRegistered(const bool &registered);
+	void				setPassword(const bool &password);
 
 };
