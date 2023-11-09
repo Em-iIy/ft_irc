@@ -25,7 +25,15 @@ void	Message::parseMsg(std::string &msg)
 
 void	Message::_checkCommand(void)
 {
-	std::vector<std::string>::const_iterator	it =
-		std::find(this->_allCommands.begin(), this->_allCommands.end(), this->_command);
-	
+	if (this->_param == "")
+	{
+		// 461 ERR_NEEDMOREPARAMS
+		this->_response = ":" + this->_server.getConfig().getHostName() + " 461 " + this->_command + " :Not enough parameters\n";
+	}
+	std::vector<std::string>::const_iterator	it = std::find(this->_allCommands.begin(), this->_allCommands.end(), this->_command);
+	if (it == this->_allCommands.end())
+	{
+		// 421 ERR_UNKNOWNCOMMAND
+		this->_response = ":" + this->_server.getConfig().getHostName() + " 421 " + this->_command + " :Unknown command\n";
+	}
 }
