@@ -27,7 +27,6 @@ private:
 	void						_pollIn(int i);
 	void						_pollOut(int i);
 
-	void						_disconnectUser(int i);
 	bool						_checkDc(int bRead, int i);
 	void						_acceptConn(void);
 
@@ -41,6 +40,7 @@ public:
 	void	Start(void);
 
 	bool	checkPassword(const std::string &password) const;
+	void	disconnectUser(int i);
 
 	Config	&getConfig(void);
 	Socket	&getSocket(void);

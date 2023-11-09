@@ -41,6 +41,7 @@ Server::~Server()
 	}
 }
 
+// obsolete?
 void	Server::_relayMsg(std::string &msg, int i)
 {
 	int	npfd = this->_pfds.size();
@@ -59,18 +60,14 @@ void	Server::_acceptConn(void)
 
 	if (newSock.fd < 0)
 		throw std::runtime_error("Accept");
-	User	*newUser = new User(*this, newSock);
+	User	*newUser = new User(*this, newSock, this->_pfds.size());
 	// add fd to pfds
 	this->_pfds.push_back(newSock);
 	// add User fd pair to map
 	this->_users.insert(std::pair<sockfd_t, User &>(newSock.fd, *newUser));
-	newUser->toSend.push_back(":" + this->_config.getServerName() + " 001 Emily :welcome Emily!Em_iIy@default\r\n");
-	newUser->toSend.push_back(":" + this->_config.getServerName() + " 002 Emily :welcome\r\n");
-	newUser->toSend.push_back(":" + this->_config.getServerName() + " 003 Emily :welcome\r\n");
-	newUser->toSend.push_back(":" + this->_config.getServerName() + " 004 Emily :welcome\r\n");
 }
 
-void	Server::_disconnectUser(int i)
+void	Server::disconnectUser(int i)
 {
 	// delete User class
 	delete &this->_getUser(i);
@@ -84,7 +81,7 @@ bool	Server::_checkDc(int bRead, int i)
 {
 	if (bRead > 0)
 		return (false);
-	this->_disconnectUser(i);
+	this->disconnectUser(i);
 	return (true);
 }
 
@@ -121,16 +118,18 @@ void	Server::_pollIn(int i)
 	// check whether recv returned 0 and disconnect user if it did
 	if (this->_checkDc(bRead, i))
 		return ;
-	std::cout << "recvd " << bRead << " bytes" << std::endl;
 	buffer[bRead] = '\0';
+	std::cout << "recvd " << bRead << " bytes" << std::endl;
 	User	&user = this->_getUser(i);
+	// Add read buffer to the back of the total message
 	user.appendBuffer(buffer);
-	// if newline is found, stop recv() and relay the message
+	// if CRLF is found, stop recv() and relay the message
 	if (user.buffer.find("\r\n") != std::string::npos)
 	{
+		std::cout << "Full command: " << user.buffer;
 		Message	msg(user.buffer, user, *this);
-		this->_relayMsg(user.buffer, i);
-		user.resetBuffer();
+		// this->_relayMsg(user.buffer, i);
+		// user.resetBuffer();
 	}
 }
 

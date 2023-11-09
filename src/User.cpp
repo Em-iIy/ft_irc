@@ -1,6 +1,6 @@
 #include "User.hpp"
 
-User::User(Server &serv, pollfd fd): _serv(serv), _fd(fd)
+User::User(Server &serv, pollfd fd, int i): _serv(serv), _fd(fd), _idx(i)
 {
 	std::cout << "User #" << this->_fd.fd << " Connected." << std::endl;
 	this->resetBuffer();
@@ -36,6 +36,11 @@ void	User::updateFullRef(void)
 int User::getFd(void) const
 {
 	return (this->_fd.fd);
+}
+
+int User::getIdx(void) const
+{
+	return (this->_idx);
 }
 
 const std::string	&User::getUsername(void) const

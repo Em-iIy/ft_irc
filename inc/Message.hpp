@@ -5,6 +5,9 @@
 #include "User.hpp"
 #include "Server.hpp"
 
+class Server;
+class User;
+
 class Message {
 private:
 	User							&_user;
@@ -17,6 +20,7 @@ private:
 	void	_respondUser(void);
 	void	_checkCommand(void);
 	void	_pass(void);
+	void	_quit(void);
 
 public:
 	Message(std::string &msg, User &user, Server &server);

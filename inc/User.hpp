@@ -13,6 +13,7 @@ class User {
 private:
 	Server						&_serv;
 	pollfd						_fd;
+	int							_idx;
 	std::string					_username;
 	std::string					_nickname;
 	std::string					_fullRef;
@@ -24,13 +25,15 @@ private:
 public:
 	std::string					buffer;
 	std::vector<std::string> 	toSend;
-	User(Server &serv, pollfd fd);
+
+	User(Server &serv, pollfd fd, int i);
 	~User();
 	void	resetBuffer(void);
 	void	appendBuffer(std::string msg);
 	void	updateFullRef(void);
 
 	int					getFd(void) const;
+	int					getIdx(void) const;
 	const std::string	&getUsername(void) const;
 	const std::string	&getNickname(void) const;
 	const std::string	&getFullRef(void) const;
