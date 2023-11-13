@@ -19,9 +19,10 @@ private:
 
 	void	_respondUser(void);
 	void	_checkCommand(void);
-	void	_pass(void);
-	void	_nick(void);
-	void	_quit(void);
+	void	_PASS(void);
+	void	_NICK(void);
+	void	_USER(void);
+	void	_QUIT(void);
 
 public:
 	Message(std::string &msg, User &user, Server &server);

@@ -172,9 +172,19 @@ void	Server::relayMsg(std::string &msg, int i)
 	}
 }
 
+static void	print_nicknames(std::vector<std::string> &v)
+{
+	std::cout << "Nicknames[" << v.size() << "]: ";
+	for (int i = 0; i < v.size(); i++)
+		std::cout << " <" << v[i] << ">";
+	std::cout << std::endl;
+}
+
 // Returns true if the given nickname is already taken
 bool		Server::checkNickname(const std::string nickname)
 {
+	if (this->_nicknames.size() == 0)
+		return (false);
 	std::vector<std::string>::iterator it = std::find(this->_nicknames.begin(), this->_nicknames.end(), nickname);
 
 	return (it != this->_nicknames.end());
@@ -186,8 +196,11 @@ void		Server::addNickname(const std::string &nickname)
 	this->_nicknames.push_back(nickname);
 }
 
+
 void		Server::removeNickname(const std::string &nickname)
 {
+	if (this->_nicknames.size() == 0)
+		return ;
 	this->_nicknames.erase(std::find(this->_nicknames.begin(), this->_nicknames.end(), nickname));
 }
 

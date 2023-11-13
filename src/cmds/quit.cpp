@@ -1,6 +1,6 @@
 #include "Message.hpp"
 
-void	Message::_quit(void)
+void	Message::_QUIT(void)
 {
 	// Create a response if the user was fully registered
 	if (this->_user.getRegistered())

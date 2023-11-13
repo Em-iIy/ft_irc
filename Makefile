@@ -11,6 +11,7 @@ FILES_SRCS =	main.cpp \
 				nickname.cpp \
 				password.cpp \
 				quit.cpp \
+				user.cpp \
 
 FILES_OBJS = $(FILES_SRCS:.cpp=.o)
 

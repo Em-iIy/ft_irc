@@ -26,7 +26,7 @@ static bool	checkNickChars(std::string &nick)
 }
 
 
-void	Message::_nick(void)
+void	Message::_NICK(void)
 {
 	std::stringstream	param(this->_param);
 	std::string			nick;
@@ -36,33 +36,36 @@ void	Message::_nick(void)
 	{
 		// 431 ERR_NONICKNAMEGIVEN
 		this->_response = ":" + this->_server.getConfig().getHostName() + " 431 :No nickname given\n";
+		this->_respondUser();
+		return ;
 	}
-	else if (!checkNickChars(nick))
+	if (!checkNickChars(nick))
 	{
 		// 432 ERR_ERRONEUSNICKNAME
 		this->_response = ":" + this->_server.getConfig().getHostName() + " 432 " + nick + " :Erroneus nickname\n";
+		this->_respondUser();
+		return ;
 	}
-	else if (this->_server.checkNickname(nick) == true)
+	if (this->_server.checkNickname(nick) == true)
 	{
 		// 433 ERR_NICKNAMEINUSE
 		this->_response = ":" + this->_server.getConfig().getHostName() + " 433 " + nick + " :Nickname is already in use\n";
+		this->_respondUser();
+		return ;
+	}
+
+	// std::cout << "getNickname(): " << _user.getNickname() << std::endl;
+	if (this->_user.getNickname() == "")
+	{
+		this->_server.addNickname(nick);
+		this->_user.setNickname(nick);
 	}
 	else
 	{
-		// std::cout << "getNickname(): " << _user.getNickname() << std::endl;
-		if (this->_user.getNickname() == "")
-		{
-			this->_server.addNickname(nick);
-			this->_user.setNickname(nick);
-		}
-		else
-		{
-			this->_response = ":" + this->_user.getNickname() + " NICK " + nick + "\n";
-			this->_server.removeNickname(this->_user.getNickname());
-			this->_user.setNickname(nick);
-			this->_server.relayMsg(this->_response, 0);
-		}
-		return ;
+		this->_response = ":" + this->_user.getNickname() + " NICK " + nick + "\n";
+		this->_server.removeNickname(this->_user.getNickname());
+		this->_server.addNickname(nick);
+		this->_user.setNickname(nick);
+		this->_server.relayMsg(this->_response, 0);
 	}
-	this->_respondUser();
 }

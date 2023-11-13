@@ -54,24 +54,22 @@ void	Message::_checkCommand(void)
 	}
 	if (*it == "QUIT")
 	{
-		this->_quit();
+		this->_QUIT();
 		return ;
 	}
-	else if (*it == "NICK")
+	if (*it == "PASS")
 	{
-		this->_nick();
+		this->_PASS();
 		return ;
 	}
-	else if (this->_param == "") // Commands after this require parameters
+	if (*it == "NICK")
 	{
-		// 461		ERR_NEEDMOREPARAMS
-		this->_response = ":" + this->_server.getConfig().getHostName() + " 461 " + this->_command + " :Not enough parameters\n";
-		this->_respondUser();
+		this->_NICK();
 		return ;
 	}
-	else if (*it == "PASS")
+	if (*it == "USER")
 	{
-		this->_pass();
+		this->_USER();
 		return ;
 	}
 }
