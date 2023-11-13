@@ -9,6 +9,8 @@ FILES_SRCS =	main.cpp \
 				Config.cpp \
 				Message.cpp \
 				nickname.cpp \
+				password.cpp \
+				quit.cpp \
 
 FILES_OBJS = $(FILES_SRCS:.cpp=.o)
 

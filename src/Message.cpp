@@ -75,38 +75,3 @@ void	Message::_checkCommand(void)
 		return ;
 	}
 }
-
-void	Message::_pass(void)
-{
-	if (this->_user.getRegistered())
-	{
-		// 462		ERR_ALREADYREGISTRED
-		this->_response = ":" + this->_server.getConfig().getHostName() + " 462 :You may not reregister\n";
-	}
-	else
-		this->_user.setPassword(this->_server.checkPassword(this->_param));
-	if (!this->_user.getPassword())
-	{
-		// 464		ERR_PASSWDMISMATCH
-		this->_response = ":" + this->_server.getConfig().getHostName() + " 464 :Password incorrect\n";
-	}
-	this->_respondUser();
-}
-
-void	Message::_quit(void)
-{
-	// Create a response if the user was fully registered
-	if (this->_user.getRegistered())
-	{
-		this->_response = ":" + this->_user.getFullRef() + " QUIT :";
-		// Add the default quit message or the message from the parameters if provided
-		if (this->_param != "")
-			this->_response += this->_param;
-		else
-			this->_response += "Client Quit";
-		this->_response += "\n";
-		this->_respondUser(); // should be all channels + all users who have been messaged
-	}
-	// Disconnect the user from the server
-	this->_server.disconnectUser(this->_user.getIdx());
-}
