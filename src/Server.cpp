@@ -41,18 +41,6 @@ Server::~Server()
 	}
 }
 
-// obsolete?
-void	Server::_relayMsg(std::string &msg, int i)
-{
-	int	npfd = this->_pfds.size();
-
-	std::cout << msg;
-	for (int j = 1; j < npfd; j++)
-	{
-		// add msg to users msg backlog
-		this->_getUser(j).toSend.push_back(msg);
-	}
-}
 
 void	Server::_acceptConn(void)
 {
@@ -171,8 +159,21 @@ bool	Server::checkPassword(const std::string &password) const
 	return (this->_password == password);
 }
 
-// Looks if the given nickname is already taken
-bool		Server::checkNickname(std::string nickname)
+// obsolete?
+void	Server::relayMsg(std::string &msg, int i)
+{
+	int	npfd = this->_pfds.size();
+
+	std::cout << msg;
+	for (int j = 1; j < npfd; j++)
+	{
+		// add msg to users msg backlog
+		this->_getUser(j).toSend.push_back(msg);
+	}
+}
+
+// Returns true if the given nickname is already taken
+bool		Server::checkNickname(const std::string nickname)
 {
 	std::vector<std::string>::iterator it = std::find(this->_nicknames.begin(), this->_nicknames.end(), nickname);
 
@@ -180,19 +181,15 @@ bool		Server::checkNickname(std::string nickname)
 }
 
 // Adds a new nickname to the vector
-void		Server::addNickname(std::string &nickname)
+void		Server::addNickname(const std::string &nickname)
 {
 	this->_nicknames.push_back(nickname);
 }
 
-// Returns reference to the nickname in the vector, so the entry can be changed
-std::string	&Server::getNickname(std::string &nickname)
+void		Server::removeNickname(const std::string &nickname)
 {
-	std::vector<std::string>::iterator it = std::find(this->_nicknames.begin(), this->_nicknames.end(), nickname);
-
-	return (*it);
+	this->_nicknames.erase(std::find(this->_nicknames.begin(), this->_nicknames.end(), nickname));
 }
-
 
 // Getters
 Config	&Server::getConfig(void)

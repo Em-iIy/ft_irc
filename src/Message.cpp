@@ -57,6 +57,11 @@ void	Message::_checkCommand(void)
 		this->_quit();
 		return ;
 	}
+	else if (*it == "NICK")
+	{
+		this->_nick();
+		return ;
+	}
 	else if (this->_param == "") // Commands after this require parameters
 	{
 		// 461		ERR_NEEDMOREPARAMS

@@ -20,6 +20,7 @@ private:
 	void	_respondUser(void);
 	void	_checkCommand(void);
 	void	_pass(void);
+	void	_nick(void);
 	void	_quit(void);
 
 public:

@@ -30,7 +30,6 @@ private:
 	bool						_checkDc(int bRead, int i);
 	void						_acceptConn(void);
 
-	void						_relayMsg(std::string &msg, int i);
 
 	User						&_getUser(int i);
 
@@ -42,9 +41,11 @@ public:
 	bool	checkPassword(const std::string &password) const;
 	void	disconnectUser(int i);
 
-	bool		checkNickname(std::string nickname);
-	void		addNickname(std::string &nickname);
-	std::string	&getNickname(std::string &nickname);
+	void		relayMsg(std::string &msg, int i);
+
+	bool		checkNickname(const std::string nickname);
+	void		addNickname(const std::string &nickname);
+	void		removeNickname(const std::string &nickname);
 
 	Config	&getConfig(void);
 	Socket	&getSocket(void);

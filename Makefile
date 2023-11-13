@@ -8,6 +8,7 @@ FILES_SRCS =	main.cpp \
 				User.cpp \
 				Config.cpp \
 				Message.cpp \
+				nickname.cpp \
 
 FILES_OBJS = $(FILES_SRCS:.cpp=.o)
 
@@ -16,6 +17,7 @@ DIR_SRCS = ./src/
 DIR_OBJS = ./obj/
 
 vpath %.cpp $(DIR_SRCS) \
+			$(DIR_SRCS)cmds/
 
 # ----------------------------------------Sources
 SRCS = $(FILES_SRCS:%=$(DIR_SRCS)%)
