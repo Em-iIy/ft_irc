@@ -14,8 +14,11 @@ private:
 	Server						&_serv;
 	pollfd						_fd;
 	int							_idx;
-	std::string					_username;
 	std::string					_nickname;
+	std::string					_username;
+	std::string					_hostname;
+	std::string					_servername;
+	std::string					_realname;
 	std::string					_fullRef;
 	bool						_op = false;
 	bool						_registered = false;
@@ -31,9 +34,11 @@ public:
 	void	resetBuffer(void);
 	void	appendBuffer(std::string msg);
 	void	updateFullRef(void);
+	void	registerUser(std::string &username, std::string &hostname, std::string &servername, std::string &realname);
 
 	int					getFd(void) const;
 	int					getIdx(void) const;
+
 	const std::string	&getUsername(void) const;
 	const std::string	&getNickname(void) const;
 	const std::string	&getFullRef(void) const;
@@ -44,5 +49,4 @@ public:
 	void				setNickname(const std::string &nickname);
 	void				setRegistered(const bool &registered);
 	void				setPassword(const bool &password);
-
 };

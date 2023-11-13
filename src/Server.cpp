@@ -57,6 +57,8 @@ void	Server::_acceptConn(void)
 
 void	Server::disconnectUser(int i)
 {
+	// remove nickname from _nicknames
+	this->removeNickname(this->_getUser(i).getNickname());
 	// delete User class
 	delete &this->_getUser(i);
 	// remove User fd pair from map

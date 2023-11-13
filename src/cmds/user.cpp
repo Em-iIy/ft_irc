@@ -8,7 +8,7 @@ void	Message::_USER(void)
 	std::string	hostname;
 	std::string	servername;
 	std::string	realname;
-	
+
 	std::getline(param, username, ' ');
 	std::getline(param, hostname, ' ');
 	std::getline(param, servername, ' ');
@@ -29,7 +29,13 @@ void	Message::_USER(void)
 	{
 		// 462		ERR_ALREADYREGISTRED
 		this->_response = ":" + this->_server.getConfig().getHostName() + " 462 :You may not reregister\n";
+		this->_respondUser();
+		return ;
 	}
-	this->_response = "user: <" + username + "> host: <" + hostname + "> server: <" + servername + "> real: <" + realname + ">\n";
-	this->_respondUser();
+	this->_user.registerUser(username, hostname, servername, realname);
+	if (this->_user.getRegistered())
+	{
+		this->_response = ":" + this->_server.getConfig().getHostName() + " 001 " + this->_user.getNickname() + " :Welcome to the Internet Relay Network " + this->_user.getFullRef() + "\n";
+		this->_respondUser();
+	}
 }

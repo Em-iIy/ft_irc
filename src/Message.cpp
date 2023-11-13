@@ -62,6 +62,9 @@ void	Message::_checkCommand(void)
 		this->_PASS();
 		return ;
 	}
+	// Must have a correct password to use any other commands
+	if (this->_user.getPassword() == false)
+		return ;
 	if (*it == "NICK")
 	{
 		this->_NICK();
@@ -72,4 +75,7 @@ void	Message::_checkCommand(void)
 		this->_USER();
 		return ;
 	}
+	// Must be registered to use any other commands
+	if (this->_user.getRegistered() == false)
+		return ;
 }

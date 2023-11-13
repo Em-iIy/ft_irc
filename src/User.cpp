@@ -25,6 +25,18 @@ void	User::appendBuffer(std::string msg)
 	this->buffer += msg;
 }
 
+void	User::registerUser(std::string &username, std::string &hostname, std::string &servername, std::string &realname)
+{
+	this->_username = username;
+	this->_hostname = hostname;
+	this->_servername = servername;
+	this->_realname = realname;
+	if (this->_nickname == "")
+		return ;
+	this->updateFullRef();
+	this->_registered = true;
+}
+
 void	User::updateFullRef(void)
 {
 	this->_fullRef = this->_nickname + "!" + this->_username + "@" + this->_serv.getConfig().getServerName();
@@ -55,7 +67,7 @@ const std::string	&User::getNickname(void) const
 
 const std::string	&User::getFullRef(void) const
 {
-	return (this->_nickname);
+	return (this->_fullRef);
 }
 
 const bool			&User::getRegistered(void) const
