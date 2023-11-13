@@ -171,6 +171,29 @@ bool	Server::checkPassword(const std::string &password) const
 	return (this->_password == password);
 }
 
+// Looks if the given nickname is already taken
+bool		Server::checkNickname(std::string nickname)
+{
+	std::vector<std::string>::iterator it = std::find(this->_nicknames.begin(), this->_nicknames.end(), nickname);
+
+	return (it != this->_nicknames.end());
+}
+
+// Adds a new nickname to the vector
+void		Server::addNickname(std::string &nickname)
+{
+	this->_nicknames.push_back(nickname);
+}
+
+// Returns reference to the nickname in the vector, so the entry can be changed
+std::string	&Server::getNickname(std::string &nickname)
+{
+	std::vector<std::string>::iterator it = std::find(this->_nicknames.begin(), this->_nicknames.end(), nickname);
+
+	return (*it);
+}
+
+
 // Getters
 Config	&Server::getConfig(void)
 {

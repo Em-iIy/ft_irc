@@ -2,11 +2,10 @@
 
 #include <vector>
 #include <map>
-#include <Server.hpp>
-#include <Socket.hpp>
 #include <poll.h>
 #include <iostream>
 #include <exception>
+#include <algorithm>
 #include "Socket.hpp"
 #include "User.hpp"
 #include "Config.hpp"
@@ -18,6 +17,7 @@ class Server {
 private:
 	Config						_config;
 	std::vector<pollfd> 		_pfds;
+	std::vector<std::string> 	_nicknames;
 	std::map<sockfd_t, User &>	_users;
 	Socket						_sock;
 	int							_port;
@@ -41,6 +41,10 @@ public:
 
 	bool	checkPassword(const std::string &password) const;
 	void	disconnectUser(int i);
+
+	bool		checkNickname(std::string nickname);
+	void		addNickname(std::string &nickname);
+	std::string	&getNickname(std::string &nickname);
 
 	Config	&getConfig(void);
 	Socket	&getSocket(void);
