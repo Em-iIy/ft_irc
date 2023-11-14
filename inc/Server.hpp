@@ -10,17 +10,14 @@
 #include "User.hpp"
 #include "Config.hpp"
 #include "Message.hpp"
-
-#define DEBUG(x) std::cout << "User #" << x << " " << __func__ << " " << __FILE__ << ":" << __LINE__ << std::endl
-
-typedef std::vector<pollfd>::iterator pollfdIt;
-
-class User;
+#include "types.hpp"
 
 class Server {
 private:
 	Config						_config;
 	std::vector<pollfd> 		_pfds;
+	std::vector<pollfd> 		_newPfds;
+	std::vector<pollfd> 		_dcPfds;
 	std::vector<std::string> 	_nicknames;
 	std::map<sockfd_t, User &>	_users;
 	Socket						_sock;
@@ -28,15 +25,16 @@ private:
 	std::string					_password;
 
 	void						_checkPoll(void);
-	void						_pollIn(int i);
-	void						_pollOut(int i);
+	void						_pollIn(pollfdIt it);
+	void						_pollOut(pollfdIt it);
 
-	bool						_checkDc(int bRead, int i);
+	bool						_checkDc(int bRead, pollfdIt it);
+	void						_disconnectPfds(void);
+
 	void						_acceptConn(void);
+	void						_connectPfds(void);
 
-
-	User						&_getUser(int i);
-	User						&_getUserFd(int fd);
+	User						&_getUser(int fd);
 
 public:
 	~Server();
@@ -44,14 +42,16 @@ public:
 	void	Start(void);
 
 	bool	checkPassword(const std::string &password) const;
-	void	disconnectUser(int i);
-	void	disconnectUserFd(int fd);
 
-	void		relayMsg(std::string &msg, int i);
+	void	disconnectUser(pollfdIt it);
 
-	bool		checkNickname(const std::string nickname);
-	void		addNickname(const std::string &nickname);
-	void		removeNickname(const std::string &nickname);
+	void	addDcPfd(pollfdIt &it);
+
+	void	broadcastMsg(std::string &msg);
+
+	bool	checkNickname(const std::string nickname);
+	void	addNickname(const std::string &nickname);
+	void	removeNickname(const std::string &nickname);
 
 	Config	&getConfig(void);
 	Socket	&getSocket(void);

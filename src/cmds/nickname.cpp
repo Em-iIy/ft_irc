@@ -66,6 +66,6 @@ void	Message::_NICK(void)
 		this->_server.removeNickname(this->_user.getNickname());
 		this->_server.addNickname(nick);
 		this->_user.setNickname(nick);
-		this->_server.relayMsg(this->_response, 0);
+		this->_server.broadcastMsg(this->_response);
 	}
 }

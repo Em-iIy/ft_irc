@@ -87,6 +87,7 @@ void				User::setUsername(const std::string &username)
 void				User::setNickname(const std::string &nickname)
 {
 	this->_nickname = nickname;
+	this->updateFullRef();
 }
 
 void				User::setRegistered(const bool &registered)

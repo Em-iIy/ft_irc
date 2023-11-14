@@ -11,7 +11,7 @@ static void	rmCRLF(std::string &str)
 	str.erase(std::remove(str.begin(), str.end(), '\r'), str.cend());
 }
 
-Message::Message(std::string &msg, User &user, Server &server) : _user(user), _server(server)
+Message::Message(std::string &msg, User &user, pollfdIt &it, Server &server) : _user(user), _it(it), _server(server)
 {
 	this->parseMsg(msg);
 }
@@ -27,8 +27,6 @@ void	Message::parseMsg(std::string &msg)
 	std::stringstream			input(msg);
 	std::string					token;
 
-	// Reset buffer before potentially deleting the user
-	// this->_user.resetBuffer();
 	// Separate the message into <command> [<parameters>]
 	std::getline(input, this->_command, ' ');
 	std::getline(input, this->_param);

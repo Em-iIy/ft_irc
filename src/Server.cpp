@@ -9,6 +9,14 @@ static pollfd initPFD(sockfd_t fd)
 	return (ret);
 }
 
+static void	print_nicknames(std::vector<std::string> &v)
+{
+	std::cout << "Nicknames[" << v.size() << "]: ";
+	for (int i = 0; i < v.size(); i++)
+		std::cout << " <" << v[i] << ">";
+	std::cout << std::endl;
+}
+
 Server::Server(const std::string &port, const std::string &password)try : _port(std::stoi(port)), _password(password)
 {
 	// Check for digits in port
@@ -35,98 +43,37 @@ catch(const std::out_of_range& e)
 
 Server::~Server()
 {
-	for (int i = 1; i < this->_pfds.size(); i++)
+	for (pollfdIt it = this->_pfds.begin() + 1; it != this->_pfds.end(); it++)
 	{
-		this->_sock.Send(this->_pfds[i].fd, "Goodbye! o/\n");
-		close(this->_pfds[i].fd);
+		this->_sock.Send(it->fd, "Goodbye! o/ (Server timout)\n");
+		close(it->fd);
 	}
 }
 
-
-void	Server::_acceptConn(void)
+void	Server::_checkPoll(void)
 {
-	pollfd	newSock = initPFD(this->_sock.Accept());
-
-	if (newSock.fd < 0)
-		throw std::runtime_error("Accept");
-	User	*newUser = new User(*this, newSock);
-	// add fd to pfds
-	this->_pfds.push_back(newSock);
-	// add User fd pair to map
-	this->_users.insert(std::pair<sockfd_t, User &>(newSock.fd, *newUser));
-}
-
-void	Server::disconnectUser(int i)
-{
-	// remove nickname from _nicknames
-	// DEBUG(this->_pfds[i].fd);
-	this->removeNickname(this->_getUser(i).getNickname());
-	// delete User class
-	// std::cout << "disconnecting user: " << i << std::endl;
-	// DEBUG(this->_pfds[i].fd);
-	delete &this->_getUser(i);
-	// std::cout << "disconnecting user: " << i << std::endl;
-	// remove User fd pair from map
-	this->_users.erase(this->_pfds[i].fd);
-	// remove fd from pfds
-	this->_pfds.erase(this->_pfds.begin() + i);
-}
-
-void	Server::disconnectUserFd(int fd)
-{
-	User	&user = this->_getUserFd(fd);
-	// remove nickname from _nicknames
-	// DEBUG(this->_pfds[i].fd);
-	this->removeNickname(user.getNickname());
-	// delete User class
-	// std::cout << "disconnecting user: " << i << std::endl;
-	// DEBUG(this->_pfds[i].fd);
-	delete &user;
-	// std::cout << "disconnecting user: " << i << std::endl;
-	// remove User fd pair from map
-	this->_users.erase(fd);
-	// remove fd from pfds
-	for (std::vector<pollfd>::iterator it = this->_pfds.begin(); it != this->_pfds.end(); it++)
+	for (pollfdIt it = this->_pfds.begin(); it != this->_pfds.end(); it++)
 	{
-		if (it->fd == fd)
-		{
-			this->_pfds.erase(it);
-			break ;
-		}
+		this->_pollOut(it);
+		this->_pollIn(it);
 	}
+	// NOTE: moved connecting and disconnecting users outside the poll checking loop (could make new function alltogether)
+	// If any, add pollfds of new connections to the full list of connections
+	if (this->_newPfds.size())
+		this->_connectPfds();
+	// If any, disconnect users associated with the pollfd in the dcPfds list
+	if (this->_dcPfds.size())
+		this->_disconnectPfds();
 }
 
-bool	Server::_checkDc(int bRead, int i)
+void	Server::_pollIn(pollfdIt it)
 {
-	if (bRead > 0)
-		return (false);
-	this->disconnectUser(i);
-	return (true);
-}
-
-void	Server::_pollOut(int i)
-{
-
-	if (!(this->_pfds[i].revents & POLLOUT))
-		return ;
-	// User is ready to recieve messages
-	// DEBUG(this->_pfds[i].fd);
-	User	&user = this->_getUser(i);
-	// send all stored messages
-	for (std::vector<std::string>::iterator it = user.toSend.begin(); it != user.toSend.end(); it++)
-		this->_sock.Send(user.getFd(), *it);
-	// clear all the messages
-	user.toSend.clear();
-}
-
-void	Server::_pollIn(int i)
-{
-	int			fd = this->_pfds[i].fd;
+	int			fd = it->fd;
 	int			bRead = 1;
 	char 		buffer[512];
 	std::string	msg;
 
-	if (!(this->_pfds[i].revents & POLLIN))
+	if (!(it->revents & POLLIN))
 		return ;
 	// check if it's the server socket
 	if (fd == this->_sock.getFd())
@@ -136,47 +83,90 @@ void	Server::_pollIn(int i)
 	}
 	bRead = recv(fd, buffer, 512 - 1, 0);
 	// check whether recv returned 0 and disconnect user if it did
-	if (this->_checkDc(bRead, i))
+	if (this->_checkDc(bRead, it))
 		return ;
 	buffer[bRead] = '\0';
-	std::cout << "User #" << this->_pfds[i].fd << " recvd " << bRead << " bytes" << std::endl;
-	// DEBUG(this->_pfds[i].fd);
-	User	&user = this->_getUser(i);
+	std::cout << "User #" << fd << " recvd " << bRead << " bytes" << std::endl;
+	User	&user = this->_getUser(fd);
 	// Add read buffer to the back of the total message
 	user.appendBuffer(buffer);
-	// if CRLF is found, stop recv() and relay the message
+	//	loop through the buffer while it can find a \n (think getnextline)
 	while (user.buffer.find("\n") != std::string::npos)
 	{
 		std::stringstream	temp(user.buffer);
 		std::string command;
 
+		// Separate out the first line
 		std::getline(temp, command, '\n');
-		user.resetBuffer();
+		// Store the rest
 		std::getline(temp, user.buffer, '\0');
-		std::cout << "User #" << this->_pfds[i].fd << " Full command: " << command << std::endl;
-		Message	msg(command, user, *this);
-		// this->_relayMsg(user.buffer, i);
-		// user.resetBuffer();
+		std::cout << "User #" << fd << " Full command: " << command << std::endl;
+		// Process command
+		Message	msg(command, user, it, *this);
 	}
 }
 
-void	Server::_checkPoll(void)
+void	Server::_pollOut(pollfdIt it)
 {
-	int	npfd = this->_pfds.size();
+	if (!(it->revents & POLLOUT))
+		return ;
+	// User is ready to recieve messages
+	User	&user = this->_getUser(it->fd);
+	// send all stored messages
+	for (std::vector<std::string>::iterator msgIt = user.toSend.begin(); msgIt != user.toSend.end(); msgIt++)
+		this->_sock.Send(user.getFd(), *msgIt);
+	// clear all the messages
+	user.toSend.clear();
+}
 
-	for (int i = 0; i < npfd; i++)
+bool	Server::_checkDc(int bRead, pollfdIt it)
+{
+	if (bRead > 0)
+		return (false);
+	// Set the user for disconnection
+	this->_dcPfds.push_back(*it);
+	return (true);
+}
+
+void	Server::_disconnectPfds(void)
+{
+	// Loop through all _dcPfds
+	for (pollfdIt dcIt = this->_dcPfds.begin(); dcIt != this->_dcPfds.end(); dcIt++)
 	{
-		this->_pollOut(i);
-		this->_pollIn(i);
+		// Find the iterator for the corresponding pdf and disconnect user
+		for (std::vector<pollfd>::iterator it = this->_pfds.begin(); it != this->_pfds.end(); it++)
+		{
+			if (it->fd == dcIt->fd)
+			{
+				this->disconnectUser(it);
+				break ;
+			}
+		}
 	}
+	this->_dcPfds.clear();
 }
 
-User	&Server::_getUser(int i)
+void	Server::_acceptConn(void)
 {
-	return (this->_users.at(this->_pfds[i].fd));
+	pollfd	newSock = initPFD(this->_sock.Accept());
+
+	if (newSock.fd < 0)
+		throw std::runtime_error("Accept");
+	User	*newUser = new User(*this, newSock);
+	// add fd to newPfds
+	this->_newPfds.push_back(newSock);
+	// add User fd pair to map
+	this->_users.insert(std::pair<sockfd_t, User &>(newSock.fd, *newUser));
 }
 
-User	&Server::_getUserFd(int fd)
+void	Server::_connectPfds(void)
+{
+	// Append the _newPfds vector to the _pfds vector
+	this->_pfds.insert(this->_pfds.end(), this->_newPfds.begin(), this->_newPfds.end());
+	this->_newPfds.clear();
+}
+
+User	&Server::_getUser(int fd)
 {
 	return (this->_users.at(fd));
 }
@@ -203,30 +193,36 @@ bool	Server::checkPassword(const std::string &password) const
 	return (this->_password == password);
 }
 
-// obsolete?
-void	Server::relayMsg(std::string &msg, int i)
+void	Server::disconnectUser(pollfdIt it)
 {
-	int	npfd = this->_pfds.size();
+	User	&user = this->_getUser(it->fd);
+	// remove nickname from _nicknames
+	this->removeNickname(user.getNickname());
+	// delete User class
+	delete &user;
+	// remove User fd pair from map
+	this->_users.erase(it->fd);
+	// remove fd from pfds
+	this->_pfds.erase(it);
+}
 
-	std::cout << msg;
-	for (int j = 1; j < npfd; j++)
+void	Server::addDcPfd(pollfdIt &it)
+{
+	this->_dcPfds.push_back(*it);
+}
+
+void	Server::broadcastMsg(std::string &msg)
+{
+	std::cout << "BROADCAST: " << msg;
+	for (pollfdIt it = this->_pfds.begin() + 1; it != this->_pfds.end(); it++)
 	{
 		// add msg to users msg backlog
-		// DEBUG(this->_pfds[i].fd);
-		this->_getUser(j).toSend.push_back(msg);
+		this->_getUser(it->fd).toSend.push_back(msg);
 	}
 }
 
-static void	print_nicknames(std::vector<std::string> &v)
-{
-	std::cout << "Nicknames[" << v.size() << "]: ";
-	for (int i = 0; i < v.size(); i++)
-		std::cout << " <" << v[i] << ">";
-	std::cout << std::endl;
-}
-
 // Returns true if the given nickname is already taken
-bool		Server::checkNickname(const std::string nickname)
+bool	Server::checkNickname(const std::string nickname)
 {
 	if (this->_nicknames.size() == 0)
 		return (false);
@@ -236,13 +232,12 @@ bool		Server::checkNickname(const std::string nickname)
 }
 
 // Adds a new nickname to the vector
-void		Server::addNickname(const std::string &nickname)
+void	Server::addNickname(const std::string &nickname)
 {
 	this->_nicknames.push_back(nickname);
 }
 
-
-void		Server::removeNickname(const std::string &nickname)
+void	Server::removeNickname(const std::string &nickname)
 {
 	if (this->_nicknames.size() == 0)
 		return ;
