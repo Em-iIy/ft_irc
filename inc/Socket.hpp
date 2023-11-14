@@ -5,8 +5,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <netinet/in.h> // for sockaddr_in
-
-#define sockfd_t int
+#include "types.hpp"
 
 class Socket {
 private:

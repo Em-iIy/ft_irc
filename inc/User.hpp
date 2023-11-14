@@ -6,8 +6,7 @@
 #include <iostream>
 #include <exception>
 #include "Server.hpp"
-
-class Server;
+#include "types.hpp"
 
 class User {
 private:
