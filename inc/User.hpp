@@ -13,7 +13,6 @@ class User {
 private:
 	Server						&_serv;
 	pollfd						_fd;
-	int							_idx;
 	std::string					_nickname;
 	std::string					_username;
 	std::string					_hostname;
@@ -29,7 +28,7 @@ public:
 	std::string					buffer;
 	std::vector<std::string> 	toSend;
 
-	User(Server &serv, pollfd fd, int i);
+	User(Server &serv, pollfd fd);
 	~User();
 	void	resetBuffer(void);
 	void	appendBuffer(std::string msg);
@@ -37,7 +36,6 @@ public:
 	void	registerUser(std::string &username, std::string &hostname, std::string &servername, std::string &realname);
 
 	int					getFd(void) const;
-	int					getIdx(void) const;
 
 	const std::string	&getUsername(void) const;
 	const std::string	&getNickname(void) const;

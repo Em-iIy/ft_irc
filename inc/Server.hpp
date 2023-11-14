@@ -13,6 +13,8 @@
 
 #define DEBUG(x) std::cout << "User #" << x << " " << __func__ << " " << __FILE__ << ":" << __LINE__ << std::endl
 
+typedef std::vector<pollfd>::iterator pollfdIt;
+
 class User;
 
 class Server {
@@ -34,6 +36,7 @@ private:
 
 
 	User						&_getUser(int i);
+	User						&_getUserFd(int fd);
 
 public:
 	~Server();
@@ -42,6 +45,7 @@ public:
 
 	bool	checkPassword(const std::string &password) const;
 	void	disconnectUser(int i);
+	void	disconnectUserFd(int fd);
 
 	void		relayMsg(std::string &msg, int i);
 

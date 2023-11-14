@@ -16,5 +16,5 @@ void	Message::_QUIT(void)
 		this->_respondUser(); // should be all channels + all users who have been messaged
 	}
 	// Disconnect the user from the server
-	this->_server.disconnectUser(this->_user.getIdx());
+	this->_server.disconnectUserFd(this->_user.getFd());
 }

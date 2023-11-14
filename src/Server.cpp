@@ -49,7 +49,7 @@ void	Server::_acceptConn(void)
 
 	if (newSock.fd < 0)
 		throw std::runtime_error("Accept");
-	User	*newUser = new User(*this, newSock, this->_pfds.size());
+	User	*newUser = new User(*this, newSock);
 	// add fd to pfds
 	this->_pfds.push_back(newSock);
 	// add User fd pair to map
@@ -70,6 +70,30 @@ void	Server::disconnectUser(int i)
 	this->_users.erase(this->_pfds[i].fd);
 	// remove fd from pfds
 	this->_pfds.erase(this->_pfds.begin() + i);
+}
+
+void	Server::disconnectUserFd(int fd)
+{
+	User	&user = this->_getUserFd(fd);
+	// remove nickname from _nicknames
+	// DEBUG(this->_pfds[i].fd);
+	this->removeNickname(user.getNickname());
+	// delete User class
+	// std::cout << "disconnecting user: " << i << std::endl;
+	// DEBUG(this->_pfds[i].fd);
+	delete &user;
+	// std::cout << "disconnecting user: " << i << std::endl;
+	// remove User fd pair from map
+	this->_users.erase(fd);
+	// remove fd from pfds
+	for (std::vector<pollfd>::iterator it = this->_pfds.begin(); it != this->_pfds.end(); it++)
+	{
+		if (it->fd == fd)
+		{
+			this->_pfds.erase(it);
+			break ;
+		}
+	}
 }
 
 bool	Server::_checkDc(int bRead, int i)
@@ -115,7 +139,7 @@ void	Server::_pollIn(int i)
 	if (this->_checkDc(bRead, i))
 		return ;
 	buffer[bRead] = '\0';
-	std::cout << "recvd " << bRead << " bytes" << std::endl;
+	std::cout << "User #" << this->_pfds[i].fd << " recvd " << bRead << " bytes" << std::endl;
 	// DEBUG(this->_pfds[i].fd);
 	User	&user = this->_getUser(i);
 	// Add read buffer to the back of the total message
@@ -129,7 +153,7 @@ void	Server::_pollIn(int i)
 		std::getline(temp, command, '\n');
 		user.resetBuffer();
 		std::getline(temp, user.buffer, '\0');
-		std::cout << "Full command: " << command << std::endl;
+		std::cout << "User #" << this->_pfds[i].fd << " Full command: " << command << std::endl;
 		Message	msg(command, user, *this);
 		// this->_relayMsg(user.buffer, i);
 		// user.resetBuffer();
@@ -150,6 +174,11 @@ void	Server::_checkPoll(void)
 User	&Server::_getUser(int i)
 {
 	return (this->_users.at(this->_pfds[i].fd));
+}
+
+User	&Server::_getUserFd(int fd)
+{
+	return (this->_users.at(fd));
 }
 
 void	Server::Start(void)
