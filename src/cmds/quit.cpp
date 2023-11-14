@@ -12,6 +12,7 @@ void	Message::_QUIT(void)
 		else
 			this->_response += "Client Quit";
 		this->_response += "\n";
+		// this->_server.relayMsg(this->_response, 0);
 		this->_respondUser(); // should be all channels + all users who have been messaged
 	}
 	// Disconnect the user from the server

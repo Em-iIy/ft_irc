@@ -1,0 +1,3 @@
+PASS hi
+NICK test
+USER test test test :test test

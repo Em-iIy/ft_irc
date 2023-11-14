@@ -28,7 +28,7 @@ void	Message::parseMsg(std::string &msg)
 	std::string					token;
 
 	// Reset buffer before potentially deleting the user
-	this->_user.resetBuffer();
+	// this->_user.resetBuffer();
 	// Separate the message into <command> [<parameters>]
 	std::getline(input, this->_command, ' ');
 	std::getline(input, this->_param);

@@ -1,4 +1,5 @@
 #include "Server.hpp"
+#include <sstream>
 
 static pollfd initPFD(sockfd_t fd)
 {
@@ -58,9 +59,13 @@ void	Server::_acceptConn(void)
 void	Server::disconnectUser(int i)
 {
 	// remove nickname from _nicknames
+	// DEBUG(this->_pfds[i].fd);
 	this->removeNickname(this->_getUser(i).getNickname());
 	// delete User class
+	// std::cout << "disconnecting user: " << i << std::endl;
+	// DEBUG(this->_pfds[i].fd);
 	delete &this->_getUser(i);
+	// std::cout << "disconnecting user: " << i << std::endl;
 	// remove User fd pair from map
 	this->_users.erase(this->_pfds[i].fd);
 	// remove fd from pfds
@@ -81,6 +86,7 @@ void	Server::_pollOut(int i)
 	if (!(this->_pfds[i].revents & POLLOUT))
 		return ;
 	// User is ready to recieve messages
+	// DEBUG(this->_pfds[i].fd);
 	User	&user = this->_getUser(i);
 	// send all stored messages
 	for (std::vector<std::string>::iterator it = user.toSend.begin(); it != user.toSend.end(); it++)
@@ -110,14 +116,21 @@ void	Server::_pollIn(int i)
 		return ;
 	buffer[bRead] = '\0';
 	std::cout << "recvd " << bRead << " bytes" << std::endl;
+	// DEBUG(this->_pfds[i].fd);
 	User	&user = this->_getUser(i);
 	// Add read buffer to the back of the total message
 	user.appendBuffer(buffer);
 	// if CRLF is found, stop recv() and relay the message
-	if (user.buffer.find("\r\n") != std::string::npos)
+	while (user.buffer.find("\n") != std::string::npos)
 	{
-		std::cout << "Full command: " << user.buffer;
-		Message	msg(user.buffer, user, *this);
+		std::stringstream	temp(user.buffer);
+		std::string command;
+
+		std::getline(temp, command, '\n');
+		user.resetBuffer();
+		std::getline(temp, user.buffer, '\0');
+		std::cout << "Full command: " << command << std::endl;
+		Message	msg(command, user, *this);
 		// this->_relayMsg(user.buffer, i);
 		// user.resetBuffer();
 	}
@@ -170,6 +183,7 @@ void	Server::relayMsg(std::string &msg, int i)
 	for (int j = 1; j < npfd; j++)
 	{
 		// add msg to users msg backlog
+		// DEBUG(this->_pfds[i].fd);
 		this->_getUser(j).toSend.push_back(msg);
 	}
 }

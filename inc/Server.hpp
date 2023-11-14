@@ -11,6 +11,8 @@
 #include "Config.hpp"
 #include "Message.hpp"
 
+#define DEBUG(x) std::cout << "User #" << x << " " << __func__ << " " << __FILE__ << ":" << __LINE__ << std::endl
+
 class User;
 
 class Server {
