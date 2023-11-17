@@ -5,9 +5,11 @@ NAME = ircserv
 FILES_SRCS =	main.cpp \
 				Server.cpp \
 				Socket.cpp \
+				Log.cpp \
 				User.cpp \
 				Config.cpp \
 				serverCmds.cpp \
+				utils.cpp \
 				Message.cpp \
 				nickname.cpp \
 				password.cpp \

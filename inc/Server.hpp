@@ -7,6 +7,7 @@
 #include <exception>
 #include <algorithm>
 #include "Socket.hpp"
+#include "Log.hpp"
 #include "User.hpp"
 #include "Config.hpp"
 #include "Message.hpp"
@@ -24,6 +25,8 @@ private:
 	int							_port;
 	std::string					_password;
 	bool						_running;
+
+	Log							_log;
 
 	void						_checkPoll(void);
 	void						_pollIn(pollfdIt it);
@@ -43,13 +46,15 @@ public:
 	void	Start(void);
 	void	Stop(void);
 
+	void	log(const std::string &src, const std::string &str);
+
 	bool	checkPassword(const std::string &password) const;
 
 	void	disconnectUser(pollfdIt it);
 
 	void	addDcPfd(pollfdIt &it);
 
-	void	broadcastMsg(std::string &msg);
+	void	broadcastMsg(const std::string &msg);
 
 	bool	checkNickname(const std::string nickname);
 	void	addNickname(const std::string &nickname);

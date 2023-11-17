@@ -1,22 +1,7 @@
 #include "Server.hpp"
 #include "serverCmds.hpp"
+#include "utils.hpp"
 #include <sstream>
-
-static pollfd initPFD(sockfd_t fd)
-{
-	pollfd ret;
-	ret.fd = fd;
-	ret.events = POLLIN | POLLOUT;
-	return (ret);
-}
-
-static void	print_nicknames(std::vector<std::string> &v)
-{
-	std::cout << "Nicknames[" << v.size() << "]: ";
-	for (int i = 0; i < v.size(); i++)
-		std::cout << " <" << v[i] << ">";
-	std::cout << std::endl;
-}
 
 Server::Server(const std::string &port, const std::string &password)try : _port(std::stoi(port)), _password(password)
 {
@@ -32,7 +17,16 @@ Server::Server(const std::string &port, const std::string &password)try : _port(
 	this->_sock.Init(this->_port);
 	this->_sock.Bind();
 	this->_sock.Listen(32);
-	std::cout << "Server built on port: " << this->_port << std::endl;
+	try
+	{
+		this->_log.init("ircserv");
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+	}
+	this->log("Server", "Server built on port: " + port);
+	
 }
 catch(const std::invalid_argument& e)
 {
@@ -111,7 +105,6 @@ void	Server::_pollIn(pollfdIt it)
 		std::getline(temp, command, '\n');
 		// Store the rest
 		std::getline(temp, user.buffer, '\0');
-		std::cout << "User #" << fd << " Full command: " << command << std::endl;
 		// Process command
 		Message	msg(command, user, it, *this);
 	}
@@ -137,6 +130,9 @@ bool	Server::_checkDc(int bRead, pollfdIt it)
 	if (bRead > 0)
 		return (false);
 	// Set the user for disconnection
+	User	&user = this->_getUser(it->fd);
+	if (user.getRegistered())
+		this->broadcastMsg(":" + user.getFullRef() + " QUIT :Client Quit\n");
 	this->_dcPfds.push_back(*it);
 	return (true);
 }
@@ -207,6 +203,11 @@ void	Server::Stop(void)
 	this->_running = false;
 }
 
+void	Server::log(const std::string &src, const std::string &str)
+{
+	this->_log.logToFile(src, str);
+}
+
 bool	Server::checkPassword(const std::string &password) const
 {
 	return (this->_password == password);
@@ -230,9 +231,9 @@ void	Server::addDcPfd(pollfdIt &it)
 	this->_dcPfds.push_back(*it);
 }
 
-void	Server::broadcastMsg(std::string &msg)
+void	Server::broadcastMsg(const std::string &msg)
 {
-	std::cout << "BROADCAST: " << msg;
+	this->log("Server", msg);
 	for (pollfdIt it = this->_pfds.begin() + 2; it != this->_pfds.end(); it++)
 	{
 		// add msg to users msg backlog

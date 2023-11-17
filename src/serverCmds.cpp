@@ -1,17 +1,9 @@
 #include "Server.hpp"
 #include "User.hpp"
+#include "utils.hpp"
 #include <string>
 #include <iostream>
 #include <exception>
-
-static void	rmCRLF(std::string &str)
-{
-	size_t CRLF = str.find_last_not_of("\r\n");
-
-	if (CRLF == std::string::npos)
-		return ;
-	str.erase(CRLF + 1);
-}
 
 // Prints out a list of all the nicknames in use
 static void	nicks(Server &serv)
@@ -73,7 +65,7 @@ static void	broadcast(std::string &param, Server &serv)
 {
 	std::string msg;
 
-	msg = ":" + serv.getConfig().getHostName() + " MSG :" + param + "\n";
+	msg = ":server NOTICE all :" + param + "\n";
 	serv.broadcastMsg(msg);
 }
 

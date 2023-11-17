@@ -6,6 +6,7 @@
 class Server;
 class Config;
 class Socket;
+class Log;
 class User;
 class Message;
 
