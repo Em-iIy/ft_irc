@@ -38,6 +38,9 @@ public:
 
 	const std::string	&getUsername(void) const;
 	const std::string	&getNickname(void) const;
+	const std::string	&getHostname(void) const;
+	const std::string	&getServername(void) const;
+	const std::string	&getRealname(void) const;
 	const std::string	&getFullRef(void) const;
 	const bool			&getRegistered(void) const;
 	const bool			&getPassword(void) const;
@@ -47,3 +50,5 @@ public:
 	void				setRegistered(const bool &registered);
 	void				setPassword(const bool &password);
 };
+
+std::ostream	&operator<<(std::ostream &o, const User &rhs);

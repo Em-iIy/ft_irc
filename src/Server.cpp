@@ -1,4 +1,5 @@
 #include "Server.hpp"
+#include "serverCmds.hpp"
 #include <sstream>
 
 static pollfd initPFD(sockfd_t fd)
@@ -25,7 +26,8 @@ Server::Server(const std::string &port, const std::string &password)try : _port(
 	// Check if port is within valid
 	if (this->_port < 0 || this->_port > 65536)
 		throw std::out_of_range("");
-		this->_pfds.push_back(initPFD(this->_sock.getFd()));
+	this->_pfds.push_back(initPFD(STDIN_FILENO));
+	this->_pfds.push_back(initPFD(this->_sock.getFd()));
 	// this->_pfds[0].events = POLLIN;
 	this->_sock.Init(this->_port);
 	this->_sock.Bind();
@@ -43,10 +45,11 @@ catch(const std::out_of_range& e)
 
 Server::~Server()
 {
-	for (pollfdIt it = this->_pfds.begin() + 1; it != this->_pfds.end(); it++)
+	// Loop through all user pfds
+	for (pollfdIt it = this->_pfds.begin() + 2; it != this->_pfds.end(); it++)
 	{
-		this->_sock.Send(it->fd, "Goodbye! o/ (Server timout)\n");
-		close(it->fd);
+		this->_sock.Send(it->fd, "Goodbye! o/ (Server turned off)\n");
+		delete &this->_getUser(it->fd);
 	}
 }
 
@@ -75,6 +78,14 @@ void	Server::_pollIn(pollfdIt it)
 
 	if (!(it->revents & POLLIN))
 		return ;
+	// Server commands
+	if (fd == STDIN_FILENO)
+	{
+		bRead = read(STDIN_FILENO, buffer, 512 - 1);
+		buffer[bRead] = '\0';
+		serverCmd(buffer, *this);
+		return ;
+	}
 	// check if it's the server socket
 	if (fd == this->_sock.getFd())
 	{
@@ -109,6 +120,8 @@ void	Server::_pollIn(pollfdIt it)
 void	Server::_pollOut(pollfdIt it)
 {
 	if (!(it->revents & POLLOUT))
+		return ;
+	if (it->fd == STDIN_FILENO)
 		return ;
 	// User is ready to recieve messages
 	User	&user = this->_getUser(it->fd);
@@ -174,7 +187,8 @@ User	&Server::_getUser(int fd)
 void	Server::Start(void)
 {
 	int rc;
-	while (true)
+	this->_running = true;
+	while (this->_running)
 	{
 		// poll all the pfds for any events
 		rc = poll(this->_pfds.data(), this->_pfds.size(), 100000);
@@ -185,7 +199,12 @@ void	Server::Start(void)
 		// check what events happened
 		this->_checkPoll();
 	}
-	std::cout << "timeout" << std::endl;
+	std::cout << ":stopping server:" << std::endl;
+}
+
+void	Server::Stop(void)
+{
+	this->_running = false;
 }
 
 bool	Server::checkPassword(const std::string &password) const
@@ -214,7 +233,7 @@ void	Server::addDcPfd(pollfdIt &it)
 void	Server::broadcastMsg(std::string &msg)
 {
 	std::cout << "BROADCAST: " << msg;
-	for (pollfdIt it = this->_pfds.begin() + 1; it != this->_pfds.end(); it++)
+	for (pollfdIt it = this->_pfds.begin() + 2; it != this->_pfds.end(); it++)
 	{
 		// add msg to users msg backlog
 		this->_getUser(it->fd).toSend.push_back(msg);
@@ -253,4 +272,15 @@ Config	&Server::getConfig(void)
 Socket	&Server::getSocket(void)
 {
 	return (this->_sock);
+}
+
+
+std::vector<std::string> 	&Server::getNicknames(void)
+{
+	return (this->_nicknames);
+}
+
+std::map<sockfd_t, User &>	&Server::getUsers(void)
+{
+	return (this->_users);
 }

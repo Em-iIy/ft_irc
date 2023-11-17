@@ -7,6 +7,7 @@ FILES_SRCS =	main.cpp \
 				Socket.cpp \
 				User.cpp \
 				Config.cpp \
+				serverCmds.cpp \
 				Message.cpp \
 				nickname.cpp \
 				password.cpp \

@@ -1,5 +1,18 @@
 #include "User.hpp"
 
+std::ostream	&operator<<(std::ostream &o, const User &rhs)
+{
+	o << "User #" << rhs.getFd() << " - " << rhs.getNickname() <<  ":" << std::endl;
+	o << "Fd:\t\t" << rhs.getFd() << std::endl;
+	o << "Nickname:\t" << rhs.getNickname() << std::endl;
+	o << "Username:\t" << rhs.getUsername() << std::endl;
+	o << "Hostname:\t" << rhs.getHostname() << std::endl;
+	o << "Servername:\t" << rhs.getServername() << std::endl;
+	o << "Realname:\t" << rhs.getRealname() << std::endl;
+	o << "FullRef:\t" << rhs.getFullRef() << std::endl;
+	return (o);
+}
+
 User::User(Server &serv, pollfd fd): _serv(serv), _fd(fd)
 {
 	std::cout << "User #" << this->_fd.fd << " Connected." << std::endl;
@@ -58,6 +71,21 @@ const std::string	&User::getUsername(void) const
 const std::string	&User::getNickname(void) const
 {
 	return (this->_nickname);
+}
+
+const std::string	&User::getHostname(void) const
+{
+	return (this->_hostname);
+}
+
+const std::string	&User::getServername(void) const
+{
+	return (this->_servername);
+}
+
+const std::string	&User::getRealname(void) const
+{
+	return (this->_realname);
 }
 
 const std::string	&User::getFullRef(void) const

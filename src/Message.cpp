@@ -7,8 +7,11 @@
 // removes trailing \r\n from strings
 static void	rmCRLF(std::string &str)
 {
-	str.erase(std::remove(str.begin(), str.end(), '\n'), str.cend());
-	str.erase(std::remove(str.begin(), str.end(), '\r'), str.cend());
+	size_t CRLF = str.find_last_not_of("\r\n");
+
+	if (CRLF == std::string::npos)
+		return ;
+	str.erase(CRLF + 1);
 }
 
 Message::Message(std::string &msg, User &user, pollfdIt &it, Server &server) : _user(user), _it(it), _server(server)
@@ -25,7 +28,6 @@ void	Message::parseMsg(std::string &msg)
 	// Remove \r\n from command string
 	rmCRLF(msg);
 	std::stringstream			input(msg);
-	std::string					token;
 
 	// Separate the message into <command> [<parameters>]
 	std::getline(input, this->_command, ' ');

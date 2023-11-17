@@ -23,6 +23,7 @@ private:
 	Socket						_sock;
 	int							_port;
 	std::string					_password;
+	bool						_running;
 
 	void						_checkPoll(void);
 	void						_pollIn(pollfdIt it);
@@ -40,6 +41,7 @@ public:
 	~Server();
 	Server(const std::string &port, const std::string &password);
 	void	Start(void);
+	void	Stop(void);
 
 	bool	checkPassword(const std::string &password) const;
 
@@ -55,4 +57,7 @@ public:
 
 	Config	&getConfig(void);
 	Socket	&getSocket(void);
+
+	std::vector<std::string> 	&getNicknames(void);
+	std::map<sockfd_t, User &>	&getUsers(void);
 };
