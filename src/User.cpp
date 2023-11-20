@@ -44,10 +44,19 @@ void	User::registerUser(std::string &username, std::string &hostname, std::strin
 	this->_hostname = hostname;
 	this->_servername = servername;
 	this->_realname = realname;
-	if (this->_nickname == "")
-		return ;
 	this->updateFullRef();
+}
+
+// Updates registered and sends welcome message
+void	User::checkRegister(void)
+{
+	if (this->_registered)
+		return ;
+	std::cout << "test" << std::endl;
+	if (!this->_nickname.length() || !this->_username.length())
+		return ;
 	this->_registered = true;
+	this->toSend.push_back(":" + this->_serv.getConfig().getHostName() + " 001 " + this->_nickname + " :Welcome to the Internet Relay Network " + this->_fullRef + "\n");
 }
 
 void	User::updateFullRef(void)

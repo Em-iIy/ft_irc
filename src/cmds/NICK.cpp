@@ -54,7 +54,6 @@ void	Message::_NICK(void)
 		return ;
 	}
 
-	// std::cout << "getNickname(): " << _user.getNickname() << std::endl;
 	if (this->_user.getNickname() == "")
 	{
 		this->_server.addNickname(nick);
@@ -62,10 +61,12 @@ void	Message::_NICK(void)
 	}
 	else
 	{
+		// Inform users of the nickname change
 		this->_response = ":" + this->_user.getNickname() + " NICK " + nick + "\n";
 		this->_server.removeNickname(this->_user.getNickname());
 		this->_server.addNickname(nick);
 		this->_user.setNickname(nick);
 		this->_server.broadcastMsg(this->_response);
 	}
+	this->_user.checkRegister();
 }

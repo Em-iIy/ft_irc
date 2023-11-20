@@ -33,6 +33,7 @@ public:
 	void	appendBuffer(std::string msg);
 	void	updateFullRef(void);
 	void	registerUser(std::string &username, std::string &hostname, std::string &servername, std::string &realname);
+	void	checkRegister(void);
 
 	int					getFd(void) const;
 
