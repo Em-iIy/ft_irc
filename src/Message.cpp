@@ -75,4 +75,9 @@ void	Message::_checkCommand(void)
 	// Must be registered to use any other commands
 	if (this->_user.getRegistered() == false)
 		return ;
+	if (*it == "PING")
+	{
+		this->_PING();
+		return ;
+	}
 }

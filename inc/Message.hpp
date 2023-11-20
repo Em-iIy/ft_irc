@@ -22,6 +22,7 @@ private:
 	void	_NICK(void);
 	void	_USER(void);
 	void	_QUIT(void);
+	void	_PING(void);
 
 public:
 	Message(std::string &msg, User &user, pollfdIt &it, Server &server);

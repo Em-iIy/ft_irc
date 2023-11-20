@@ -13,6 +13,7 @@ FILES_SRCS =	main.cpp \
 				Message.cpp \
 				NICK.cpp \
 				PASS.cpp \
+				PING.cpp \
 				QUIT.cpp \
 				USER.cpp \
 
@@ -53,7 +54,7 @@ $(NAME): $(DIR_OBJS) $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(INC) $(LFLAGS)
 
 
-$(DIR_OBJS)%.o: %.cpp $(GLM)
+$(DIR_OBJS)%.o: %.cpp
 	$(CC) $(CFLAGS) -c $< -o $@ $(INC) $(DFLAGS)
 
 $(DIR_OBJS):
