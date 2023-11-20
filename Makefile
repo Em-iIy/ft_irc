@@ -31,6 +31,10 @@ SRCS = $(FILES_SRCS:%=$(DIR_SRCS)%)
 # ----------------------------------------Objects
 OBJS = $(FILES_OBJS:%=$(DIR_OBJS)%)
 
+# ----------------------------------------Defines
+HOST_NAME = \"$(shell hostname)\";
+DFLAGS += -DHOST_NAME=$(HOST_NAME)
+
 # ----------------------------------------Flags
 CC = c++
 CFLAGS = -std=c++11
@@ -41,6 +45,7 @@ INC =  -Iinc
 
 # ----------------------------------------Making
 all:
+	echo $(HOST_NAME)
 	@$(MAKE) $(NAME) -j4
 
 
@@ -49,7 +54,7 @@ $(NAME): $(DIR_OBJS) $(OBJS)
 
 
 $(DIR_OBJS)%.o: %.cpp $(GLM)
-	$(CC) $(CFLAGS) -c $< -o $@ $(INC)
+	$(CC) $(CFLAGS) -c $< -o $@ $(INC) $(DFLAGS)
 
 $(DIR_OBJS):
 	mkdir -p $@

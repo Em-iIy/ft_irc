@@ -1,10 +1,21 @@
 #include "Config.hpp"
+#include <limits.h>
+#include <unistd.h>
 
 Config::Config()
 {
-	this->_serverName = "default";
-	this->_hostName = "default";
-	this->_version = "0.1";
+	#ifdef HOST_NAME
+		this->_hostName = HOST_NAME;
+	#else
+	/* can't do this because it's not an "allowed" function (it's the same thing essentially)
+		char hostname[HOST_NAME_MAX];
+		gethostname(hostname, HOST_NAME_MAX);
+		this->_hostName = hostname;
+	*/
+		this->_hostName = "default";
+	#endif
+	this->_serverName = "ir.chat"; // need to find name
+	this->_version = "0.2";
 }
 
 Config::~Config()
