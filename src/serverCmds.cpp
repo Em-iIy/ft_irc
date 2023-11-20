@@ -76,6 +76,7 @@ void	serverCmd(std::string cmd, Server &serv)
 	std::string command;
 	std::string param;
 
+	serv.log("Server", cmd);
 	// Commands without parameters
 	if (space == std::string::npos)
 	{

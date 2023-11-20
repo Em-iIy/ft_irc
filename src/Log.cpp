@@ -2,6 +2,7 @@
 #include "utils.hpp"
 #include <exception>
 #include <iostream>
+#include <ctime>
 
 Log::Log(void) 
 {
@@ -29,7 +30,10 @@ Log::~Log(void)
 
 void	Log::logToFile(const std::string &src, const std::string &str)
 {
-	std::string msg = "[" + src + "]\t" + str;
+	time_t		time = std::time(NULL);
+	std::string	strTime = std::string(ctime(&time));
+	rmCRLF(strTime);
+	std::string msg = "[" + strTime + " - " + src + "]\t" + str;
 
 	rmCRLF(msg);
 	std::cout << msg << std::endl;
