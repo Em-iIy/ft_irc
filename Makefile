@@ -11,10 +11,10 @@ FILES_SRCS =	main.cpp \
 				serverCmds.cpp \
 				utils.cpp \
 				Message.cpp \
-				nickname.cpp \
-				password.cpp \
-				quit.cpp \
-				user.cpp \
+				NICK.cpp \
+				PASS.cpp \
+				QUIT.cpp \
+				USER.cpp \
 
 FILES_OBJS = $(FILES_SRCS:.cpp=.o)
 
