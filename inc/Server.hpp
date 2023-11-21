@@ -1,17 +1,17 @@
 #pragma once
 
-#include <vector>
-#include <map>
-#include <poll.h>
-#include <iostream>
-#include <exception>
-#include <algorithm>
 #include "Socket.hpp"
 #include "Log.hpp"
 #include "User.hpp"
 #include "Config.hpp"
 #include "Message.hpp"
 #include "types.hpp"
+#include <vector>
+#include <map>
+#include <poll.h>
+#include <iostream>
+#include <exception>
+#include <algorithm>
 
 class Server {
 private:
@@ -56,7 +56,7 @@ public:
 
 	void	broadcastMsg(const std::string &msg);
 
-	bool	checkNickname(const std::string nickname);
+	bool	checkNickname(const std::string &nickname);
 	void	addNickname(const std::string &nickname);
 	void	removeNickname(const std::string &nickname);
 

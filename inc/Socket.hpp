@@ -1,11 +1,11 @@
 #pragma once
 
+#include "types.hpp"
 #include <iostream>
 #include <exception>
 #include <sys/socket.h>
 #include <unistd.h>
 #include <netinet/in.h> // for sockaddr_in
-#include "types.hpp"
 
 class Socket {
 private:

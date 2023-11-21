@@ -242,7 +242,7 @@ void	Server::broadcastMsg(const std::string &msg)
 }
 
 // Returns true if the given nickname is already taken
-bool	Server::checkNickname(const std::string nickname)
+bool	Server::checkNickname(const std::string &nickname)
 {
 	if (this->_nicknames.size() == 0)
 		return (false);

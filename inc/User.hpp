@@ -1,12 +1,12 @@
 #pragma once
 
+#include "Server.hpp"
+#include "types.hpp"
 #include <poll.h>
 #include <unistd.h>
 #include <vector>
 #include <iostream>
 #include <exception>
-#include "Server.hpp"
-#include "types.hpp"
 
 class User {
 private:
@@ -19,6 +19,7 @@ private:
 	std::string					_realname;
 	std::string					_fullRef;
 	status_t					_status = STAT_NEW;
+	umode_t						_mode = UMODE_NONE;
 	//Channel					&_channel;
 
 public:
@@ -33,8 +34,9 @@ public:
 	void	registerUser(std::string &username, std::string &hostname, std::string &servername, std::string &realname);
 	void	checkRegister(void);
 
-	int					getFd(void) const;
 
+	const int			getFd(void) const;
+	const umode_t		&getMode(void) const;
 	const std::string	&getUsername(void) const;
 	const std::string	&getNickname(void) const;
 	const std::string	&getHostname(void) const;
@@ -48,6 +50,8 @@ public:
 	void				setNickname(const std::string &nickname);
 	void				setRegistered(const bool &registered);
 	void				setPassword(const bool &password);
+	void				addMode(umode_t mode);
+	void				rmMode(umode_t mode);
 
 	void				capStart(void);
 	void				capEnd(void);

@@ -12,6 +12,7 @@ FILES_SRCS =	main.cpp \
 				utils.cpp \
 				Message.cpp \
 				CAP.cpp \
+				MODE.cpp \
 				NICK.cpp \
 				PASS.cpp \
 				PING.cpp \

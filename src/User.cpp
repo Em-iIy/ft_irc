@@ -10,6 +10,7 @@ std::ostream	&operator<<(std::ostream &o, const User &rhs)
 	o << "Servername:\t" << rhs.getServername() << std::endl;
 	o << "Realname:\t" << rhs.getRealname() << std::endl;
 	o << "FullRef:\t" << rhs.getFullRef() << std::endl;
+	o << "Mode:\t\t" << umodeToStr(rhs.getMode()) << std::endl;
 	return (o);
 }
 
@@ -63,7 +64,7 @@ void	User::checkRegister(void)
 	if (!(this->_status & STAT_REG_USER))
 		return ;
 	this->_status |= STAT_REG;
-	this->toSend.push_back(":" + this->_serv.getHostName() + " 001 " + this->_nickname + " :Welcome to the Internet Relay Network " + this->_fullRef + "\n");
+	this->toSend.push_back(":" + this->_serv.getHostName() + " 001 " + this->_nickname + " :Welcome to the Codam Chat Network" + this->_fullRef + "\n");
 }
 
 void	User::updateFullRef(void)
@@ -74,7 +75,12 @@ void	User::updateFullRef(void)
 
 
 // Getters
-int User::getFd(void) const
+const umode_t	&User::getMode(void) const
+{
+	return (this->_mode);
+}
+
+const int User::getFd(void) const
 {
 	return (this->_fd.fd);
 }
@@ -147,6 +153,17 @@ void				User::setPassword(const bool &password)
 	if (password)
 		this->_status |= STAT_REG_PASS;
 }
+
+void				User::addMode(umode_t mode)
+{
+	this->_mode |= mode;
+}
+
+void				User::rmMode(umode_t mode)
+{
+	this->_mode &= ~mode;
+}
+
 
 void				User::capStart(void)
 {

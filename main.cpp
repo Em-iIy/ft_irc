@@ -1,10 +1,5 @@
-#include <iostream>
-#include <vector>
-#include <exception>
-#include <Server.hpp>
-#include <Socket.hpp>
-#include <poll.h>
-#include <errno.h>
+#include "Server.hpp"
+#include "Socket.hpp"
 
 int main(int argc, char **argv)
 {

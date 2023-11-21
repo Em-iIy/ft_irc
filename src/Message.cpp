@@ -85,4 +85,9 @@ void	Message::_checkCommand(void)
 		this->_PING();
 		return ;
 	}
+	if (*it == "MODE")
+	{
+		this->_MODE();
+		return ;
+	}
 }
