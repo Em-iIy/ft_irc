@@ -20,6 +20,7 @@ User::User(Server &serv, pollfd fd): _serv(serv), _fd(fd)
 	this->resetBuffer();
 	this->_username = "";
 	this->_nickname = "";
+	this->_awayMsg = "";
 }
 
 User::~User()
@@ -75,11 +76,6 @@ void	User::updateFullRef(void)
 
 
 // Getters
-const umode_t	&User::getMode(void) const
-{
-	return (this->_mode);
-}
-
 const int User::getFd(void) const
 {
 	return (this->_fd.fd);
@@ -115,6 +111,11 @@ const std::string	&User::getFullRef(void) const
 	return (this->_fullRef);
 }
 
+const std::string	&User::getAwayMsg(void) const
+{
+	return (this->_awayMsg);
+}
+
 const bool			User::getRegistered(void) const
 {
 	return (this->_status & STAT_REG);
@@ -126,6 +127,15 @@ const bool			User::getPassword(void) const
 
 }
 
+const umode_t	&User::getMode(void) const
+{
+	return (this->_mode);
+}
+
+const bool			User::checkMode(umode_t mode) const
+{
+	return (this->_mode & mode);
+}
 
 
 
@@ -140,6 +150,11 @@ void				User::setNickname(const std::string &nickname)
 	this->_nickname = nickname;
 	this->_status |= STAT_REG_NICK;
 	this->updateFullRef();
+}
+
+void				User::setAwayMsg(const std::string &msg)
+{
+	this->_awayMsg = msg;
 }
 
 void				User::setRegistered(const bool &registered)

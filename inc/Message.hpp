@@ -14,7 +14,7 @@ private:
 	pollfdIt						_it;
 	std::string						_command;
 	std::string						_param;
-	const std::vector<std::string>	_allCommands{"PING", "MODE", "NICK", "USER", "PASS", "CAP", "QUIT"};
+	const std::vector<std::string>	_allCommands{"PING", "MODE", "AWAY", "NICK", "USER", "PASS", "CAP", "QUIT"};
 	std::string						_response;
 
 	void	_respondUser(void);
@@ -23,6 +23,7 @@ private:
 	void	_USER_MODE(std::string &target, std::string &mode);
 	void	_CHANNEL_MODE(std::string &target, std::string &mode);
 
+	void	_AWAY(void);
 	void	_CAP(void);
 	void	_MODE(void);
 	void	_PASS(void);

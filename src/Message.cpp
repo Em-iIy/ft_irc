@@ -90,4 +90,9 @@ void	Message::_checkCommand(void)
 		this->_MODE();
 		return ;
 	}
+	if (*it == "AWAY")
+	{
+		this->_AWAY();
+		return ;
+	}
 }

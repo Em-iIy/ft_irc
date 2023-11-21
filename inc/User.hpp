@@ -18,6 +18,7 @@ private:
 	std::string					_servername;
 	std::string					_realname;
 	std::string					_fullRef;
+	std::string					_awayMsg;
 	status_t					_status = STAT_NEW;
 	umode_t						_mode = UMODE_NONE;
 	//Channel					&_channel;
@@ -36,18 +37,21 @@ public:
 
 
 	const int			getFd(void) const;
-	const umode_t		&getMode(void) const;
 	const std::string	&getUsername(void) const;
 	const std::string	&getNickname(void) const;
 	const std::string	&getHostname(void) const;
 	const std::string	&getServername(void) const;
 	const std::string	&getRealname(void) const;
 	const std::string	&getFullRef(void) const;
+	const std::string	&getAwayMsg(void) const;
 	const bool			getRegistered(void) const;
 	const bool			getPassword(void) const;
+	const umode_t		&getMode(void) const;
+	const bool			checkMode(umode_t mode) const;
 
 	void				setUsername(const std::string &username);
 	void				setNickname(const std::string &nickname);
+	void				setAwayMsg(const std::string &msg);
 	void				setRegistered(const bool &registered);
 	void				setPassword(const bool &password);
 	void				addMode(umode_t mode);
