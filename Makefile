@@ -11,6 +11,7 @@ FILES_SRCS =	main.cpp \
 				serverCmds.cpp \
 				utils.cpp \
 				Message.cpp \
+				CAP.cpp \
 				NICK.cpp \
 				PASS.cpp \
 				PING.cpp \
@@ -70,4 +71,9 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+
+# ----------------------------------------Util
+lines:
+	wc -l main.cpp src/*.cpp src/cmds/*.cpp inc/*.hpp
+
+.PHONY: all clean fclean re lines

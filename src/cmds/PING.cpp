@@ -18,13 +18,13 @@ void	Message::_PING(void)
 	{
 		dst = this->_param;
 	}
-	if (dst != this->_server.getConfig().getHostName())
+	if (dst != this->_server.getHostName())
 	{
-		this->_response = ":" + this->_server.getConfig().getHostName() + " 402 " + dst + " :No such server\n";
+		this->_response = ":" + this->_server.getHostName() + " 402 " + dst + " :No such server\n";
 		this->_respondUser();
 		return ;
 	}
-	this->_response = ":" + this->_server.getConfig().getHostName() + " PONG " + this->_server.getConfig().getServerName() + " :" + msg + "\n";
+	this->_response = ":" + this->_server.getHostName() + " PONG " + this->_server.getServerName() + " :" + msg + "\n";
 	this->_respondUser();
 	return ;
 }

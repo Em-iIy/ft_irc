@@ -60,8 +60,11 @@ public:
 	void	addNickname(const std::string &nickname);
 	void	removeNickname(const std::string &nickname);
 
-	Config	&getConfig(void);
-	Socket	&getSocket(void);
+	const Config		&getConfig(void) const;
+	const std::string	&getHostName(void) const;
+	const std::string	&getServerName(void) const;
+	const std::string	&getVersion(void) const;
+	Socket				&getSocket(void);
 
 	std::vector<std::string> 	&getNicknames(void);
 	std::map<sockfd_t, User &>	&getUsers(void);

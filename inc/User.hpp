@@ -18,9 +18,7 @@ private:
 	std::string					_servername;
 	std::string					_realname;
 	std::string					_fullRef;
-	bool						_op = false;
-	bool						_registered = false;
-	bool						_password = false;
+	status_t					_status = STAT_NEW;
 	//Channel					&_channel;
 
 public:
@@ -43,13 +41,16 @@ public:
 	const std::string	&getServername(void) const;
 	const std::string	&getRealname(void) const;
 	const std::string	&getFullRef(void) const;
-	const bool			&getRegistered(void) const;
-	const bool			&getPassword(void) const;
+	const bool			getRegistered(void) const;
+	const bool			getPassword(void) const;
 
 	void				setUsername(const std::string &username);
 	void				setNickname(const std::string &nickname);
 	void				setRegistered(const bool &registered);
 	void				setPassword(const bool &password);
+
+	void				capStart(void);
+	void				capEnd(void);
 };
 
 std::ostream	&operator<<(std::ostream &o, const User &rhs);

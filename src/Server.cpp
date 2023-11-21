@@ -265,10 +265,26 @@ void	Server::removeNickname(const std::string &nickname)
 }
 
 // Getters
-Config	&Server::getConfig(void)
+const Config	&Server::getConfig(void) const
 {
 	return (this->_config);
 }
+
+const std::string	&Server::getHostName(void) const
+{
+	return (this->_config.getHostName());
+}
+
+const std::string	&Server::getServerName(void) const
+{
+	return (this->_config.getServerName());
+}
+
+const std::string	&Server::getVersion(void) const
+{
+	return (this->_config.getVersion());
+}
+
 
 Socket	&Server::getSocket(void)
 {

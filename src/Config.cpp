@@ -14,7 +14,7 @@ Config::Config()
 	*/
 		this->_hostName = "default";
 	#endif
-	this->_serverName = "ir.chat"; // need to find name
+	this->_serverName = "cc.tv"; // Codam Chat tv :)
 	this->_version = "0.2";
 }
 

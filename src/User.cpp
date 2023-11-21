@@ -44,24 +44,31 @@ void	User::registerUser(std::string &username, std::string &hostname, std::strin
 	this->_hostname = hostname;
 	this->_servername = servername;
 	this->_realname = realname;
+	this->_status |= STAT_REG_USER;
 	this->updateFullRef();
 }
 
 // Updates registered and sends welcome message
 void	User::checkRegister(void)
 {
-	if (this->_registered)
+	if (this->getRegistered())
 		return ;
-	std::cout << "test" << std::endl;
-	if (!this->_nickname.length() || !this->_username.length())
+	// Check if CAP negotiations was started it was also ended
+	if (this->_status & STAT_CAP_START && !(this->_status & STAT_CAP_END))
 		return ;
-	this->_registered = true;
-	this->toSend.push_back(":" + this->_serv.getConfig().getHostName() + " 001 " + this->_nickname + " :Welcome to the Internet Relay Network " + this->_fullRef + "\n");
+	// Check if a nickname was registered
+	if (!(this->_status & STAT_REG_NICK))
+		return ;
+	// Check if user info was registered
+	if (!(this->_status & STAT_REG_USER))
+		return ;
+	this->_status |= STAT_REG;
+	this->toSend.push_back(":" + this->_serv.getHostName() + " 001 " + this->_nickname + " :Welcome to the Internet Relay Network " + this->_fullRef + "\n");
 }
 
 void	User::updateFullRef(void)
 {
-	this->_fullRef = this->_nickname + "!" + this->_username + "@" + this->_serv.getConfig().getServerName();
+	this->_fullRef = this->_nickname + "!" + this->_username + "@" + this->_serv.getServerName();
 }
 
 
@@ -102,14 +109,15 @@ const std::string	&User::getFullRef(void) const
 	return (this->_fullRef);
 }
 
-const bool			&User::getRegistered(void) const
+const bool			User::getRegistered(void) const
 {
-	return (this->_registered);
+	return (this->_status & STAT_REG);
 }
 
-const bool			&User::getPassword(void) const
+const bool			User::getPassword(void) const
 {
-	return (this->_password);
+	return (this->_status & STAT_REG_PASS);
+
 }
 
 
@@ -124,15 +132,29 @@ void				User::setUsername(const std::string &username)
 void				User::setNickname(const std::string &nickname)
 {
 	this->_nickname = nickname;
+	this->_status |= STAT_REG_NICK;
 	this->updateFullRef();
 }
 
 void				User::setRegistered(const bool &registered)
 {
-	this->_registered = registered;
+	if (registered)
+		this->_status |= STAT_REG;
 }
 
 void				User::setPassword(const bool &password)
 {
-	this->_password = password;
+	if (password)
+		this->_status |= STAT_REG_PASS;
 }
+
+void				User::capStart(void)
+{
+	this->_status |= STAT_CAP_START;
+}
+
+void				User::capEnd(void)
+{
+	this->_status |= STAT_CAP_END;
+}
+

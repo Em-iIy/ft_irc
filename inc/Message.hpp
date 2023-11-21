@@ -13,11 +13,12 @@ private:
 	pollfdIt						_it;
 	std::string						_command;
 	std::string						_param;
-	const std::vector<std::string>	_allCommands{"PASS", "NICK", "USER", "QUIT", "PING"};
+	const std::vector<std::string>	_allCommands{"CAP", "PASS", "NICK", "USER", "QUIT", "PING"};
 	std::string						_response;
 
 	void	_respondUser(void);
 	void	_checkCommand(void);
+	void	_CAP(void);
 	void	_PASS(void);
 	void	_NICK(void);
 	void	_USER(void);

@@ -21,7 +21,7 @@ void	Message::_USER(void)
 		realname[0] != ':'
 		)
 	{
-		this->_response = ":" + this->_server.getConfig().getHostName() + " 461 " + this->_command + " :Not enough parameters\n";
+		this->_response = ":" + this->_server.getHostName() + " 461 " + this->_command + " :Not enough parameters\n";
 		this->_respondUser();
 		return ;
 	}
@@ -29,7 +29,7 @@ void	Message::_USER(void)
 	if (this->_user.getRegistered())
 	{
 		// 462		ERR_ALREADYREGISTRED
-		this->_response = ":" + this->_server.getConfig().getHostName() + " 462 :You may not reregister\n";
+		this->_response = ":" + this->_server.getHostName() + " 462 :You may not reregister\n";
 		this->_respondUser();
 		return ;
 	}
