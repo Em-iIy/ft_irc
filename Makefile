@@ -78,4 +78,8 @@ re: fclean all
 lines:
 	wc -l main.cpp src/*.cpp src/cmds/*.cpp inc/*.hpp
 
-.PHONY: all clean fclean re lines
+test: tests/testConn.cpp
+	g++ tests/testConn.cpp -o testConn && ./testConn
+	rm -f testConn
+
+.PHONY: all clean fclean re lines test
