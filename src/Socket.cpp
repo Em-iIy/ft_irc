@@ -87,5 +87,10 @@ sockfd_t	Socket::Accept(void)
 
 void		Socket::Send(const sockfd_t &fd, const std::string &msg)
 {
-	send(fd, msg.c_str(), msg.length(), 0);
+	size_t bSent = send(fd, msg.c_str(), msg.length(), MSG_NOSIGNAL);
+	if (bSent < 0)
+	{
+		perror("send");
+		throw std::runtime_error("send: fail");
+	}
 }

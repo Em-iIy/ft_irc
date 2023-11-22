@@ -132,7 +132,7 @@ bool	Server::_checkDc(int bRead, pollfdIt it)
 	// Set the user for disconnection
 	User	&user = this->_getUser(it->fd);
 	if (user.getRegistered())
-		this->broadcastMsg(":" + user.getFullRef() + " QUIT :Client Quit\n");
+		this->broadcastMsg(":" + user.getFullRef() + " QUIT :User disconnected\n");
 	this->_dcPfds.push_back(*it);
 	return (true);
 }
@@ -157,10 +157,16 @@ void	Server::_disconnectPfds(void)
 
 void	Server::_acceptConn(void)
 {
-	pollfd	newSock = initPFD(this->_sock.Accept());
-
-	if (newSock.fd < 0)
-		throw std::runtime_error("Accept");
+	pollfd newSock;
+	try
+	{
+		newSock = initPFD(this->_sock.Accept());
+	}
+	catch(...)
+	{
+		std::cout << "Couldn't connect user" << std::endl;
+		return ;
+	}
 	User	*newUser = new User(*this, newSock);
 	// add fd to newPfds
 	this->_newPfds.push_back(newSock);
@@ -290,12 +296,10 @@ const std::string	&Server::getVersion(void) const
 	return (this->_config.getVersion());
 }
 
-
 Socket	&Server::getSocket(void)
 {
 	return (this->_sock);
 }
-
 
 std::vector<std::string> 	&Server::getNicknames(void)
 {

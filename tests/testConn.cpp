@@ -41,7 +41,7 @@ void* connect_to_server(void* arg) {
     ssize_t bytes_sent = send(client_socket, message.c_str(), message.length(), 0);
     if (bytes_sent == -1)
         perror("Error sending message");
-	sleep(60); // ctrl + c here stops the server (related to sending messages on disconnect)
+	sleep(60); // ctrl + c here stops the server (fixed)
 	message = "QUIT :Disconnected\r\n";
     bytes_sent = send(client_socket, message.c_str(), message.length(), 0);
     if (bytes_sent == -1)
