@@ -45,7 +45,7 @@ void	Message::_checkCommand(void)
 	if (it == this->_allCommands.end()) // Check if the command was found
 	{
 		// 421		ERR_UNKNOWNCOMMAND
-		this->_response = ":" + this->_server.getHostName() + " 421 " + this->_command + " :Unknown command\n";
+		this->_response = ":" + this->_server.getServerName() + " 421 " + this->_command + " :Unknown command\n";
 		this->_respondUser();
 		return ;
 	}

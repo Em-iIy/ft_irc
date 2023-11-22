@@ -62,6 +62,7 @@ public:
 
 	const Config		&getConfig(void) const;
 	const std::string	&getHostName(void) const;
+	const std::string	&getStartDate(void) const;
 	const std::string	&getServerName(void) const;
 	const std::string	&getVersion(void) const;
 	Socket				&getSocket(void);

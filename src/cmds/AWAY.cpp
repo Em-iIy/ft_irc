@@ -12,12 +12,12 @@ void	Message::_AWAY(void)
 	{
 		this->_user.rmMode(UMODE_A);
 		// 305		RPL_UNAWAY
-		this->_response = ":" + this->_server.getHostName() + " 305 :You are no longer marked as being away\n";
+		this->_response = ":" + this->_server.getServerName() + " 305 :You are no longer marked as being away\n";
 		this->_respondUser();
 		return ;
 	}
 	this->_user.addMode(UMODE_A);
 	// 306		RPL_NOWAWAY
-	this->_response = ":" + this->_server.getHostName() + " 306 :You have been marked as being away\n";
+	this->_response = ":" + this->_server.getServerName() + " 306 :You have been marked as being away\n";
 	this->_respondUser();
 }

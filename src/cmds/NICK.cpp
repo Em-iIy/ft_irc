@@ -35,21 +35,21 @@ void	Message::_NICK(void)
 	if (nick == "")
 	{
 		// 431 ERR_NONICKNAMEGIVEN
-		this->_response = ":" + this->_server.getHostName() + " 431 :No nickname given\n";
+		this->_response = ":" + this->_server.getServerName() + " 431 :No nickname given\n";
 		this->_respondUser();
 		return ;
 	}
 	if (!checkNickChars(nick))
 	{
 		// 432 ERR_ERRONEUSNICKNAME
-		this->_response = ":" + this->_server.getHostName() + " 432 " + nick + " :Erroneus nickname\n";
+		this->_response = ":" + this->_server.getServerName() + " 432 " + nick + " :Erroneus nickname\n";
 		this->_respondUser();
 		return ;
 	}
 	if (this->_server.checkNickname(nick) == true)
 	{
 		// 433 ERR_NICKNAMEINUSE
-		this->_response = ":" + this->_server.getHostName() + " 433 " + nick + " :Nickname is already in use\n";
+		this->_response = ":" + this->_server.getServerName() + " 433 " + nick + " :Nickname is already in use\n";
 		this->_respondUser();
 		return ;
 	}

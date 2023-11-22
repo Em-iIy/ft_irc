@@ -275,6 +275,11 @@ const std::string	&Server::getHostName(void) const
 	return (this->_config.getHostName());
 }
 
+const std::string	&Server::getStartDate(void) const
+{
+	return (this->_config.getDate());
+}
+
 const std::string	&Server::getServerName(void) const
 {
 	return (this->_config.getServerName());

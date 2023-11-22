@@ -5,14 +5,14 @@ void	Message::_USER_MODE(std::string &target, std::string &mode)
 	if (target.length() > 9 || target != this->_user.getNickname())
 	{
 		// 502		ERR_USERSDONTMATCH
-		this->_response = ":" + this->_server.getHostName() + " 502 :Cannot change mode for other users\n";
+		this->_response = ":" + this->_server.getServerName() + " 502 :Cannot change mode for other users\n";
 		this->_respondUser();
 		return ;
 	}
 	if (mode.length() == 0)
 	{
 		// 221		RPL_UMODEIS
-		this->_response = ":" + this->_server.getHostName() + " 221 " + target + " :" + umodeToStr(this->_user.getMode()) + "\n";
+		this->_response = ":" + this->_server.getServerName() + " 221 " + target + " :" + umodeToStr(this->_user.getMode()) + "\n";
 		this->_respondUser();
 		return ;
 	}
@@ -43,13 +43,13 @@ void	Message::_USER_MODE(std::string &target, std::string &mode)
 		else
 			throw std::exception();
 		// 221		RPL_UMODEIS
-		this->_response = ":" + this->_server.getHostName() + " 221 " + target + " :" + umodeToStr(this->_user.getMode()) + "\n";
+		this->_response = ":" + this->_server.getServerName() + " 221 " + target + " :" + umodeToStr(this->_user.getMode()) + "\n";
 		this->_respondUser();
 	}
 	catch(...)
 	{
 		// 501		ERR_UMODEUNKNOWNFLAG
-		this->_response = ":" + this->_server.getHostName() + " 501 :Unknown MODE flag\n";
+		this->_response = ":" + this->_server.getServerName() + " 501 :Unknown MODE flag\n";
 		this->_respondUser();
 		return ;
 	}
@@ -71,7 +71,7 @@ void	Message::_MODE(void)
 	if (this->_param == "")
 	{
 		// 461		ERR_NEEDMOREPARAMS
-		this->_response = ":" + this->_server.getHostName() + " 461 " + this->_command + " :Not enough parameters\n";
+		this->_response = ":" + this->_server.getServerName() + " 461 " + this->_command + " :Not enough parameters\n";
 		this->_respondUser();
 		return ;
 	}

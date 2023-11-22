@@ -1,6 +1,8 @@
 #include "Config.hpp"
+#include "utils.hpp"
 #include <limits.h>
 #include <unistd.h>
+
 
 Config::Config()
 {
@@ -15,6 +17,7 @@ Config::Config()
 		this->_hostName = "default";
 	#endif
 	this->_serverName = "cc.tv"; // Codam Chat tv :)
+	this->_date = date();
 	this->_version = "0.2";
 }
 
@@ -33,6 +36,11 @@ const std::string	&Config::getHostName(void) const
 	return (this->_hostName);
 }
 
+const std::string	&Config::getDate(void) const
+{
+	return (this->_date);
+}
+
 const std::string	&Config::getVersion(void) const
 {
 	return (this->_version);
@@ -49,6 +57,11 @@ void				Config::setServerName(const std::string &serverName)
 void				Config::setHostName(const std::string &hostName)
 {
 	this->_hostName = hostName;
+}
+
+void				Config::setDate(const std::string &date)
+{
+	this->_date = date;
 }
 
 void				Config::setVersion(const std::string &version)

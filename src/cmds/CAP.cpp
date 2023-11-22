@@ -9,7 +9,7 @@ void	Message::_CAP(void)
 	if (this->_param == "")
 	{
 		// 461		ERR_NEEDMOREPARAMS
-		this->_response = ":" + this->_server.getHostName() + " 461 " + this->_command + " :Not enough parameters\n";
+		this->_response = ":" + this->_server.getServerName() + " 461 " + this->_command + " :Not enough parameters\n";
 		this->_respondUser();
 		return ;
 	}
@@ -32,7 +32,7 @@ void	Message::_CAP(void)
 		param != "LIST")
 	{
 		// 410		ERR_INVALIDCAPCMD
-		this->_response = ":" + this->_server.getHostName() + " 410 ";
+		this->_response = ":" + this->_server.getServerName() + " 410 ";
 		if (this->_user.getRegistered())
 			this->_response += this->_user.getNickname() + " "; 
 		this->_response += param + " :Invalid CAP command\n";

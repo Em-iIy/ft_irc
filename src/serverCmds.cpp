@@ -65,7 +65,7 @@ static void	broadcast(std::string &param, Server &serv)
 {
 	std::string msg;
 
-	msg = ":server NOTICE all :" + param + "\n";
+	msg = ":" + serv.getServerName() + " NOTICE all :" + param + "\n";
 	serv.broadcastMsg(msg);
 }
 
@@ -90,7 +90,7 @@ void	serverCmd(std::string cmd, Server &serv)
 			nicks(serv);
 			return ;
 		}
-		if (cmd == "STOP")
+		if (cmd == "QUIT")
 		{
 			serv.Stop();
 			return ;

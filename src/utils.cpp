@@ -1,6 +1,7 @@
 #include "utils.hpp"
+#include <ctime>
 
-// removes trailing \r\n from strings
+// Removes trailing \r\n from strings
 void	rmCRLF(std::string &str)
 {
 	size_t CRLF = str.find_last_not_of("\r\n");
@@ -10,6 +11,7 @@ void	rmCRLF(std::string &str)
 	str.erase(CRLF + 1);
 }
 
+// Initializes pollfd struct to the default settings
 pollfd	initPFD(sockfd_t fd)
 {
 	pollfd ret;
@@ -18,6 +20,7 @@ pollfd	initPFD(sockfd_t fd)
 	return (ret);
 }
 
+// Converts a mode character to the corresponding enum value
 umode_e	cToUmode(char c)
 {
 	switch (c)
@@ -41,6 +44,7 @@ umode_e	cToUmode(char c)
 	}
 }
 
+// Converts a mode to a string with all the set modes
 std::string	umodeToStr(const umode_t mode)
 {
 	std::string	ret = "";
@@ -63,4 +67,24 @@ std::string	umodeToStr(const umode_t mode)
 	if (mode & UMODE_S)
 		ret += "s";
 	return (ret);
+}
+
+// Returns a date as a string formatted "Day Month DD YYYY"
+std::string	date(void)
+{
+	std::time_t now = std::time(NULL);
+	char	temp[32];
+
+	std::strftime(temp, sizeof(temp), "%a %b %d %Y", std::localtime(&now));
+	return (temp);
+}
+
+// Returns a time as a string formatted "HH:MM:SS"
+std::string	time(void)
+{
+	std::time_t now = std::time(NULL);
+	char	temp[9];
+
+	std::strftime(temp, sizeof(temp), "%H:%M:%S", std::localtime(&now));
+	return (temp);
 }
