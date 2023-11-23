@@ -37,7 +37,9 @@ public:
 	void	checkRegister(void);
 
 
-	const int			getFd(void) const;
+	const int			&getFd(void) const;
+	std::string			getIP(void) const;
+	int					getPort(void) const;
 	const std::string	&getUsername(void) const;
 	const std::string	&getNickname(void) const;
 	const std::string	&getHostname(void) const;
@@ -45,10 +47,10 @@ public:
 	const std::string	&getRealname(void) const;
 	const std::string	&getFullRef(void) const;
 	const std::string	&getAwayMsg(void) const;
-	const bool			getRegistered(void) const;
-	const bool			getPassword(void) const;
+	bool				getRegistered(void) const;
+	bool				getPassword(void) const;
 	const umode_t		&getMode(void) const;
-	const bool			checkMode(umode_t mode) const;
+	bool				checkMode(umode_t mode) const;
 
 	void				setUsername(const std::string &username);
 	void				setNickname(const std::string &nickname);

@@ -6,7 +6,7 @@
 #include <exception>
 
 
-Message::Message(std::string &msg, User &user, pollfdIt &it, Server &server) : _user(user), _it(it), _server(server)
+Message::Message(std::string &msg, User &user, pollfdIt &it, Server &server) : _user(user), _server(server), _it(it)
 {
 	this->parseMsg(msg);
 	
@@ -48,6 +48,8 @@ cmd_e	Message::_checkCommand(void)
 		return (CMD_AWAY);
 	if (this->_command == "NICK")
 		return (CMD_NICK);
+	if (this->_command == "version")
+		return (CMD_VERSION);
 	if (this->_command == "USER")
 		return (CMD_USER);
 	if (this->_command == "PASS")
@@ -90,6 +92,9 @@ void	Message::_runCommand(void)
 		break ;
 	case CMD_USER:
 		this->_USER();
+		break ;
+	case CMD_VERSION:
+		this->_VERSION();
 		break ;
 	default:
 		break;

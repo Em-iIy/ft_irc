@@ -83,9 +83,7 @@ std::pair<sockfd_t, sockaddr_in>	Socket::Accept(void)
 		throw std::runtime_error("accept: fail");
 	}
 	ret.second = this->_addr;
-	uint32_t address = this->_addr.sin_addr.s_addr;
 	std::cout << inet_ntoa(this->_addr.sin_addr) << ":" << this->_addr.sin_port << std::endl;
-	// std::cout << ((address >> 24) & 0xff) << "." << ((address >> 16) & 0xff) << "." << ((address >> 8) & 0xff) << "." << ((address) & 0xff) 
 	return (ret);
 }
 

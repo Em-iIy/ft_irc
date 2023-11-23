@@ -13,13 +13,15 @@ void	Log::init(const std::string &filename)
 {
 	std::string	fname = filename + ".log";
 	// Open the file
-	this->_file.open(fname);
-	if (!this->_file.is_open())
-	{
-		std::string	error = "Error: Logfile " + std::string(fname) + " could not be opened";
-		throw std::runtime_error(error);
-	}
-	this->_init = true;
+	#ifdef LOG_MODE
+		this->_file.open(fname);
+		if (!this->_file.is_open())
+		{
+			std::string	error = "Error: Logfile " + std::string(fname) + " could not be opened";
+			throw std::runtime_error(error);
+		}
+		this->_init = true;
+	#endif
 }
 
 Log::~Log(void)

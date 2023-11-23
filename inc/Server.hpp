@@ -65,6 +65,8 @@ public:
 	const std::string	&getStartDate(void) const;
 	const std::string	&getServerName(void) const;
 	const std::string	&getVersion(void) const;
+	const std::string	&getDebug(void) const;
+	const std::string	&getComments(void) const;
 	Socket				&getSocket(void);
 
 	std::vector<std::string> 	&getNicknames(void);

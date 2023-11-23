@@ -6,11 +6,19 @@
 #include <pthread.h>
 #include <iostream>
 
+#ifndef PASSWORD
+	#define PASSWORD "hi"
+#endif
+
+#ifndef PORT
+	#define PORT 6667
+#endif
+
 void* connect_to_server(void* arg) {
     const char* server_ip = "127.0.0.1";
-    const int server_port = 6667;
+    const int server_port = PORT;
 	int i = *(int *)arg + 5;
-    std::string message = "PASS hi\r\nNICK " + std::to_string(i) + "\r\nUSER a a a :a\r\n";
+    std::string message = "PASS " + std::string(PASSWORD) + "\r\nNICK " + std::to_string(i) + "\r\nUSER a a a :a\r\n";
 
     // Create a socket
     int client_socket = socket(AF_INET, SOCK_STREAM, 0);

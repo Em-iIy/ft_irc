@@ -4,6 +4,8 @@ std::ostream	&operator<<(std::ostream &o, const User &rhs)
 {
 	o << "User #" << rhs.getFd() << " - " << rhs.getNickname() <<  ":" << std::endl;
 	o << "Fd:\t\t" << rhs.getFd() << std::endl;
+	o << "IP:\t\t" << rhs.getIP() << std::endl;
+	o << "Port:\t\t" << rhs.getPort() << std::endl;
 	o << "Nickname:\t" << rhs.getNickname() << std::endl;
 	o << "Username:\t" << rhs.getUsername() << std::endl;
 	o << "Hostname:\t" << rhs.getHostname() << std::endl;
@@ -80,10 +82,21 @@ void	User::updateFullRef(void)
 
 
 // Getters
-const int User::getFd(void) const
+const int &User::getFd(void) const
 {
 	return (this->_fd.fd);
 }
+
+std::string	User::getIP(void) const
+{
+	return (inet_ntoa(this->_sock.sin_addr));
+}
+
+int	User::getPort(void) const
+{
+	return (this->_sock.sin_port);
+}
+
 
 const std::string	&User::getUsername(void) const
 {
@@ -120,12 +133,12 @@ const std::string	&User::getAwayMsg(void) const
 	return (this->_awayMsg);
 }
 
-const bool			User::getRegistered(void) const
+bool			User::getRegistered(void) const
 {
 	return (this->_status & STAT_REG);
 }
 
-const bool			User::getPassword(void) const
+bool			User::getPassword(void) const
 {
 	return (this->_status & STAT_REG_PASS);
 
@@ -136,7 +149,7 @@ const umode_t	&User::getMode(void) const
 	return (this->_mode);
 }
 
-const bool			User::checkMode(umode_t mode) const
+bool			User::checkMode(umode_t mode) const
 {
 	return (this->_mode & mode);
 }

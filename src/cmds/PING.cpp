@@ -24,6 +24,7 @@ void	Message::_PING(void)
 	}
 	if (dst != this->_server.getServerName())
 	{
+		// 402		ERR_NOSUCHSERVER
 		this->_response = ":" + this->_server.getServerName() + " 402 " + dst + " :No such server\n";
 		this->_respondUser();
 		return ;

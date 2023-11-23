@@ -19,6 +19,12 @@ Config::Config()
 	this->_serverName = "cc.tv"; // Codam Chat tv :)
 	this->_date = date();
 	this->_version = "0.2";
+	this->_comments = "This version number is arbitrary";
+	#ifdef DEBUG_MODE
+		this->_debug = DEBUG_MODE;
+	#else
+		this->_debug = "0";
+	#endif
 }
 
 Config::~Config()
@@ -46,6 +52,16 @@ const std::string	&Config::getVersion(void) const
 	return (this->_version);
 }
 
+const std::string	&Config::getDebug(void) const
+{
+	return (this->_debug);
+}
+
+const std::string	&Config::getComments(void) const
+{
+	return (this->_comments);
+}
+
 
 
 // Setters
@@ -67,4 +83,14 @@ void				Config::setDate(const std::string &date)
 void				Config::setVersion(const std::string &version)
 {
 	this->_version = version;
+}
+
+void				Config::setDebug(const std::string &debug)
+{
+	this->_debug = debug;
+}
+
+void				Config::setComments(const std::string &comments)
+{
+	this->_comments = comments;
 }

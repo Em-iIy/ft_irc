@@ -19,7 +19,7 @@ enum	status_e {
 	STAT_REG		= 0x04,
 	STAT_REG_PASS	= 0x08,
 	STAT_REG_NICK	= 0x10,
-	STAT_REG_USER	= 0x20
+	STAT_REG_USER	= 0x20,
 };
 
 enum	umode_e {
@@ -42,7 +42,8 @@ enum	cmd_e {
 	CMD_PASS,
 	CMD_PING,
 	CMD_QUIT,
-	CMD_USER
+	CMD_USER,
+	CMD_VERSION,
 };
 
 // Types
@@ -52,4 +53,8 @@ typedef int umode_t;
 typedef std::vector<pollfd>::iterator pollfdIt;
 
 // Macros
-#define DEBUG(x) std::cout << "User #" << x << " " << __func__ << " " << __FILE__ << ":" << __LINE__ << std::endl
+#ifdef DEBUG_MODE
+	#define DEBUG(x) std::cout << "User #" << x << " " << __func__ << " " << __FILE__ << ":" << __LINE__ << std::endl
+#else
+	#define DEBUG(x)
+#endif

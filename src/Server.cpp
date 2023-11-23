@@ -298,6 +298,16 @@ const std::string	&Server::getVersion(void) const
 	return (this->_config.getVersion());
 }
 
+const std::string	&Server::getDebug(void) const
+{
+	return (this->_config.getDebug());
+}
+
+const std::string	&Server::getComments(void) const
+{
+	return (this->_config.getComments());
+}
+
 Socket	&Server::getSocket(void)
 {
 	return (this->_sock);

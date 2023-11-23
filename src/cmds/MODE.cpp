@@ -61,7 +61,7 @@ void	Message::_USER_MODE(std::string &target, std::string &mode)
 
 void	Message::_CHANNEL_MODE(std::string &target, std::string &mode)
 {
-	std::cout << "Channels not yet implemented >:(" << std::endl;
+	std::cout << target << " " << mode << " Channels not yet implemented >:(" << std::endl;
 }
 
 
