@@ -49,8 +49,10 @@ cmd_e	Message::_checkCommand(void)
 		return (CMD_AWAY);
 	if (this->_command == "NICK")
 		return (CMD_NICK);
-	if (this->_command == "version")
+	if (this->_command == "VERSION")
 		return (CMD_VERSION);
+	if (this->_command == "ISON")
+		return (CMD_ISON);
 	if (this->_command == "USER")
 		return (CMD_USER);
 	if (this->_command == "PASS")
@@ -75,6 +77,9 @@ void	Message::_runCommand(void)
 		break ;
 	case CMD_CAP:
 		this->_CAP();
+		break ;
+	case CMD_ISON:
+		this->_ISON();
 		break ;
 	case CMD_MODE:
 		this->_MODE();

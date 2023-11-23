@@ -26,6 +26,7 @@ private:
 
 	void	_AWAY(void);
 	void	_CAP(void);
+	void	_ISON(void);
 	void	_MODE(void);
 	void	_NICK(void);
 	void	_PASS(void);

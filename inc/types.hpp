@@ -37,6 +37,7 @@ enum	cmd_e {
 	CMD_NOT_FOUND,
 	CMD_AWAY,
 	CMD_CAP,
+	CMD_ISON,
 	CMD_MODE,
 	CMD_NICK,
 	CMD_PASS,

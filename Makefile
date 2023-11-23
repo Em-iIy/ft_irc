@@ -17,6 +17,7 @@ FILES_SRCS =	main.cpp \
 				Message.cpp \
 				AWAY.cpp \
 				CAP.cpp \
+				ISON.cpp \
 				MODE.cpp \
 				NICK.cpp \
 				PASS.cpp \
