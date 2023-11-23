@@ -33,6 +33,18 @@ enum	umode_e {
 	UMODE_S			= 0x40,
 };
 
+enum	cmd_e {
+	CMD_NOT_FOUND,
+	CMD_AWAY,
+	CMD_CAP,
+	CMD_MODE,
+	CMD_NICK,
+	CMD_PASS,
+	CMD_PING,
+	CMD_QUIT,
+	CMD_USER
+};
+
 // Types
 typedef int sockfd_t;
 typedef int status_t;

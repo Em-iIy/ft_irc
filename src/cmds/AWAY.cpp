@@ -2,6 +2,9 @@
 
 void	Message::_AWAY(void)
 {
+	// Must be registered to use this command
+	if (this->_user.getRegistered() == false)
+		return ;
 	if (this->_param != "")
 	{
 		if (this->_param[0] == ':')

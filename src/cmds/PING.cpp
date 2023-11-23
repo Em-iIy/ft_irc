@@ -2,6 +2,10 @@
 
 void	Message::_PING(void)
 {
+	// Must be registered to use this command
+	if (this->_user.getRegistered() == false)
+		return ;
+		
 	std::string	dst;
 	std::string	msg;
 	size_t		colon;

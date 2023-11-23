@@ -28,6 +28,8 @@ static bool	checkNickChars(std::string &nick)
 
 void	Message::_NICK(void)
 {
+	if (this->_user.getPassword() == false)
+		return ;
 	std::stringstream	param(this->_param);
 	std::string			nick;
 	

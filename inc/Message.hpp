@@ -18,7 +18,8 @@ private:
 	std::string						_response;
 
 	void	_respondUser(void);
-	void	_checkCommand(void);
+	cmd_e	_checkCommand(void);
+	void	_runCommand(void);
 
 	void	_USER_MODE(std::string &target, std::string &mode);
 	void	_CHANNEL_MODE(std::string &target, std::string &mode);

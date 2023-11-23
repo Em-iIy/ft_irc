@@ -3,6 +3,8 @@
 
 void	Message::_USER(void)
 {
+	if (this->_user.getPassword() == false)
+		return ;
 	std::stringstream	param(this->_param);
 	std::string	username;
 	std::string	hostname;

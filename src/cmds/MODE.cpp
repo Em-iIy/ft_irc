@@ -2,6 +2,9 @@
 
 void	Message::_USER_MODE(std::string &target, std::string &mode)
 {
+	// Must be registered to use this command
+	if (this->_user.getRegistered() == false)
+		return ;
 	if (target.length() > 9 || target != this->_user.getNickname())
 	{
 		// 502		ERR_USERSDONTMATCH

@@ -30,7 +30,7 @@ void	Message::parseMsg(std::string &msg)
 	std::getline(input, this->_command, ' ');
 	std::getline(input, this->_param);
 	// Check and execute the command
-	this->_checkCommand();
+	this->_runCommand();
 }
 
 void	Message::_respondUser(void)
@@ -38,61 +38,60 @@ void	Message::_respondUser(void)
 	this->_user.toSend.push_back(this->_response);
 }
 
-void	Message::_checkCommand(void)
+cmd_e	Message::_checkCommand(void)
 {
-	std::vector<std::string>::const_iterator	it = std::find(this->_allCommands.begin(), this->_allCommands.end(), this->_command);
+	if (this->_command == "PING")
+		return (CMD_PING);
+	if (this->_command == "MODE")
+		return (CMD_MODE);
+	if (this->_command == "AWAY")
+		return (CMD_AWAY);
+	if (this->_command == "NICK")
+		return (CMD_NICK);
+	if (this->_command == "USER")
+		return (CMD_USER);
+	if (this->_command == "PASS")
+		return (CMD_PASS);
+	if (this->_command == "CAP")
+		return (CMD_CAP);
+	if (this->_command == "QUIT")
+		return (CMD_QUIT);
+	return (CMD_NOT_FOUND);
+}
 
-	if (it == this->_allCommands.end()) // Check if the command was found
+void	Message::_runCommand(void)
+{
+	switch (this->_checkCommand())
 	{
-		// 421		ERR_UNKNOWNCOMMAND
+	case CMD_NOT_FOUND:
 		this->_response = ":" + this->_server.getServerName() + " 421 " + this->_command + " :Unknown command\n";
 		this->_respondUser();
-		return ;
-	}
-	if (*it == "CAP")
-	{
-		this->_CAP();
-		return ;
-	}
-	if (*it == "QUIT")
-	{
-		this->_QUIT();
-		return ;
-	}
-	if (*it == "PASS")
-	{
-		this->_PASS();
-		return ;
-	}
-	// Must have a correct password to use any other commands
-	if (this->_user.getPassword() == false)
-		return ;
-	if (*it == "NICK")
-	{
-		this->_NICK();
-		return ;
-	}
-	if (*it == "USER")
-	{
-		this->_USER();
-		return ;
-	}
-	// Must be registered to use any other commands
-	if (this->_user.getRegistered() == false)
-		return ;
-	if (*it == "PING")
-	{
-		this->_PING();
-		return ;
-	}
-	if (*it == "MODE")
-	{
-		this->_MODE();
-		return ;
-	}
-	if (*it == "AWAY")
-	{
+		break ;
+	case CMD_AWAY:
 		this->_AWAY();
-		return ;
+		break ;
+	case CMD_CAP:
+		this->_CAP();
+		break ;
+	case CMD_MODE:
+		this->_MODE();
+		break ;
+	case CMD_NICK:
+		this->_NICK();
+		break ;
+	case CMD_PASS:
+		this->_PASS();
+		break ;
+	case CMD_PING:
+		this->_PING();
+		break ;
+	case CMD_QUIT:
+		this->_QUIT();
+		break ;
+	case CMD_USER:
+		this->_USER();
+		break ;
+	default:
+		break;
 	}
 }
