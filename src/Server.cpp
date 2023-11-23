@@ -42,7 +42,7 @@ Server::~Server()
 	// Loop through all user pfds
 	for (pollfdIt it = this->_pfds.begin() + 2; it != this->_pfds.end(); it++)
 	{
-		this->_sock.Send(it->fd, ":" + this->getServerName() + " NOTICE all :Goodbye! o/ (Server turned off)\n");
+		this->_sock.Send(it->fd, ":" + this->getServerName() + " NOTICE all :Goodbye! o/ (Server turned off)\r\n");
 		delete &this->_getUser(it->fd);
 	}
 }
@@ -132,7 +132,7 @@ bool	Server::_checkDc(int bRead, pollfdIt it)
 	// Set the user for disconnection
 	User	&user = this->_getUser(it->fd);
 	if (user.getRegistered())
-		this->broadcastMsg(":" + user.getFullRef() + " QUIT :User disconnected\n");
+		this->broadcastMsg(":" + user.getFullRef() + " QUIT :User disconnected\r\n");
 	this->_dcPfds.push_back(*it);
 	return (true);
 }

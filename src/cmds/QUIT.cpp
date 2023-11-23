@@ -11,7 +11,7 @@ void	Message::_QUIT(void)
 			this->_response += this->_param;
 		else
 			this->_response += ":Client Quit";
-		this->_response += "\n";
+		this->_response += "\r\n";
 		this->_server.broadcastMsg(this->_response);
 	}
 	// Set the user for disconnection

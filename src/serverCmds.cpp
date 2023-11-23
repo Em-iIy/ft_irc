@@ -65,7 +65,7 @@ static void	broadcast(std::string &param, Server &serv)
 {
 	std::string msg;
 
-	msg = ":" + serv.getServerName() + " NOTICE all :" + param + "\n";
+	msg = ":" + serv.getServerName() + " NOTICE all :" + param + "\r\n";
 	serv.broadcastMsg(msg);
 }
 

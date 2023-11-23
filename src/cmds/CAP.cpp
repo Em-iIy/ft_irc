@@ -9,7 +9,7 @@ void	Message::_CAP(void)
 	if (this->_param == "")
 	{
 		// 461		ERR_NEEDMOREPARAMS
-		this->_response = ":" + this->_server.getServerName() + " 461 " + this->_command + " :Not enough parameters\n";
+		this->_response = ":" + this->_server.getServerName() + " 461 " + this->_command + " :Not enough parameters\r\n";
 		this->_respondUser();
 		return ;
 	}
@@ -35,13 +35,13 @@ void	Message::_CAP(void)
 		this->_response = ":" + this->_server.getServerName() + " 410 ";
 		if (this->_user.getRegistered())
 			this->_response += this->_user.getNickname() + " "; 
-		this->_response += param + " :Invalid CAP command\n";
+		this->_response += param + " :Invalid CAP command\r\n";
 		this->_respondUser();
 		return ;
 	}
 	// User has started capabilities negotiations
 	this->_user.capStart();
 	// Respond that no capabilities are supported
-	this->_response = "CAP * " + param + "\n";
+	this->_response = "CAP * " + param + "\r\n";
 	this->_respondUser();
 }

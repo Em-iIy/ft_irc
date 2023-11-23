@@ -67,10 +67,10 @@ void	User::checkRegister(void)
 	if (!(this->_status & STAT_REG_USER))
 		return ;
 	this->_status |= STAT_REG;
-	this->toSend.push_back(":" + this->_serv.getServerName() + " 001 " + this->_nickname + " :Welcome to the Codam Chat Network " + this->_fullRef + "\n");
-	this->toSend.push_back(":" + this->_serv.getServerName() + " 002 " + this->_nickname + " :Your host is " + this->_serv.getServerName() + ", running version " + this->_serv.getVersion() + "\n");
-	this->toSend.push_back(":" + this->_serv.getServerName() + " 003 " + this->_nickname + " :This server was created " + this->_serv.getStartDate() + "\n");
-	this->toSend.push_back(":" + this->_serv.getServerName() + " 004 " + this->_nickname + " "  + this->_serv.getServerName() + " " + this->_serv.getVersion() + " aoOirw itkol" + "\n"); // <user modes> <channel modes>
+	this->toSend.push_back(":" + this->_serv.getServerName() + " 001 " + this->_nickname + " :Welcome to the Codam Chat Network " + this->_fullRef + "\r\n");
+	this->toSend.push_back(":" + this->_serv.getServerName() + " 002 " + this->_nickname + " :Your host is " + this->_serv.getServerName() + ", running version " + this->_serv.getVersion() + "\r\n");
+	this->toSend.push_back(":" + this->_serv.getServerName() + " 003 " + this->_nickname + " :This server was created " + this->_serv.getStartDate() + "\r\n");
+	this->toSend.push_back(":" + this->_serv.getServerName() + " 004 " + this->_nickname + " "  + this->_serv.getServerName() + " " + this->_serv.getVersion() + " aoOirw itkol" + "\r\n"); // <user modes> <channel modes>
 }
 
 void	User::updateFullRef(void)

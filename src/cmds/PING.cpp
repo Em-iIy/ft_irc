@@ -25,11 +25,11 @@ void	Message::_PING(void)
 	if (dst != this->_server.getServerName())
 	{
 		// 402		ERR_NOSUCHSERVER
-		this->_response = ":" + this->_server.getServerName() + " 402 " + dst + " :No such server\n";
+		this->_response = ":" + this->_server.getServerName() + " 402 " + dst + " :No such server\r\n";
 		this->_respondUser();
 		return ;
 	}
-	this->_response = ":" + this->_server.getServerName() + " PONG " + this->_server.getServerName() + " :" + msg + "\n";
+	this->_response = ":" + this->_server.getServerName() + " PONG " + this->_server.getServerName() + " :" + msg + "\r\n";
 	this->_respondUser();
 	return ;
 }
