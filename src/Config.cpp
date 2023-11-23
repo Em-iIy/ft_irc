@@ -9,7 +9,7 @@ Config::Config()
 	#ifdef HOST_NAME
 		this->_hostName = HOST_NAME;
 	#else
-	/* can't do this because it's not an "allowed" function (it's the same thing essentially)
+	/* // Can't do this because it's not an "allowed" function (it's the same thing essentially)
 		char hostname[HOST_NAME_MAX];
 		gethostname(hostname, HOST_NAME_MAX);
 		this->_hostName = hostname;

@@ -42,7 +42,7 @@ Server::~Server()
 	// Loop through all user pfds
 	for (pollfdIt it = this->_pfds.begin() + 2; it != this->_pfds.end(); it++)
 	{
-		this->_sock.Send(it->fd, "Goodbye! o/ (Server turned off)\n");
+		this->_sock.Send(it->fd, ":" + this->getServerName() + " NOTICE all :Goodbye! o/ (Server turned off)\n");
 		delete &this->_getUser(it->fd);
 	}
 }
@@ -157,17 +157,19 @@ void	Server::_disconnectPfds(void)
 
 void	Server::_acceptConn(void)
 {
-	pollfd newSock;
+	std::pair<sockfd_t, sockaddr_in>	newConn;
+	pollfd 								newSock;
 	try
 	{
-		newSock = initPFD(this->_sock.Accept());
+		newConn = this->_sock.Accept();
+		newSock = initPFD(newConn.first);
 	}
 	catch(...)
 	{
 		std::cout << "Couldn't connect user" << std::endl;
 		return ;
 	}
-	User	*newUser = new User(*this, newSock);
+	User	*newUser = new User(*this, newSock, newConn.second);
 	// add fd to newPfds
 	this->_newPfds.push_back(newSock);
 	// add User fd pair to map

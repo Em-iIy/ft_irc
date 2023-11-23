@@ -1,6 +1,7 @@
 #include "Socket.hpp"
 #include <sys/ioctl.h>
 #include <fcntl.h>
+#include <arpa/inet.h>
 
 Socket::Socket(void)
 {
@@ -72,16 +73,19 @@ int	Socket::Listen(uint n)
 	return (ret);
 }
 
-sockfd_t	Socket::Accept(void)
+std::pair<sockfd_t, sockaddr_in>	Socket::Accept(void)
 {
-	sockfd_t	ret = accept(this->_fd, (sockaddr *)&this->_addr, &this->_addrLen);
-	if (ret < 0)
+	std::pair<sockfd_t, sockaddr_in> ret;
+	ret.first = accept(this->_fd, (sockaddr *)&this->_addr, &this->_addrLen);
+	if (ret.first < 0)
 	{
 		perror("accept");
 		throw std::runtime_error("accept: fail");
 	}
+	ret.second = this->_addr;
 	uint32_t address = this->_addr.sin_addr.s_addr;
-	std::cout << ((address >> 24) & 0xf) << "." << ((address >> 16) & 0xf) << "." << ((address >> 8) & 0xf) << "." << ((address) & 0xf) << ":" << this->_addr.sin_port << std::endl;
+	std::cout << inet_ntoa(this->_addr.sin_addr) << ":" << this->_addr.sin_port << std::endl;
+	// std::cout << ((address >> 24) & 0xff) << "." << ((address >> 16) & 0xff) << "." << ((address >> 8) & 0xff) << "." << ((address) & 0xff) 
 	return (ret);
 }
 

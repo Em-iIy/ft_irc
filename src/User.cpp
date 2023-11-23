@@ -14,7 +14,7 @@ std::ostream	&operator<<(std::ostream &o, const User &rhs)
 	return (o);
 }
 
-User::User(Server &serv, pollfd fd): _serv(serv), _fd(fd)
+User::User(Server &serv, pollfd fd, sockaddr_in sock): _serv(serv), _fd(fd), _sock(sock)
 {
 	std::cout << "User #" << this->_fd.fd << " Connected." << std::endl;
 	this->resetBuffer();
@@ -68,12 +68,13 @@ void	User::checkRegister(void)
 	this->toSend.push_back(":" + this->_serv.getServerName() + " 001 " + this->_nickname + " :Welcome to the Codam Chat Network " + this->_fullRef + "\n");
 	this->toSend.push_back(":" + this->_serv.getServerName() + " 002 " + this->_nickname + " :Your host is " + this->_serv.getServerName() + ", running version " + this->_serv.getVersion() + "\n");
 	this->toSend.push_back(":" + this->_serv.getServerName() + " 003 " + this->_nickname + " :This server was created " + this->_serv.getStartDate() + "\n");
-	this->toSend.push_back(":" + this->_serv.getServerName() + " 004 " + this->_nickname + " "  + this->_serv.getServerName() + " " + this->_serv.getVersion() + " aoOirw itkol" + "\n");
+	this->toSend.push_back(":" + this->_serv.getServerName() + " 004 " + this->_nickname + " "  + this->_serv.getServerName() + " " + this->_serv.getVersion() + " aoOirw itkol" + "\n"); // <user modes> <channel modes>
 }
 
 void	User::updateFullRef(void)
 {
 	this->_fullRef = this->_nickname + "!" + this->_username + "@" + this->_serv.getHostName();
+	// this->_fullRef = this->_nickname + "!" + this->_username + "@" + inet_ntoa(this->_sock.sin_addr);
 }
 
 

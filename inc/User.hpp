@@ -12,6 +12,7 @@ class User {
 private:
 	Server						&_serv;
 	pollfd						_fd;
+	sockaddr_in					_sock;
 	std::string					_nickname;
 	std::string					_username;
 	std::string					_hostname;
@@ -27,7 +28,7 @@ public:
 	std::string					buffer;
 	std::vector<std::string> 	toSend;
 
-	User(Server &serv, pollfd fd);
+	User(Server &serv, pollfd fd, sockaddr_in sock);
 	~User();
 	void	resetBuffer(void);
 	void	appendBuffer(std::string msg);
