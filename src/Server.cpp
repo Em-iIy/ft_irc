@@ -98,6 +98,7 @@ void	Server::_pollIn(pollfdIt it)
 	//	loop through the buffer while it can find a \n (think getnextline)
 	while (user.buffer.find("\n") != std::string::npos)
 	{
+		msgLimitSize(user.buffer);
 		std::stringstream	temp(user.buffer);
 		std::string command;
 

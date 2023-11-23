@@ -66,6 +66,7 @@ static void	broadcast(std::string &param, Server &serv)
 	std::string msg;
 
 	msg = ":" + serv.getServerName() + " NOTICE all :" + param + "\r\n";
+	msgLimitSize(msg);
 	serv.broadcastMsg(msg);
 }
 

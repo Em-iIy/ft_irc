@@ -35,6 +35,7 @@ void	Message::parseMsg(std::string &msg)
 
 void	Message::_respondUser(void)
 {
+	msgLimitSize(this->_response);
 	this->_user.toSend.push_back(this->_response);
 }
 

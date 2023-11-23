@@ -11,6 +11,15 @@ void	rmCRLF(std::string &str)
 	str.erase(CRLF + 1);
 }
 
+void	msgLimitSize(std::string &str)
+{
+	if (str.length() > 512)
+	{
+		str.resize(510);
+		str += "\r\n";
+	}
+}
+
 // Initializes pollfd struct to the default settings
 pollfd	initPFD(sockfd_t fd)
 {
