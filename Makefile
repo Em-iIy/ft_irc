@@ -25,6 +25,7 @@ FILES_SRCS =	main.cpp \
 				QUIT.cpp \
 				USER.cpp \
 				VERSION.cpp \
+				WHOIS.cpp \
 
 FILES_OBJS = $(FILES_SRCS:.cpp=.o)
 

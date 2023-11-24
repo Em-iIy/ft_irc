@@ -49,6 +49,8 @@ cmd_e	Message::_checkCommand(void)
 		return (CMD_AWAY);
 	if (this->_command == "NICK")
 		return (CMD_NICK);
+	if (this->_command == "WHOIS")
+		return (CMD_WHOIS);
 	if (this->_command == "VERSION")
 		return (CMD_VERSION);
 	if (this->_command == "ISON")
@@ -101,6 +103,9 @@ void	Message::_runCommand(void)
 		break ;
 	case CMD_VERSION:
 		this->_VERSION();
+		break ;
+	case CMD_WHOIS:
+		this->_WHOIS();
 		break ;
 	default:
 		break;

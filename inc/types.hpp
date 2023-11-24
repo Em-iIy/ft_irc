@@ -45,6 +45,7 @@ enum	cmd_e {
 	CMD_QUIT,
 	CMD_USER,
 	CMD_VERSION,
+	CMD_WHOIS,
 };
 
 // Types

@@ -34,6 +34,7 @@ private:
 	void	_QUIT(void);
 	void	_USER(void);
 	void	_VERSION(void);
+	void	_WHOIS(void);
 
 public:
 	Message(std::string &msg, User &user, pollfdIt &it, Server &server);
