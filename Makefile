@@ -48,7 +48,7 @@ DFLAGS += -DHOST_NAME=$(HOST_NAME)
 
 # ----------------------------------------Flags
 CC = c++
-CFLAGS = -std=c++11
+CFLAGS = -std=c++14
 CFLAGS += -Wall -Wextra -Werror
 # CFLAGS += -g -fsanitize=address
 

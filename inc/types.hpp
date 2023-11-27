@@ -11,6 +11,9 @@ class Log;
 class User;
 class Message;
 
+// Defines
+#define MSG_BUFFERSIZE 512
+
 // Enums
 enum	status_e {
 	STAT_NEW		= 0x00,

@@ -13,10 +13,11 @@ void	rmCRLF(std::string &str)
 
 void	msgLimitSize(std::string &str)
 {
-	if (str.length() > 512)
+	if (str.length() > MSG_BUFFERSIZE)
 	{
-		str.resize(510);
-		str += "\r\n";
+		str.resize(MSG_BUFFERSIZE);
+		str[MSG_BUFFERSIZE - 2] = '\r';
+		str[MSG_BUFFERSIZE - 1] = '\n';
 	}
 }
 

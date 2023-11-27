@@ -67,7 +67,7 @@ void	Server::_pollIn(pollfdIt it)
 {
 	int			fd = it->fd;
 	int			bRead = 1;
-	char 		buffer[512];
+	char 		buffer[MSG_BUFFERSIZE];
 	std::string	msg;
 
 	if (!(it->revents & POLLIN))
@@ -75,7 +75,7 @@ void	Server::_pollIn(pollfdIt it)
 	// Server commands
 	if (fd == STDIN_FILENO)
 	{
-		bRead = read(STDIN_FILENO, buffer, 512 - 1);
+		bRead = read(STDIN_FILENO, buffer, MSG_BUFFERSIZE - 1);
 		buffer[bRead] = '\0';
 		serverCmd(buffer, *this);
 		return ;
@@ -86,7 +86,7 @@ void	Server::_pollIn(pollfdIt it)
 		this->_acceptConn();
 		return ;
 	}
-	bRead = recv(fd, buffer, 512 - 1, 0);
+	bRead = recv(fd, buffer, MSG_BUFFERSIZE - 1, 0);
 	// check whether recv returned 0 and disconnect user if it did
 	if (this->_checkDc(bRead, it))
 		return ;
@@ -95,8 +95,11 @@ void	Server::_pollIn(pollfdIt it)
 	User	&user = this->_getUser(fd);
 	// Add read buffer to the back of the total message
 	user.appendBuffer(buffer);
+	// Check if the received message contains \n from the back (if it doesn't then the user.buffer won't have one either, no need to check that again)
+	if (std::find(std::rbegin(buffer) + (MSG_BUFFERSIZE - bRead), std::rend(buffer), '\n') == std::rend(buffer))
+		return ;
 	//	loop through the buffer while it can find a \n (think getnextline)
-	while (user.buffer.find("\n") != std::string::npos)
+	while (user.buffer.find_last_of("\n") != std::string::npos)
 	{
 		msgLimitSize(user.buffer);
 		std::stringstream	temp(user.buffer);
