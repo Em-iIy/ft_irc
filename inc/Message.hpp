@@ -7,12 +7,16 @@
 #include <iostream>
 #include <vector>
 
+#define ARG_COUNT 14
+
 class Message {
 private:
 	User							&_user;
 	Server							&_server;
 	pollfdIt						_it;
 	std::string						_command;
+	std::vector<std::string>		_params;
+	std::string						_trailing;
 	std::string						_param;
 	// const std::vector<std::string>	_allCommands{"PING", "MODE", "AWAY", "NICK", "USER", "PASS", "CAP", "QUIT"};
 	std::string						_response;
