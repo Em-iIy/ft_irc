@@ -14,7 +14,6 @@ private:
 	pollfdIt						_it;
 	std::string						_command;
 	std::string						_param;
-	// const std::vector<std::string>	_allCommands{"PING", "MODE", "AWAY", "NICK", "USER", "PASS", "CAP", "QUIT"};
 	std::string						_response;
 
 	void	_respondUser(void);
@@ -34,6 +33,7 @@ private:
 	void	_QUIT(void);
 	void	_USER(void);
 	void	_VERSION(void);
+	void	_JOIN(void);
 
 public:
 	Message(std::string &msg, User &user, pollfdIt &it, Server &server);

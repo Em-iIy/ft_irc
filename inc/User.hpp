@@ -7,6 +7,8 @@
 #include <vector>
 #include <iostream>
 #include <exception>
+#include <list>
+#include "Channel.hpp"
 
 class User {
 private:
@@ -22,7 +24,7 @@ private:
 	std::string					_awayMsg;
 	status_t					_status = STAT_NEW;
 	umode_t						_mode = UMODE_NONE;
-	//Channel					&_channel;
+	std::list<Channel *>		_channels;
 
 public:
 	std::string					buffer;

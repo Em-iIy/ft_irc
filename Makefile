@@ -15,9 +15,11 @@ FILES_SRCS =	main.cpp \
 				serverCmds.cpp \
 				utils.cpp \
 				Message.cpp \
+				Channel.cpp \
 				AWAY.cpp \
 				CAP.cpp \
 				ISON.cpp \
+				JOIN.cpp \
 				MODE.cpp \
 				NICK.cpp \
 				PASS.cpp \

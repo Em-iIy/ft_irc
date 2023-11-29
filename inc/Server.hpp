@@ -6,12 +6,14 @@
 #include "Config.hpp"
 #include "Message.hpp"
 #include "types.hpp"
+#include "Channel.hpp"
 #include <vector>
 #include <map>
 #include <poll.h>
 #include <iostream>
 #include <exception>
 #include <algorithm>
+#include <list>
 
 class Server {
 private:
@@ -25,6 +27,7 @@ private:
 	int							_port;
 	std::string					_password;
 	bool						_running;
+	std::list<Channel>			_channels;
 
 	Log							_log;
 

@@ -61,6 +61,8 @@ cmd_e	Message::_checkCommand(void)
 		return (CMD_CAP);
 	if (this->_command == "QUIT")
 		return (CMD_QUIT);
+	if (this->_command == "JOIN")
+		return (CMD_JOIN);
 	return (CMD_NOT_FOUND);
 }
 
@@ -101,6 +103,9 @@ void	Message::_runCommand(void)
 		break ;
 	case CMD_VERSION:
 		this->_VERSION();
+		break ;
+	case CMD_JOIN:
+		this->_JOIN();
 		break ;
 	default:
 		break;

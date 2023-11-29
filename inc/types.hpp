@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <poll.h>
+#include <iostream>
 
 // Classes
 class Server;
@@ -10,6 +11,7 @@ class Socket;
 class Log;
 class User;
 class Message;
+class Channel;
 
 // Enums
 enum	status_e {
@@ -45,6 +47,7 @@ enum	cmd_e {
 	CMD_QUIT,
 	CMD_USER,
 	CMD_VERSION,
+	CMD_JOIN,
 };
 
 // Types
