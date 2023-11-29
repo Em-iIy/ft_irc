@@ -39,12 +39,12 @@ enum	umode_e {
 };
 
 enum	cmode_e {
-	CMODE_NONE		= 0x00,
-	CMODE_I			= 0x01,
-	CMODE_T			= 0x02,
-	CMODE_K			= 0x04,
-	CMODE_O			= 0x08,
-	CMODE_L			= 0x10,
+	CMODE_NONE		= 0x000000,
+	CMODE_I			= 0x010000,
+	CMODE_T			= 0x020000,
+	CMODE_K			= 0x040000,
+	CMODE_O			= 0x080000,
+	CMODE_L			= 0x100000,
 };
 
 enum	cmd_e {

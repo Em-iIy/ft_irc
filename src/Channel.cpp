@@ -15,6 +15,23 @@ Channel::~Channel(void)
 {
 }
 
+bool	Channel::_userInChannel(User *user)
+{
+	for (std::list<User *>::iterator it = this->_users.begin(); it != this->_users.end(); ++it)
+	{
+		if (*it == user)
+			return true;
+	}
+	return false;
+}
+
+void	Channel::addUser(User *user)
+{
+	if (_userInChannel(user))
+		return;
+	this->_users.push_back(user);
+}
+
 const std::string	&Channel::getName(void)
 {
 	return (this->_name);

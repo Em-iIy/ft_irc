@@ -2,9 +2,6 @@
 
 void	Message::_PONG(void)
 {
-	// Must be registered to use this command
-	if (this->_user.getRegistered() == false)
-		return ;
 	if (this->_params.size() == 0)
 	{
 		// 409		ERR_NOORIGIN

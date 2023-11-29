@@ -50,7 +50,7 @@ void	Message::_JOIN(void)
 		for (std::list<Channel>::iterator it = channels.begin(); it != channels.end(); ++it)
 		{
 			if ((*it).getName() == names[i])
-				continue ; // work in progress
+				(*it).addUser(&(this->_user));
 		}
 	}
 }
