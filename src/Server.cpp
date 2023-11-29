@@ -293,6 +293,14 @@ void	Server::removeNickname(const std::string &nickname)
 	this->_nicknames.erase(std::find(this->_nicknames.begin(), this->_nicknames.end(), nickname));
 }
 
+// Adds new channel
+void	Server::addChannel(std::string &name, std::string &pass, User *creator)
+{
+	Channel newChannel(name, pass, creator);
+
+	this->_channels.push_back(newChannel);
+}
+
 // Getters
 const Config	&Server::getConfig(void) const
 {

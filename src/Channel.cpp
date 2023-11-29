@@ -25,11 +25,17 @@ bool	Channel::_userInChannel(User *user)
 	return false;
 }
 
-void	Channel::addUser(User *user)
+void	Channel::addUser(User *user, std::string &pass)
 {
 	if (_userInChannel(user))
 		return;
-	this->_users.push_back(user);
+	if (this->_mode & CMODE_K)
+		if (pass == this->_pass)
+			this->_users.push_back(user);
+		else
+			throw std::exception();
+	else
+		this->_users.push_back(user);
 }
 
 const std::string	&Channel::getName(void)

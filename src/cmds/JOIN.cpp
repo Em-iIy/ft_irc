@@ -25,6 +25,7 @@ void	Message::_JOIN(void)
 {
 	std::vector<std::string>	names;
 	std::vector<std::string>	passes;
+	std::string					pass;
 
 	if (!this->_params.size())
 	{
@@ -50,7 +51,27 @@ void	Message::_JOIN(void)
 		for (std::list<Channel>::iterator it = channels.begin(); it != channels.end(); ++it)
 		{
 			if ((*it).getName() == names[i])
-				(*it).addUser(&(this->_user));
+			{
+				pass = "";
+				if (i < passes.size())
+					pass = passes[i];
+				try
+				{
+					(*it).addUser(&(this->_user), pass);
+					return ;
+				}
+				catch(const std::exception& e)
+				{
+					// 475		ERR_BADCHANNELKEY
+					this->_response = ":" + this->_server.getServerName() + " 475 " + names[i] + " :Cannot join channel (+k)\r\n";
+					this->_respondUser();
+					return ;
+				}
+			}
 		}
+		pass = "";
+		if (i < passes.size())
+			pass = passes[i];
+		this->_server.addChannel(names[i], pass, &(this->_user));
 	}
 }

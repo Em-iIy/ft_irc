@@ -70,6 +70,8 @@ public:
 	void	addNickname(const std::string &nickname);
 	void	removeNickname(const std::string &nickname);
 
+	void	addChannel(std::string &name, std::string &pass, User *creator);
+
 	const Config		&getConfig(void) const;
 	const std::string	&getHostName(void) const;
 	const std::string	&getStartDate(void) const;

@@ -25,5 +25,5 @@ public:
 
 	void	addMode(cmode_t mode);
 	void	rmMode(cmode_t mode);
-	void	addUser(User *user);
+	void	addUser(User *user, std::string &pass);
 };
