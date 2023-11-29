@@ -27,6 +27,7 @@ FILES_SRCS =	main.cpp \
 				QUIT.cpp \
 				USER.cpp \
 				VERSION.cpp \
+				WHOIS.cpp \
 
 FILES_OBJS = $(FILES_SRCS:.cpp=.o)
 
@@ -49,7 +50,7 @@ DFLAGS += -DHOST_NAME=$(HOST_NAME)
 
 # ----------------------------------------Flags
 CC = c++
-CFLAGS = -std=c++11
+CFLAGS = -std=c++14
 CFLAGS += -Wall -Wextra -Werror
 # CFLAGS += -g -fsanitize=address
 

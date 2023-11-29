@@ -13,10 +13,11 @@ void	rmCRLF(std::string &str)
 
 void	msgLimitSize(std::string &str)
 {
-	if (str.length() > 512)
+	if (str.length() > MSG_BUFFERSIZE)
 	{
-		str.resize(510);
-		str += "\r\n";
+		str.resize(MSG_BUFFERSIZE);
+		str[MSG_BUFFERSIZE - 2] = '\r';
+		str[MSG_BUFFERSIZE - 1] = '\n';
 	}
 }
 
@@ -27,6 +28,17 @@ pollfd	initPFD(sockfd_t fd)
 	ret.fd = fd;
 	ret.events = POLLIN | POLLOUT;
 	return (ret);
+}
+
+// Return true if str has a channel prefix
+bool	isChannel(const std::string &str)
+{
+	if (str[0] == '#' ||
+		str[0] == '+' ||
+		str[0] == '&' ||
+		str[0] == '!')
+		return (true);
+	return (false);
 }
 
 // Converts a mode character to the corresponding enum value

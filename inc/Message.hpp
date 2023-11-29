@@ -7,12 +7,16 @@
 #include <iostream>
 #include <vector>
 
+#define ARG_COUNT 14
+
 class Message {
 private:
 	User							&_user;
 	Server							&_server;
 	pollfdIt						_it;
 	std::string						_command;
+	std::vector<std::string>		_params;
+	std::string						_trailing;
 	std::string						_param;
 	std::string						_response;
 
@@ -33,6 +37,7 @@ private:
 	void	_QUIT(void);
 	void	_USER(void);
 	void	_VERSION(void);
+	void	_WHOIS(void);
 	void	_JOIN(void);
 
 public:

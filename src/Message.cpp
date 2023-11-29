@@ -8,7 +8,12 @@
 
 Message::Message(std::string &msg, User &user, pollfdIt &it, Server &server) : _user(user), _server(server), _it(it)
 {
+	// Reserve the max amount of arguments a command may have
+	this->_params.reserve(ARG_COUNT + 1);
+	// Separate the message into <command> [(vector<string>[14])<params>] [:<trailing>]
 	this->parseMsg(msg);
+	// Check and execute the command
+	this->_runCommand();
 	
 	if (user.getRegistered())
 		server.log(user.getNickname(), msg);
@@ -20,17 +25,80 @@ Message::~Message(void)
 {
 }
 
+// Splits input message into <command> [(vector<string>[14 + [1]])<params> + [:<trailing>]]
+// Still splits message into <command> [param] until all commands are updated to ^
 void	Message::parseMsg(std::string &msg)
 {
 	// Remove \r\n from command string
 	rmCRLF(msg);
-	std::stringstream			input(msg);
+	std::string	temp;
 
-	// Separate the message into <command> [<parameters>]
-	std::getline(input, this->_command, ' ');
-	std::getline(input, this->_param);
-	// Check and execute the command
-	this->_runCommand();
+	// Remove when commands are updated
+	{
+		std::stringstream			input(msg);
+		std::getline(input, temp, ' ');
+		std::getline(input, this->_param);
+	}
+
+	size_t colon = msg.find(" :");
+	size_t	space = 0;
+	size_t	arg = 0;
+
+	space = msg.find(' ', space);
+	// Return in case of command without arguments
+	if (space == std::string::npos)
+	{
+		this->_command = msg;
+		return ;
+	}
+	// Separate out the command
+	this->_command = msg.substr(arg, space - arg);
+	// Move arg to 1 past the space and find next space
+	arg = space + 1;
+	space = msg.find(' ', arg);
+	while (space != std::string::npos && this->_params.size() < 14)
+	{
+		// Separate out the trailing argument after the ':'
+		if (msg[arg] == ':')
+		{
+			this->_trailing = msg.substr(arg + 1);
+			if (this->_trailing != "")
+				this->_params.push_back(this->_trailing);
+			return ;
+		}
+		// Separate out the argument
+		if (space != arg) // otherwise it's an empty string
+		{
+			temp = msg.substr(arg, space - arg);
+			this->_params.push_back(temp);
+		}
+		// Move arg to 1 past the space and find next space
+		arg = space + 1;
+		space = msg.find(' ', arg);
+	}
+	// Separate out the trailing argument after the ':'
+	if (this->_params.size() == 14)
+	{
+		colon = msg.find(" :", arg);
+		if (colon != std::string::npos)
+			this->_trailing = msg.substr(colon + 2);
+		if (this->_trailing != "")
+			this->_params.push_back(this->_trailing);
+		return ;
+	}
+	if (msg[arg] == ':')
+	{
+		this->_trailing = msg.substr(arg + 1);
+		if (this->_trailing != "")
+			this->_params.push_back(this->_trailing);
+		return ;
+	}
+	// Get the last parameter
+	if (arg != msg.length()) // otherwise it's an empty string
+	{
+		temp = msg.substr(arg);
+		this->_params.push_back(temp);
+	}
 }
 
 void	Message::_respondUser(void)
@@ -49,6 +117,8 @@ cmd_e	Message::_checkCommand(void)
 		return (CMD_AWAY);
 	if (this->_command == "NICK")
 		return (CMD_NICK);
+	if (this->_command == "WHOIS")
+		return (CMD_WHOIS);
 	if (this->_command == "VERSION")
 		return (CMD_VERSION);
 	if (this->_command == "ISON")
@@ -103,6 +173,9 @@ void	Message::_runCommand(void)
 		break ;
 	case CMD_VERSION:
 		this->_VERSION();
+		break ;
+	case CMD_WHOIS:
+		this->_WHOIS();
 		break ;
 	case CMD_JOIN:
 		this->_JOIN();

@@ -13,6 +13,9 @@ class User;
 class Message;
 class Channel;
 
+// Defines
+#define MSG_BUFFERSIZE 512
+
 // Enums
 enum	status_e {
 	STAT_NEW		= 0x00,
@@ -48,6 +51,7 @@ enum	cmd_e {
 	CMD_USER,
 	CMD_VERSION,
 	CMD_JOIN,
+	CMD_WHOIS,
 };
 
 // Types

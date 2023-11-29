@@ -30,17 +30,15 @@ void	Message::_NICK(void)
 {
 	if (this->_user.getPassword() == false)
 		return ;
-	std::stringstream	param(this->_param);
-	std::string			nick;
 	
-	std::getline(param, nick, ' ');
-	if (nick == "")
+	if (this->_params.size() == 0)
 	{
 		// 431 ERR_NONICKNAMEGIVEN
 		this->_response = ":" + this->_server.getServerName() + " 431 :No nickname given\r\n";
 		this->_respondUser();
 		return ;
 	}
+	std::string	&nick = this->_params[0];
 	if (!checkNickChars(nick))
 	{
 		// 432 ERR_ERRONEUSNICKNAME
