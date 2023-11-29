@@ -30,6 +30,17 @@ pollfd	initPFD(sockfd_t fd)
 	return (ret);
 }
 
+// Return true if str has a channel prefix
+bool	isChannel(const std::string &str)
+{
+	if (str[0] == '#' ||
+		str[0] == '+' ||
+		str[0] == '&' ||
+		str[0] == '!')
+		return (true);
+	return (false);
+}
+
 // Converts a mode character to the corresponding enum value
 umode_e	cToUmode(char c)
 {

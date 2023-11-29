@@ -9,7 +9,7 @@
 Message::Message(std::string &msg, User &user, pollfdIt &it, Server &server) : _user(user), _server(server), _it(it)
 {
 	// Reserve the max amount of arguments a command may have
-	this->_params.reserve(ARG_COUNT);
+	this->_params.reserve(ARG_COUNT + 1);
 	// Separate the message into <command> [(vector<string>[14])<params>] [:<trailing>]
 	this->parseMsg(msg);
 	// Check and execute the command
@@ -25,7 +25,7 @@ Message::~Message(void)
 {
 }
 
-// Splits input message into <command> [(vector<string>[14])<params>] [:<trailing>]
+// Splits input message into <command> [(vector<string>[14 + [1]])<params> + [:<trailing>]]
 // Still splits message into <command> [param] until all commands are updated to ^
 void	Message::parseMsg(std::string &msg)
 {
@@ -62,6 +62,8 @@ void	Message::parseMsg(std::string &msg)
 		if (msg[arg] == ':')
 		{
 			this->_trailing = msg.substr(arg + 1);
+			if (this->_trailing != "")
+				this->_params.push_back(this->_trailing);
 			return ;
 		}
 		// Separate out the argument
@@ -80,11 +82,15 @@ void	Message::parseMsg(std::string &msg)
 		colon = msg.find(" :", arg);
 		if (colon != std::string::npos)
 			this->_trailing = msg.substr(colon + 2);
+		if (this->_trailing != "")
+			this->_params.push_back(this->_trailing);
 		return ;
 	}
 	if (msg[arg] == ':')
 	{
 		this->_trailing = msg.substr(arg + 1);
+		if (this->_trailing != "")
+			this->_params.push_back(this->_trailing);
 		return ;
 	}
 	// Get the last parameter

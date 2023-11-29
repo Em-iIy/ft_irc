@@ -5,7 +5,7 @@ void	Message::_USER_MODE(std::string &target, std::string &mode)
 	// Must be registered to use this command
 	if (this->_user.getRegistered() == false)
 		return ;
-	if (target.length() > 9 || target != this->_user.getNickname())
+	if (target != this->_user.getNickname())
 	{
 		// 502		ERR_USERSDONTMATCH
 		this->_response = ":" + this->_server.getServerName() + " 502 :Cannot change mode for other users\r\n";
@@ -67,34 +67,19 @@ void	Message::_CHANNEL_MODE(std::string &target, std::string &mode)
 
 void	Message::_MODE(void)
 {
-	std::string	target;
-	std::string mode;
-	size_t		space;
-
-	if (this->_param == "")
+	if (this->_params.size() == 0)
 	{
 		// 461		ERR_NEEDMOREPARAMS
 		this->_response = ":" + this->_server.getServerName() + " 461 " + this->_command + " :Not enough parameters\r\n";
 		this->_respondUser();
 		return ;
 	}
-	space = this->_param.find(' ');
-	if (space != std::string::npos)
-	{
-		target = this->_param.substr(0, space);
-		mode = this->_param.substr(space + 1);
-	}
-	else
-	{
-		target = this->_param;
-		mode = "";
-	}
+	std::string	&target = this->_params[0];
+	std::string mode = "";
+	if (this->_params.size() > 1)
+		mode = this->_params[1];
 	// Check whether a channel or user mode is being changed
-	if (target[0] == '#' ||
-		target[0] == '+' ||
-		target[0] == '&' ||
-		target[0] == '!'
-		)
+	if (isChannel(target))
 		this->_CHANNEL_MODE(target, mode);
 	else
 		this->_USER_MODE(target, mode);

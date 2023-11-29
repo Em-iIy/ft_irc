@@ -3,21 +3,14 @@
 // https://ircv3.net/specs/extensions/capability-negotiation.html
 void	Message::_CAP(void)
 {
-	std::string param;
-	size_t	space;
-
-	if (this->_param == "")
+	if (this->_params.size() == 0)
 	{
 		// 461		ERR_NEEDMOREPARAMS
 		this->_response = ":" + this->_server.getServerName() + " 461 " + this->_command + " :Not enough parameters\r\n";
 		this->_respondUser();
 		return ;
 	}
-	space = this->_param.find(' ');
-	if (space != std::string::npos)
-		param = this->_param.substr(space + 1);
-	else
-		param = this->_param;
+	std::string &param = this->_params[0];
 	// CAP REQ is a valid command but not supported
 	if (param == "REQ")
 		return ;

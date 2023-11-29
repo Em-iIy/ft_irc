@@ -2,7 +2,7 @@
 
 void	Message::_PASS(void)
 {
-	if (this->_param == "")
+	if (this->_params.size() == 0)
 	{
 		// 461		ERR_NEEDMOREPARAMS
 		this->_response = ":" + this->_server.getServerName() + " 461 " + this->_command + " :Not enough parameters\r\n";
@@ -17,7 +17,7 @@ void	Message::_PASS(void)
 		return ;
 	}
 
-	this->_user.setPassword(this->_server.checkPassword(this->_param));
+	this->_user.setPassword(this->_server.checkPassword(this->_params[0]));
 	if (!this->_user.getPassword())
 	{
 		// 464		ERR_PASSWDMISMATCH

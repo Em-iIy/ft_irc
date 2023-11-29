@@ -5,12 +5,10 @@ void	Message::_AWAY(void)
 	// Must be registered to use this command
 	if (this->_user.getRegistered() == false)
 		return ;
-	if (this->_param != "")
-	{
-		if (this->_param[0] == ':')
-			this->_param.erase(0, 1);
-		this->_user.setAwayMsg(this->_param);
-	}
+	if (this->_params.size() != 0)
+		this->_user.setAwayMsg(this->_params[0]);
+	else
+		this->_user.setAwayMsg("");
 	if (this->_user.checkMode(UMODE_A) == true)
 	{
 		this->_user.rmMode(UMODE_A);

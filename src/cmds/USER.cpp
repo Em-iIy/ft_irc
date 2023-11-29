@@ -5,23 +5,7 @@ void	Message::_USER(void)
 {
 	if (this->_user.getPassword() == false)
 		return ;
-	std::stringstream	param(this->_param);
-	std::string	username;
-	std::string	hostname;
-	std::string	servername;
-	std::string	realname;
-
-	std::getline(param, username, ' ');
-	std::getline(param, hostname, ' ');
-	std::getline(param, servername, ' ');
-	std::getline(param, realname, '\0');
-
-	if (username.length() == 0 || 
-		hostname.length() == 0 || 
-		servername.length() == 0 || 
-		realname.length() <= 1 ||
-		realname[0] != ':'
-		)
+	if (this->_params.size() < 4)
 	{
 		this->_response = ":" + this->_server.getServerName() + " 461 " + this->_command + " :Not enough parameters\r\n";
 		this->_respondUser();
@@ -35,8 +19,6 @@ void	Message::_USER(void)
 		this->_respondUser();
 		return ;
 	}
-	// remove the colon from the start of real name
-	realname.erase(0, 1);
-	this->_user.registerUser(username, hostname, servername, realname);
+	this->_user.registerUser(this->_params[0], this->_params[1], this->_params[2], this->_params[3]);
 	this->_user.checkRegister();
 }
