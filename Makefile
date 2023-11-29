@@ -24,6 +24,7 @@ FILES_SRCS =	main.cpp \
 				NICK.cpp \
 				PASS.cpp \
 				PING.cpp \
+				PONG.cpp \
 				QUIT.cpp \
 				USER.cpp \
 				VERSION.cpp \

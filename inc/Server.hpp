@@ -14,6 +14,10 @@
 #include <exception>
 #include <algorithm>
 #include <list>
+#include <ctime>
+
+#define IDLE_TIMEOUT	600
+#define PING_FREQ		60
 
 class Server {
 private:
@@ -25,6 +29,7 @@ private:
 	std::map<sockfd_t, User &>	_users;
 	Socket						_sock;
 	int							_port;
+	std::time_t					_pingTimer;
 	std::string					_password;
 	bool						_running;
 	std::list<Channel>			_channels;
@@ -40,6 +45,8 @@ private:
 
 	void						_acceptConn(void);
 	void						_connectPfds(void);
+
+	void						_pingUsers(void);
 
 	User						&_getUser(int fd);
 

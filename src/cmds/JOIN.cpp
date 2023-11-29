@@ -8,13 +8,13 @@ static void	parseParams(std::vector<std::string> &params, std::vector<std::strin
 	if (params.size() > 1)
 		passesParam = params[1];
 
-	while (comma = namesParam.find(',') != std::string::npos)
+	while ((comma = namesParam.find(',')) != std::string::npos)
 	{
 		names.push_back(namesParam.substr(0, comma));
 		namesParam.erase(0, comma + 1);
 	}
 	comma = 0;
-	while (comma = passesParam.find(',') != std::string::npos)
+	while ((comma = passesParam.find(',')) != std::string::npos)
 	{
 		passes.push_back(passesParam.substr(0, comma));
 		passesParam.erase(0, comma + 1);
@@ -39,10 +39,12 @@ void	Message::_JOIN(void)
 	for (size_t i = 0; i < names.size(); i++)
 	{
 		if (isChannel(names[i]))
+		{
 			// 403		ERR_NOSUCHCHANNEL
 			this->_response = ":" + this->_server.getServerName() + " 403 " + names[i] + " :No such channel\r\n";
 			this->_respondUser();
 			return ;
+		}
 	
 		std::list<Channel>	&channels = this->_server.getChannels();
 		for (std::list<Channel>::iterator it = channels.begin(); it != channels.end(); ++it)

@@ -111,6 +111,8 @@ cmd_e	Message::_checkCommand(void)
 {
 	if (this->_command == "PING")
 		return (CMD_PING);
+	if (this->_command == "PONG")
+		return (CMD_PONG);
 	if (this->_command == "MODE")
 		return (CMD_MODE);
 	if (this->_command == "AWAY")
@@ -164,6 +166,9 @@ void	Message::_runCommand(void)
 		break ;
 	case CMD_PING:
 		this->_PING();
+		break ;
+	case CMD_PONG:
+		this->_PONG();
 		break ;
 	case CMD_QUIT:
 		this->_QUIT();

@@ -25,6 +25,7 @@ Server::Server(const std::string &port, const std::string &password)try : _port(
 	{
 		std::cerr << e.what() << '\n';
 	}
+	this->_pingTimer = std::time(NULL);
 	this->log("Server", "Server built on port: " + port);
 	
 }
@@ -187,6 +188,21 @@ void	Server::_connectPfds(void)
 	this->_newPfds.clear();
 }
 
+void	Server::_pingUsers(void)
+{
+	if (std::time(NULL) - this->_pingTimer < PING_FREQ)
+		return ;
+	std::string msg = "PING " + this->getServerName() + "\r\n";
+	for (pollfdIt it = this->_pfds.begin() + 2; it != this->_pfds.end(); it++)
+	{
+		User	&user = this->_getUser(it->fd);
+		if (user.getIdle() > IDLE_TIMEOUT)
+			this->addDcPfd(it);
+		user.toSend.push_back(msg);
+	}
+	this->_pingTimer = std::time(NULL);
+}
+
 User	&Server::_getUser(int fd)
 {
 	return (this->_users.at(fd));
@@ -198,6 +214,7 @@ void	Server::Start(void)
 	this->_running = true;
 	while (this->_running)
 	{
+		this->_pingUsers();
 		// poll all the pfds for any events
 		rc = poll(this->_pfds.data(), this->_pfds.size(), 100000);
 		if (rc < 0)

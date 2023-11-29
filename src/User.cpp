@@ -13,6 +13,7 @@ std::ostream	&operator<<(std::ostream &o, const User &rhs)
 	o << "Realname:\t" << rhs.getRealname() << std::endl;
 	o << "FullRef:\t" << rhs.getFullRef() << std::endl;
 	o << "Mode:\t\t" << umodeToStr(rhs.getMode()) << std::endl;
+	o << "Idle:\t\t" << rhs.getIdle() << " seconds" << std::endl;
 	return (o);
 }
 
@@ -23,6 +24,7 @@ User::User(Server &serv, pollfd fd, sockaddr_in sock): _serv(serv), _fd(fd), _so
 	this->_username = "";
 	this->_nickname = "";
 	this->_awayMsg = "";
+	this->_idleTime = std::time(NULL);
 }
 
 User::~User()
@@ -154,6 +156,12 @@ bool			User::checkMode(umode_t mode) const
 	return (this->_mode & mode);
 }
 
+std::time_t		User::getIdle(void) const
+{
+	return (std::time(NULL) - this->_idleTime);
+}
+
+
 
 
 // Setters
@@ -194,6 +202,11 @@ void				User::addMode(umode_t mode)
 void				User::rmMode(umode_t mode)
 {
 	this->_mode &= ~mode;
+}
+
+void				User::setIdle(const std::time_t &time)
+{
+	this->_idleTime = time;
 }
 
 

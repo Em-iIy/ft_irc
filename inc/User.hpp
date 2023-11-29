@@ -2,13 +2,14 @@
 
 #include "Server.hpp"
 #include "types.hpp"
+#include "Channel.hpp"
 #include <poll.h>
 #include <unistd.h>
 #include <vector>
 #include <iostream>
 #include <exception>
 #include <list>
-#include "Channel.hpp"
+#include <ctime>
 
 class User {
 private:
@@ -24,6 +25,7 @@ private:
 	std::string					_awayMsg;
 	status_t					_status = STAT_NEW;
 	umode_t						_mode = UMODE_NONE;
+	std::time_t					_idleTime;
 	std::list<Channel *>		_channels;
 
 public:
@@ -53,6 +55,7 @@ public:
 	bool				getPassword(void) const;
 	const umode_t		&getMode(void) const;
 	bool				checkMode(umode_t mode) const;
+	std::time_t			getIdle(void) const;
 
 	void				setUsername(const std::string &username);
 	void				setNickname(const std::string &nickname);
@@ -61,6 +64,7 @@ public:
 	void				setPassword(const bool &password);
 	void				addMode(umode_t mode);
 	void				rmMode(umode_t mode);
+	void				setIdle(const std::time_t &time);
 
 	void				capStart(void);
 	void				capEnd(void);
