@@ -74,4 +74,5 @@ public:
 
 	std::vector<std::string> 	&getNicknames(void);
 	std::map<sockfd_t, User &>	&getUsers(void);
+	std::list<Channel>			&getChannels(void);
 };

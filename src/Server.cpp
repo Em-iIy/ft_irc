@@ -326,3 +326,8 @@ std::map<sockfd_t, User &>	&Server::getUsers(void)
 {
 	return (this->_users);
 }
+
+std::list<Channel>	&Server::getChannels(void)
+{
+	return (this->_channels);
+}

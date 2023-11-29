@@ -1,22 +1,12 @@
 #include "Message.hpp"
 
-static void	parseParams(std::string &param, std::vector<std::string> &names, std::vector<std::string> &passes)
+static void	parseParams(std::vector<std::string> &params, std::vector<std::string> &names, std::vector<std::string> &passes)
 {
-	size_t		space = param.find(' ');
 	size_t		comma = 0;
-	std::string	namesParam;
-	std::string	passesParam;
-
-	if (space != std::string::npos)
-	{
-		namesParam = param.substr(0, space);
-		passesParam = param.substr(space + 1);
-	}
-	else
-	{
-		namesParam = param;
-		passesParam = "";
-	}
+	std::string	namesParam = params[0];
+	std::string	passesParam = "";
+	if (params.size() > 1)
+		passesParam = params[1];
 
 	while (comma = namesParam.find(',') != std::string::npos)
 	{
@@ -36,7 +26,7 @@ void	Message::_JOIN(void)
 	std::vector<std::string>	names;
 	std::vector<std::string>	passes;
 
-	if (this->_param == "")
+	if (!this->_params.size())
 	{
 		// 461		ERR_NEEDMOREPARAMS
 		this->_response = ":" + this->_server.getServerName() + " 461 " + this->_command + " :Not enough parameters\r\n";
@@ -44,19 +34,21 @@ void	Message::_JOIN(void)
 		return ;
 	}
 
-	parseParams(this->_param, names, passes);
+	parseParams(this->_params, names, passes);
 	
 	for (size_t i = 0; i < names.size(); i++)
 	{
-		if (names[i][0] != '#' ||
-			names[i][0] != '+' ||
-			names[i][0] != '&' ||
-			names[i][0] != '!'
-			)
-			// 461		ERR_NEEDMOREPARAMS
-			this->_response = ":" + this->_server.getServerName() + " 461 " + this->_command + " :Not enough parameters\r\n";
+		if (isChannel(names[i]))
+			// 403		ERR_NOSUCHCHANNEL
+			this->_response = ":" + this->_server.getServerName() + " 403 " + names[i] + " :No such channel\r\n";
 			this->_respondUser();
 			return ;
-		
+	
+		std::list<Channel>	&channels = this->_server.getChannels();
+		for (std::list<Channel>::iterator it = channels.begin(); it != channels.end(); ++it)
+		{
+			if ((*it).getName() == names[i])
+				continue ; // work in progress
+		}
 	}
 }

@@ -38,6 +38,15 @@ enum	umode_e {
 	UMODE_S			= 0x40,
 };
 
+enum	cmode_e {
+	CMODE_NONE		= 0x00,
+	CMODE_I			= 0x01,
+	CMODE_T			= 0x02,
+	CMODE_K			= 0x04,
+	CMODE_O			= 0x08,
+	CMODE_L			= 0x10,
+};
+
 enum	cmd_e {
 	CMD_NOT_FOUND,
 	CMD_AWAY,
@@ -58,6 +67,7 @@ enum	cmd_e {
 typedef int sockfd_t;
 typedef int status_t;
 typedef int umode_t;
+typedef int	cmode_t;
 typedef std::vector<pollfd>::iterator pollfdIt;
 
 // Macros
