@@ -71,6 +71,7 @@ public:
 	void	removeNickname(const std::string &nickname);
 
 	void	addChannel(std::string &name, std::string &pass, User *creator);
+	void	printChannels(void); // for testing purposes
 
 	const Config		&getConfig(void) const;
 	const std::string	&getHostName(void) const;

@@ -65,6 +65,7 @@ public:
 	void				addMode(umode_t mode);
 	void				rmMode(umode_t mode);
 	void				setIdle(const std::time_t &time);
+	void				addToChannel(Channel *channel);
 
 	void				capStart(void);
 	void				capEnd(void);

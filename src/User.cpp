@@ -220,3 +220,7 @@ void				User::capEnd(void)
 	this->_status |= STAT_CAP_END;
 }
 
+void				User::addToChannel(Channel *channel)
+{
+	this->_channels.push_back(channel);
+}

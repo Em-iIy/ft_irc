@@ -22,8 +22,13 @@ public:
 
 	const std::string	&getName(void);
 	const std::string	&getPass(void);
+	const std::string	&getTopic(void);
+	std::list<User *>	&getUsers(void);
+	std::list<User *>	&getOpers(void);
 
 	void	addMode(cmode_t mode);
 	void	rmMode(cmode_t mode);
 	void	addUser(User *user, std::string &pass);
 };
+
+std::ostream	&operator<<(std::ostream &out, Channel &c);

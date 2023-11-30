@@ -301,6 +301,12 @@ void	Server::addChannel(std::string &name, std::string &pass, User *creator)
 	this->_channels.push_back(newChannel);
 }
 
+void	Server::printChannels(void)
+{
+	for (std::list<Channel>::iterator it = this->_channels.begin(); it != this->_channels.end(); ++it)
+		std::cout << *it << std::endl;
+}
+
 // Getters
 const Config	&Server::getConfig(void) const
 {
