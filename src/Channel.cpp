@@ -17,7 +17,7 @@ Channel::~Channel(void)
 {
 }
 
-bool	Channel::_userInChannel(User *user)
+bool	Channel::isUser(User *user)
 {
 	for (std::list<User *>::iterator it = this->_users.begin(); it != this->_users.end(); ++it)
 	{
@@ -27,9 +27,19 @@ bool	Channel::_userInChannel(User *user)
 	return false;
 }
 
+bool	Channel::isOper(User *user)
+{
+	for (std::list<User *>::iterator it = this->_opers.begin(); it != this->_opers.end(); ++it)
+	{
+		if (*it == user)
+			return true;
+	}
+	return false;
+}
+
 void	Channel::addUser(User *user, std::string &pass)
 {
-	if (_userInChannel(user))
+	if (this->isUser(user))
 		return;
 	if (this->_mode & CMODE_K)
 		if (pass == this->_pass)
@@ -44,6 +54,13 @@ void	Channel::addUser(User *user, std::string &pass)
 		this->_users.push_back(user);
 		user->addToChannel(this);
 	}
+}
+
+void	Channel::addOper(User *user)
+{
+	if (this->isOper(user))
+		return;
+	this->_opers.push_back(user);
 }
 
 const std::string	&Channel::getName(void)

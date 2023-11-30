@@ -62,6 +62,7 @@ enum	cmd_e {
 	CMD_VERSION,
 	CMD_JOIN,
 	CMD_WHOIS,
+	CMD_PART,
 };
 
 // Types

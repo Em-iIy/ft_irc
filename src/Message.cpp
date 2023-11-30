@@ -135,6 +135,8 @@ cmd_e	Message::_checkCommand(void)
 		return (CMD_QUIT);
 	if (this->_command == "JOIN")
 		return (CMD_JOIN);
+	if (this->_command == "PART")
+		return (CMD_PART);
 	return (CMD_NOT_FOUND);
 }
 
@@ -184,6 +186,9 @@ void	Message::_runCommand(void)
 		break ;
 	case CMD_JOIN:
 		this->_JOIN();
+		break ;
+	case CMD_PART:
+		this->_PART();
 		break ;
 	default:
 		break;

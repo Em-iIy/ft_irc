@@ -29,6 +29,9 @@ public:
 	void	addMode(cmode_t mode);
 	void	rmMode(cmode_t mode);
 	void	addUser(User *user, std::string &pass);
+	void	addOper(User *user);
+	bool	isUser(User *user);
+	bool	isOper(User *user);
 };
 
 std::ostream	&operator<<(std::ostream &out, Channel &c);

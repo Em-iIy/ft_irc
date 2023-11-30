@@ -40,6 +40,7 @@ private:
 	void	_VERSION(void);
 	void	_WHOIS(void);
 	void	_JOIN(void);
+	void	_PART(void);
 
 public:
 	Message(std::string &msg, User &user, pollfdIt &it, Server &server);
