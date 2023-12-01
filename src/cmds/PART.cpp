@@ -1,23 +1,5 @@
 #include "Message.hpp"
 
-static std::vector<std::string>	parseParam(std::string param)
-{
-	size_t						comma = 0;
-	std::vector<std::string>	channels;
-
-	if (param.find(',') == std::string::npos)
-		channels.push_back(param);
-	else
-	{
-		while ((comma = param.find(',')) != std::string::npos)
-		{
-			channels.push_back(param.substr(0, comma));
-			param.erase(0, comma + 1);
-		}
-	}
-	return (channels);
-}
-
 void	Message::_PART(void)
 {
 	// Must be registered to use this command
@@ -31,7 +13,7 @@ void	Message::_PART(void)
 		return ;
 	}
 
-	std::vector<std::string>	channelsToPart = parseParam(this->_params[0]);
+	std::vector<std::string>	channelsToPart = parseParamByComma(this->_params[0]);
 	std::list<Channel *>		allChannels = this->_server.getChannels();
 
 	for (size_t i = 0; i < channelsToPart.size(); i++)

@@ -23,6 +23,7 @@ public:
 	const std::string	&getTopic(void);
 	std::list<User *>	&getUsers(void);
 	std::list<User *>	&getOpers(void);
+	cmode_t				&getMode(void);
 
 	void	addMode(cmode_t mode);
 	void	rmMode(cmode_t mode);

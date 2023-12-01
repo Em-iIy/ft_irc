@@ -102,6 +102,11 @@ std::list<User *>	&Channel::getOpers(void)
 	return (this->_opers);
 }
 
+cmode_t				&Channel::getMode(void)
+{
+	return (this->_mode);
+}
+
 void	Channel::addMode(cmode_t mode)
 {
 	this->_mode |= mode;

@@ -65,7 +65,7 @@ umode_e	cToUmode(char c)
 	}
 }
 
-// Converts a mode to a string with all the set modes
+// Converts a user mode to a string with all the set modes
 std::string	umodeToStr(const umode_t mode)
 {
 	std::string	ret = "";
@@ -90,6 +90,27 @@ std::string	umodeToStr(const umode_t mode)
 	return (ret);
 }
 
+// Converts a channel mode to a string with all the set modes
+std::string	cmodeToStr(const cmode_t mode)
+{
+	std::string	ret = "";
+
+	if (mode == CMODE_NONE)
+		return (ret);
+	ret += "+";
+	if (mode & CMODE_I)
+		ret += "i";
+	if (mode & CMODE_T)
+		ret += "t";
+	if (mode & CMODE_K)
+		ret += "k";
+	if (mode & CMODE_O)
+		ret += "o";
+	if (mode & CMODE_L)
+		ret += "l";
+	return (ret);
+}
+
 // Returns a date as a string formatted "Day Month DD YYYY"
 std::string	date(void)
 {
@@ -108,4 +129,25 @@ std::string	time(void)
 
 	std::strftime(temp, sizeof(temp), "%H:%M:%S", std::localtime(&now));
 	return (temp);
+}
+
+// Returns a vector of strings from a string seperated by commas
+std::vector<std::string>	parseParamByComma(std::string param)
+{
+	size_t						comma = 0;
+	std::vector<std::string>	paramsVector;
+
+	if (param.empty())
+		return (paramsVector);
+	if (param.find(',') == std::string::npos)
+		paramsVector.push_back(param);
+	else
+	{
+		while ((comma = param.find(',')) != std::string::npos)
+		{
+			paramsVector.push_back(param.substr(0, comma));
+			param.erase(0, comma + 1);
+		}
+	}
+	return (paramsVector);
 }

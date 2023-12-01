@@ -1,38 +1,7 @@
 #include "Message.hpp"
 
-static void	parseParams(std::vector<std::string> &params, std::vector<std::string> &names, std::vector<std::string> &passes)
-{
-	size_t		comma = 0;
-	std::string	namesParam = params[0];
-	std::string	passesParam = "";
-
-	if (params.size() > 1)
-		passesParam = params[1];
-	if (namesParam.find(',') == std::string::npos)
-		names.push_back(namesParam);
-	while ((comma = namesParam.find(',')) != std::string::npos)
-	{
-		names.push_back(namesParam.substr(0, comma));
-		namesParam.erase(0, comma + 1);
-	}
-	comma = 0;
-	if (passesParam.find(',') == std::string::npos)
-		passes.push_back(passesParam);
-	while ((comma = passesParam.find(',')) != std::string::npos)
-	{
-		passes.push_back(passesParam.substr(0, comma));
-		passesParam.erase(0, comma + 1);
-	}
-}
-
 void	Message::_JOIN(void)
 {
-	std::list<Channel *>		&channels = this->_server.getChannels();
-	std::vector<std::string>	names;
-	std::vector<std::string>	passes;
-	std::string					pass;
-	bool						channelExists;
-
 	// Must be registered to use this command
 	if (this->_user.getRegistered() == false)
 		return ;
@@ -43,8 +12,16 @@ void	Message::_JOIN(void)
 		this->_respondUser();
 		return ;
 	}
+
+	std::list<Channel *>		&channels = this->_server.getChannels();
+	std::vector<std::string>	passes;
+	std::string					pass;
+	bool						channelExists;
+
 	// adds requested channel names and passwords to their respective vectors
-	parseParams(this->_params, names, passes);
+	std::vector<std::string>	names = parseParamByComma(this->_params[0]);
+	if (this->_params.size() > 1)
+		passes = parseParamByComma(this->_params[1]);
 
 	for (size_t i = 0; i < names.size(); i++)
 	{
