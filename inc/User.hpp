@@ -56,6 +56,7 @@ public:
 	const umode_t		&getMode(void) const;
 	bool				checkMode(umode_t mode) const;
 	std::time_t			getIdle(void) const;
+	std::list<Channel *>	&getChannels(void) {return (this->_channels);};
 
 	void				setUsername(const std::string &username);
 	void				setNickname(const std::string &nickname);
@@ -66,9 +67,10 @@ public:
 	void				rmMode(umode_t mode);
 	void				setIdle(const std::time_t &time);
 	void				addToChannel(Channel *channel);
+	void				rmFromChannel(Channel *channel);
 
 	void				capStart(void);
 	void				capEnd(void);
 };
 
-std::ostream	&operator<<(std::ostream &o, const User &rhs);
+std::ostream	&operator<<(std::ostream &o, User &rhs);

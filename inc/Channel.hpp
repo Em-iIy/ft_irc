@@ -14,8 +14,6 @@ private:
 	std::list<User *>		_opers;
 	cmode_t					_mode = CMODE_NONE;
 
-	bool	_userInChannel(User *user);
-
 public:
 	Channel(std::string &name, std::string &pass, User *creator);
 	~Channel();
@@ -29,7 +27,9 @@ public:
 	void	addMode(cmode_t mode);
 	void	rmMode(cmode_t mode);
 	void	addUser(User *user, std::string &pass);
+	void	rmUser(User *user);
 	void	addOper(User *user);
+	void	rmOper(User *user);
 	bool	isUser(User *user);
 	bool	isOper(User *user);
 };

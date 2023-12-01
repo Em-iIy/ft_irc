@@ -46,6 +46,9 @@ Server::~Server()
 		this->_sock.Send(it->fd, ":" + this->getServerName() + " NOTICE all :Goodbye! o/ (Server turned off)\r\n");
 		delete &this->_getUser(it->fd);
 	}
+	// Loop through all channels
+	for (std::list<Channel *>::iterator it = this->_channels.begin(); it != this->_channels.end(); ++it)
+		delete *it;
 }
 
 void	Server::_checkPoll(void)
@@ -293,18 +296,45 @@ void	Server::removeNickname(const std::string &nickname)
 	this->_nicknames.erase(std::find(this->_nicknames.begin(), this->_nicknames.end(), nickname));
 }
 
-// Adds new channel
+// Channel stuff
 void	Server::addChannel(std::string &name, std::string &pass, User *creator)
 {
-	Channel newChannel(name, pass, creator);
+	Channel *newChannel = new Channel(name, pass, creator);
 
+	newChannel->addUser(creator, pass);
+	newChannel->addOper(creator);
 	this->_channels.push_back(newChannel);
+}
+
+void	Server::rmChannel(Channel *channel)
+{
+	this->_channels.remove(channel);
+}
+
+bool	Server::hasChannel(std::string &name)
+{
+	for (std::list<Channel *>::iterator it = this->_channels.begin(); it != this->_channels.end(); ++it)
+	{
+		if ((**it).getName() == name)
+			return (true);
+	}
+	return (false);
+}
+
+Channel	*Server::getChannel(std::string &name)
+{
+	for (std::list<Channel *>::iterator it = this->_channels.begin(); it != this->_channels.end(); ++it)
+	{
+		if ((**it).getName() == name)
+			return (*it);
+	}
+	return (NULL);
 }
 
 void	Server::printChannels(void)
 {
-	for (std::list<Channel>::iterator it = this->_channels.begin(); it != this->_channels.end(); ++it)
-		std::cout << *it << std::endl;
+	for (std::list<Channel *>::iterator it = this->_channels.begin(); it != this->_channels.end(); ++it)
+		std::cout << **it << std::endl;
 }
 
 // Getters
@@ -358,7 +388,7 @@ std::map<sockfd_t, User &>	&Server::getUsers(void)
 	return (this->_users);
 }
 
-std::list<Channel>	&Server::getChannels(void)
+std::list<Channel *>	&Server::getChannels(void)
 {
 	return (this->_channels);
 }

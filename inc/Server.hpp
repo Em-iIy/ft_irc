@@ -32,7 +32,7 @@ private:
 	std::time_t					_pingTimer;
 	std::string					_password;
 	bool						_running;
-	std::list<Channel>			_channels;
+	std::list<Channel *>		_channels;
 
 	Log							_log;
 
@@ -71,6 +71,9 @@ public:
 	void	removeNickname(const std::string &nickname);
 
 	void	addChannel(std::string &name, std::string &pass, User *creator);
+	void	rmChannel(Channel *channel);
+	bool	hasChannel(std::string &name);
+	Channel	*getChannel(std::string &name);
 	void	printChannels(void); // for testing purposes
 
 	const Config		&getConfig(void) const;
@@ -84,5 +87,5 @@ public:
 
 	std::vector<std::string> 	&getNicknames(void);
 	std::map<sockfd_t, User &>	&getUsers(void);
-	std::list<Channel>			&getChannels(void);
+	std::list<Channel *>		&getChannels(void);
 };

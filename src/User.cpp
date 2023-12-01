@@ -1,6 +1,6 @@
 #include "User.hpp"
 
-std::ostream	&operator<<(std::ostream &o, const User &rhs)
+std::ostream	&operator<<(std::ostream &o, User &rhs)
 {
 	o << "User #" << rhs.getFd() << " - " << rhs.getNickname() <<  ":" << std::endl;
 	o << "Fd:\t\t" << rhs.getFd() << std::endl;
@@ -14,6 +14,10 @@ std::ostream	&operator<<(std::ostream &o, const User &rhs)
 	o << "FullRef:\t" << rhs.getFullRef() << std::endl;
 	o << "Mode:\t\t" << umodeToStr(rhs.getMode()) << std::endl;
 	o << "Idle:\t\t" << rhs.getIdle() << " seconds" << std::endl;
+	o << "Channels:\t";
+	for (std::list<Channel *>::iterator it = rhs.getChannels().begin(); it != rhs.getChannels().end(); ++it)
+		o << (*it)->getName() << " ";
+	o << std::endl;
 	return (o);
 }
 
@@ -222,5 +226,12 @@ void				User::capEnd(void)
 
 void				User::addToChannel(Channel *channel)
 {
+	DEBUG(this->_fd.fd);
+	std::cout << channel->getName() << std::endl;
 	this->_channels.push_back(channel);
+}
+
+void				User::rmFromChannel(Channel *channel)
+{
+	this->_channels.remove(channel);
 }

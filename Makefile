@@ -22,6 +22,7 @@ FILES_SRCS =	main.cpp \
 				JOIN.cpp \
 				MODE.cpp \
 				NICK.cpp \
+				PART.cpp \
 				PASS.cpp \
 				PING.cpp \
 				PONG.cpp \

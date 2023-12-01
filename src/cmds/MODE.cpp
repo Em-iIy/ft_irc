@@ -2,9 +2,6 @@
 
 void	Message::_USER_MODE(std::string &target, std::string &mode)
 {
-	// Must be registered to use this command
-	if (this->_user.getRegistered() == false)
-		return ;
 	if (target != this->_user.getNickname())
 	{
 		// 502		ERR_USERSDONTMATCH
@@ -61,12 +58,37 @@ void	Message::_USER_MODE(std::string &target, std::string &mode)
 
 void	Message::_CHANNEL_MODE(std::string &target, std::string &mode)
 {
+	if (!this->_server.hasChannel(target))
+	{
+		// 403		ERR_NOSUCHCHANNEL
+		this->_response = ":" + this->_server.getServerName() + " 403 " + target + " :No such channel\r\n";
+		this->_respondUser();
+		return ;
+	}
+	if (!this->_server.getChannel(target)->isUser(&this->_user))
+	{
+		// 442		ERR_NOTONCHANNEL
+		this->_response = ":" + this->_server.getServerName() + " 442 " + target + " :You're not on that channel\r\n";
+		this->_respondUser();
+		return ;
+	}
+	if (!this->_server.getChannel(target)->isOper(&this->_user))
+	{
+		// 482		ERR_CHANOPRIVSNEEDED
+		this->_response = ":" + this->_server.getServerName() + " 482 " + target + " :You're not channel operator\r\n";
+		this->_respondUser();
+		return ;
+	}
+	
 	std::cout << target << " " << mode << " Channels not yet implemented >:(" << std::endl;
 }
 
 
 void	Message::_MODE(void)
 {
+	// Must be registered to use this command
+	if (this->_user.getRegistered() == false)
+		return ;
 	if (this->_params.size() == 0)
 	{
 		// 461		ERR_NEEDMOREPARAMS

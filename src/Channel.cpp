@@ -56,11 +56,25 @@ void	Channel::addUser(User *user, std::string &pass)
 	}
 }
 
+void	Channel::rmUser(User *user)
+{
+	this->_users.remove(user);
+	// also removes channel from users' own list
+	user->rmFromChannel(this);
+}
+
 void	Channel::addOper(User *user)
 {
 	if (this->isOper(user))
 		return;
 	this->_opers.push_back(user);
+}
+
+void	Channel::rmOper(User *user)
+{
+	this->_opers.remove(user);
+	if (!(this->_opers.size()) && (this->_users.size() > 0))
+		this->addOper(*(this->_users.begin()));
 }
 
 const std::string	&Channel::getName(void)
