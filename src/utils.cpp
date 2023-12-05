@@ -58,7 +58,7 @@ umode_e	cToUmode(char c)
 		return (UMODE_LO);
 	case 'O':
 		return (UMODE_UO);
-	case 'S':
+	case 's':
 		return (UMODE_S);
 	default:
 		return (UMODE_NONE);
