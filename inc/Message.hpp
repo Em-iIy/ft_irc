@@ -25,7 +25,7 @@ private:
 	void	_runCommand(void);
 
 	void	_USER_MODE(std::string &target, std::string &mode);
-	void	_CHANNEL_MODE(std::string &target, std::string &mode, std::string &setting);
+	void	_CHANNEL_MODE(std::string &target, std::string &mode);
 
 	void	_AWAY(void);
 	void	_CAP(void);
