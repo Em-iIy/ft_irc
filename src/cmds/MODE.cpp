@@ -23,6 +23,8 @@ void	Message::_USER_MODE(std::string &target, std::string &mode)
 		umode_t	inMode;
 		while (i < mode.size())
 		{
+			if (mode[i] != '+' && mode[i] != '-')
+				throw std::exception();
 			while (mode[i] == '+' || mode[i] == '-')
 				i++;
 			// modeBool = (mode[i - 1] == '+') ? true : false; Em finds this too hard to read :(
@@ -68,6 +70,8 @@ void	Message::_USER_MODE(std::string &target, std::string &mode)
 
 void	Message::_CHANNEL_MODE(std::string &target, std::string &mode)
 {
+	Channel *targetChannel = this->_server.getChannel(target);
+
 	if (!this->_server.hasChannel(target))
 	{
 		// 403		ERR_NOSUCHCHANNEL
@@ -75,14 +79,14 @@ void	Message::_CHANNEL_MODE(std::string &target, std::string &mode)
 		this->_respondUser();
 		return ;
 	}
-	if (!this->_server.getChannel(target)->isUser(&this->_user))
+	if (!targetChannel->isUser(&this->_user))
 	{
 		// 442		ERR_NOTONCHANNEL
 		this->_response = ":" + this->_server.getServerName() + " 442 " + target + " :You're not on that channel\r\n";
 		this->_respondUser();
 		return ;
 	}
-	if (!this->_server.getChannel(target)->isOper(&this->_user))
+	if (!targetChannel->isOper(&this->_user))
 	{
 		// 482		ERR_CHANOPRIVSNEEDED
 		this->_response = ":" + this->_server.getServerName() + " 482 " + target + " :You're not channel operator\r\n";
@@ -96,27 +100,51 @@ void	Message::_CHANNEL_MODE(std::string &target, std::string &mode)
 		this->_respondUser();
 		return ;
 	}
-
-	// WORK IN PROGRESS: ->figure out if it's + or - (last one before a different character)
-	//					 ->do that to every character it finds afterwards (error response if unknown mode)
-	//					 ->in case a setting is needed, get the next setting from the vector
-
-	size_t		i = 1;
-	bool		modeBool = false; // True for adding, false for removing
-	std::string	modeParams = "";
-
-	while (i < this->_params.size())
+	try
 	{
-		if (this->_params[i][0] == '+')
-			modeBool = true;
-		else if (this->_params[i][0] != '-')
-			return ;
-		if ((i + 1) < this->_params.size())
+		for (std::vector<std::string>::iterator it = this->_params.begin() + 1; it != this->_params.end(); ++it)
 		{
-			modeParams = this->_params[i + 1];
-			i++;
+			bool	modeBool; // True for adding, false for removing
+			cmode_t	inMode;
+			size_t	i = 0;
+			while (i < it->size())
+			{
+				if ((*it)[i] != '+' && (*it)[i] != '-')
+					throw std::runtime_error(":" + this->_server.getServerName() + " 472 :Unknown MODE flag\r\n");
+				while ((*it)[i] == '+' || (*it)[i] == '-')
+					i++;
+				if ((*it)[i - 1] == '+')
+					modeBool = true;
+				else
+					modeBool = false;
+				while ((*it)[i] != '+' && (*it)[i] != '-' && (*it)[i])
+				{
+					inMode = cToCmode((*it)[i]);
+					if (inMode == CMODE_NONE)
+						throw std::runtime_error(":" + this->_server.getServerName() + " 472 " + (*it)[i] + " :is unknown mode char to me for " + targetChannel->getName() + "\r\n");
+					if (modeBool)
+					{
+						if ((inMode == CMODE_K) && (it + 1 != this->_params.end()))
+						{
+							it++;
+							if (!targetChannel->setPass(*(it + 1)))
+								throw std::runtime_error(":" + targetChannel->getName() + " 467 :Channel key already set\r\n");
+						}
+					}
+					else
+					{
+						continue; // WORK IN PROGRESS
+					}
+					i++;
+				}
+			}
 		}
-		i++;
+	}
+	catch(std::exception &e)
+	{
+		this->_response = e.what();
+		this->_respondUser();
+		return ;
 	}
 }
 

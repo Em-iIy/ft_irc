@@ -34,6 +34,7 @@ public:
 	void	rmUser(User *user);
 	void	addOper(User *user);
 	void	rmOper(User *user);
+	bool	setPass(std::string pass);
 	bool	isUser(User *user);
 	bool	isOper(User *user);
 };
