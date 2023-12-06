@@ -22,14 +22,22 @@ void	Message::_TOPIC(void)
 	}
 	if (this->_params.size() == 1)
 	{
-		// 331		RPL_NOTOPIC
-		// 332		RPL_TOPIC
 		const std::string &topic = target->getTopic();
 		if (topic == "")
+		{
+			// 331		RPL_NOTOPIC
 			this->_response = ":" + this->_server.getServerName() + " 331 " + target->getName() + " :No topic is set\r\n";
+			this->_respondUser();
+		}
 		else
+		{
+			// 332		RPL_TOPIC
 			this->_response = ":" + this->_server.getServerName() + " 332 " + target->getName() + " :" + topic + "\r\n";
-		this->_respondUser();
+			this->_respondUser();
+			// 333		RPL_TOPICWHOTIME
+			this->_response = ":" + this->_server.getServerName() + " 333 " + target->getName() + " " + target->getTopicSetBy() + " " + std::to_string(target->getTopicSetAt()) + "\r\n";
+			this->_respondUser();
+		}
 		return ;
 	}
 	if (target->checkMode(CMODE_T) && target->isOper(&this->_user) == false)
@@ -40,4 +48,12 @@ void	Message::_TOPIC(void)
 		return ;
 	}
 	target->setTopic(this->_params[1]);
+	target->setTopicSetBy(this->_user.getNickname());
+	target->setTopicSetAt(std::time(NULL));
+	// 332		RPL_TOPIC
+	this->_response = ":" + this->_server.getServerName() + " 332 " + target->getName() + " :" + this->_params[1] + "\r\n";
+	this->_respondUser();
+	// 333		RPL_TOPICWHOTIME
+	this->_response = ":" + this->_server.getServerName() + " 333 " + target->getName() + " " + target->getTopicSetBy() + " " + std::to_string(target->getTopicSetAt()) + "\r\n";
+	this->_respondUser();
 }

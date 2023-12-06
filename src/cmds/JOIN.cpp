@@ -47,6 +47,12 @@ void	Message::_JOIN(void)
 				try
 				{
 					(**it).addUser(&(this->_user), pass);
+					// 332		RPL_TOPIC
+					this->_response = ":" + this->_server.getServerName() + " 332 " + (*it)->getName() + " :" + this->_params[1] + "\r\n";
+					this->_respondUser();
+					// 333		RPL_TOPICWHOTIME
+					this->_response = ":" + this->_server.getServerName() + " 333 " + (*it)->getName() + " " + (*it)->getTopicSetBy() + " " + std::to_string((*it)->getTopicSetAt()) + "\r\n";
+					this->_respondUser();
 				}
 				catch(...)
 				{
