@@ -26,6 +26,8 @@ public:
 	cmode_t				&getMode(void);
 	bool				checkMode(cmode_t mode) const;
 
+	void				setTopic(const std::string &topic);
+
 	void	addMode(cmode_t mode);
 	void	rmMode(cmode_t mode);
 	void	addUser(User *user, std::string &pass);

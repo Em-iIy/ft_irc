@@ -55,6 +55,11 @@ bool				Channel::checkMode(cmode_t mode) const
 
 
 
+// Setters
+void				Channel::setTopic(const std::string &topic)
+{
+	this->_topic = topic;
+}
 
 bool	Channel::isUser(User *user)
 {

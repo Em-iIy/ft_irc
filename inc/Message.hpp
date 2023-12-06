@@ -36,6 +36,7 @@ private:
 	void	_PING(void);
 	void	_PONG(void);
 	void	_QUIT(void);
+	void	_TOPIC(void);
 	void	_USER(void);
 	void	_VERSION(void);
 	void	_WHOIS(void);

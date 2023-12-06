@@ -27,6 +27,7 @@ FILES_SRCS =	main.cpp \
 				PING.cpp \
 				PONG.cpp \
 				QUIT.cpp \
+				TOPIC.cpp \
 				USER.cpp \
 				VERSION.cpp \
 				WHOIS.cpp \

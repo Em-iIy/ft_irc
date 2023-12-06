@@ -58,6 +58,7 @@ enum	cmd_e {
 	CMD_PING,
 	CMD_PONG,
 	CMD_QUIT,
+	CMD_TOPIC,
 	CMD_USER,
 	CMD_VERSION,
 	CMD_JOIN,
