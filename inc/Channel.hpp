@@ -24,6 +24,7 @@ public:
 	std::list<User *>	&getUsers(void);
 	std::list<User *>	&getOpers(void);
 	cmode_t				&getMode(void);
+	bool				checkMode(cmode_t mode) const;
 
 	void	addMode(cmode_t mode);
 	void	rmMode(cmode_t mode);

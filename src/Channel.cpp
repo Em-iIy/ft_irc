@@ -17,6 +17,45 @@ Channel::~Channel(void)
 {
 }
 
+// Getters
+const std::string	&Channel::getName(void)
+{
+	return (this->_name);
+}
+
+const std::string	&Channel::getPass(void)
+{
+	return (this->_pass);
+}
+
+const std::string	&Channel::getTopic(void)
+{
+	return (this->_topic);
+}
+
+ std::list<User *>	&Channel::getUsers(void)
+{
+	return (this->_users);
+}
+
+std::list<User *>	&Channel::getOpers(void)
+{
+	return (this->_opers);
+}
+
+cmode_t				&Channel::getMode(void)
+{
+	return (this->_mode);
+}
+
+bool				Channel::checkMode(cmode_t mode) const
+{
+	return (this->_mode & mode);
+}
+
+
+
+
 bool	Channel::isUser(User *user)
 {
 	for (std::list<User *>::iterator it = this->_users.begin(); it != this->_users.end(); ++it)
@@ -63,56 +102,26 @@ void	Channel::rmUser(User *user)
 	user->rmFromChannel(this);
 }
 
-void	Channel::addOper(User *user)
+void				Channel::addOper(User *user)
 {
 	if (this->isOper(user))
 		return;
 	this->_opers.push_back(user);
 }
 
-void	Channel::rmOper(User *user)
+void				Channel::rmOper(User *user)
 {
 	this->_opers.remove(user);
 	if (!(this->_opers.size()) && (this->_users.size() > 0))
 		this->addOper(*(this->_users.begin()));
 }
 
-const std::string	&Channel::getName(void)
-{
-	return (this->_name);
-}
-
-const std::string	&Channel::getPass(void)
-{
-	return (this->_pass);
-}
-
-const std::string		&Channel::getTopic(void)
-{
-	return (this->_topic);
-}
-
- std::list<User *>	&Channel::getUsers(void)
-{
-	return (this->_users);
-}
-
-std::list<User *>	&Channel::getOpers(void)
-{
-	return (this->_opers);
-}
-
-cmode_t				&Channel::getMode(void)
-{
-	return (this->_mode);
-}
-
-void	Channel::addMode(cmode_t mode)
+void				Channel::addMode(cmode_t mode)
 {
 	this->_mode |= mode;
 }
 
-void	Channel::rmMode(cmode_t mode)
+void				Channel::rmMode(cmode_t mode)
 {
 	this->_mode &= ~mode;
 }
