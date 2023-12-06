@@ -14,3 +14,4 @@ std::string					cmodeToStr(const cmode_t mode);
 std::string					date(void);
 std::string					time(void);
 std::vector<std::string>	parseParamByComma(std::string param);
+std::vector<std::string>	split(const std::string &str, const std::string &d);
