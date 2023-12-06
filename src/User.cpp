@@ -165,6 +165,18 @@ std::time_t		User::getIdle(void) const
 	return (std::time(NULL) - this->_idleTime);
 }
 
+std::list<Channel *>	&User::getChannels(void)
+{
+	return (this->_channels);
+};
+
+Channel 				*User::getChannel(const std::string &channelName)
+{
+	for (std::list<Channel *>::iterator it = this->_channels.begin(); it != this->_channels.end(); ++it)
+		if ((*it)->getName() == channelName)
+			return (*it);
+	return (NULL);
+}
 
 
 

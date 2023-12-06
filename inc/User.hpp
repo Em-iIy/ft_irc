@@ -41,36 +41,37 @@ public:
 	void	checkRegister(void);
 
 
-	const int			&getFd(void) const;
-	std::string			getIP(void) const;
-	int					getPort(void) const;
-	const std::string	&getUsername(void) const;
-	const std::string	&getNickname(void) const;
-	const std::string	&getHostname(void) const;
-	const std::string	&getServername(void) const;
-	const std::string	&getRealname(void) const;
-	const std::string	&getFullRef(void) const;
-	const std::string	&getAwayMsg(void) const;
-	bool				getRegistered(void) const;
-	bool				getPassword(void) const;
-	const umode_t		&getMode(void) const;
-	bool				checkMode(umode_t mode) const;
-	std::time_t			getIdle(void) const;
-	std::list<Channel *>	&getChannels(void) {return (this->_channels);};
+	const int				&getFd(void) const;
+	std::string				getIP(void) const;
+	int						getPort(void) const;
+	const std::string		&getUsername(void) const;
+	const std::string		&getNickname(void) const;
+	const std::string		&getHostname(void) const;
+	const std::string		&getServername(void) const;
+	const std::string		&getRealname(void) const;
+	const std::string		&getFullRef(void) const;
+	const std::string		&getAwayMsg(void) const;
+	bool					getRegistered(void) const;
+	bool					getPassword(void) const;
+	const umode_t			&getMode(void) const;
+	bool					checkMode(umode_t mode) const;
+	std::time_t				getIdle(void) const;
+	std::list<Channel *>	&getChannels(void);
+	Channel 				*getChannel(const std::string &channelName);
 
-	void				setUsername(const std::string &username);
-	void				setNickname(const std::string &nickname);
-	void				setAwayMsg(const std::string &msg);
-	void				setRegistered(const bool &registered);
-	void				setPassword(const bool &password);
-	void				addMode(umode_t mode);
-	void				rmMode(umode_t mode);
-	void				setIdle(const std::time_t &time);
-	void				addToChannel(Channel *channel);
-	void				rmFromChannel(Channel *channel);
+	void					setUsername(const std::string &username);
+	void					setNickname(const std::string &nickname);
+	void					setAwayMsg(const std::string &msg);
+	void					setRegistered(const bool &registered);
+	void					setPassword(const bool &password);
+	void					addMode(umode_t mode);
+	void					rmMode(umode_t mode);
+	void					setIdle(const std::time_t &time);
+	void					addToChannel(Channel *channel);
+	void					rmFromChannel(Channel *channel);
 
-	void				capStart(void);
-	void				capEnd(void);
+	void					capStart(void);
+	void					capEnd(void);
 };
 
 std::ostream	&operator<<(std::ostream &o, User &rhs);
