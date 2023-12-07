@@ -41,7 +41,7 @@ bool	isChannel(const std::string &str)
 	return (false);
 }
 
-// Converts a mode character to the corresponding enum value
+// Converts a user mode character to the corresponding enum value
 umode_e	cToUmode(char c)
 {
 	switch (c)
@@ -62,6 +62,26 @@ umode_e	cToUmode(char c)
 		return (UMODE_S);
 	default:
 		return (UMODE_NONE);
+	}
+}
+
+// Converts a channel mode character to the corresponding enum value
+cmode_e	cToCmode(char c)
+{
+	switch (c)
+	{
+	case 'i':
+		return (CMODE_I);
+	case 't':
+		return (CMODE_T);
+	case 'k':
+		return (CMODE_K);
+	case 'o':
+		return (CMODE_O);
+	case 'l':
+		return (CMODE_L);
+	default:
+		return (CMODE_NONE);
 	}
 }
 

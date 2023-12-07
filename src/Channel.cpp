@@ -131,6 +131,15 @@ void				Channel::rmMode(cmode_t mode)
 	this->_mode &= ~mode;
 }
 
+bool				Channel::setPass(std::string pass)
+{
+	if (this->checkMode(CMODE_K))
+		return false;
+	this->addMode(CMODE_K);
+	this->_pass = pass;
+	return true;
+}
+
 std::ostream	&operator<<(std::ostream &out, Channel &c)
 {
 	out << "Channel " << c.getName() << std::endl <<
