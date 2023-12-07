@@ -297,13 +297,16 @@ void	Server::removeNickname(const std::string &nickname)
 }
 
 // Channel stuff
-void	Server::addChannel(std::string &name, std::string &pass, User *creator)
+
+// Returns the new channel pointer
+Channel	*Server::addChannel(std::string &name, std::string &pass, User *creator)
 {
 	Channel *newChannel = new Channel(name, pass, creator);
 
 	newChannel->addUser(creator, pass);
 	newChannel->addOper(creator);
 	this->_channels.push_back(newChannel);
+	return (newChannel);
 }
 
 void	Server::rmChannel(Channel *channel)

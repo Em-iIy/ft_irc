@@ -1,5 +1,42 @@
 #include "Message.hpp"
 
+// Sends Channel info to the user when joining the channel
+// !!! Needs to broadcast to the channel the the user has joined
+void	Message::_welcomeChannel(Channel *channel)
+{
+	// 332		RPL_TOPIC
+	if (channel->getTopic() != "")
+	{
+		this->_response = ":" + this->_server.getServerName() + " 332 " + this->_user.getNickname() + " " + channel->getName() + " :" + channel->getTopic() + "\r\n";
+		this->_respondUser();
+	}
+	// 353		RPL_NAMEREPLY
+	this->_response = ":" + this->_server.getServerName() + " 353 =" + channel->getName() + " :";
+	for (std::list<User *>::iterator it = channel->getUsers().begin(); it != channel->getUsers().end(); ++it)
+	{
+		// Create extra response if list of users exceeds max message size
+		if (this->_response.length() > MSG_BUFFERSIZE - 16)
+		{
+			this->_response.pop_back();
+			this->_response += "\r\n";
+			this->_respondUser();
+			this->_response = ":" + this->_server.getServerName() + " 353 =" + channel->getName() + " :";
+		}
+		if (channel->isOper(*it))
+			this->_response += "@";
+		else
+			this->_response += "=";
+		this->_response += (*it)->getNickname() + " ";
+	}
+	this->_response.pop_back();
+	this->_response += "\r\n";
+	this->_respondUser();
+	// 366		RPL_ENDOFNAMES
+	this->_response = ":" + this->_server.getServerName() = " 366 " + channel->getName() + " :End of NAMES list\r\n";
+	this->_respondUser();
+}
+
+
 void	Message::_JOIN(void)
 {
 	// Must be registered to use this command
@@ -36,8 +73,9 @@ void	Message::_JOIN(void)
 		channelExists = false;
 		for (std::list<Channel *>::iterator it = channels.begin(); it != channels.end(); ++it)
 		{
+			Channel *channel = *it;
 			// if channel exists, attemt to add them to it
-			if ((**it).getName() == names[i])
+			if (channel->getName() == names[i])
 			{
 				channelExists = true;
 				// Password iterator must be the same as the channels' in their respective vectors, else try without one
@@ -46,13 +84,8 @@ void	Message::_JOIN(void)
 					pass = passes[i];
 				try
 				{
-					(**it).addUser(&(this->_user), pass);
-					// 332		RPL_TOPIC
-					this->_response = ":" + this->_server.getServerName() + " 332 " + (*it)->getName() + " :" + this->_params[1] + "\r\n";
-					this->_respondUser();
-					// 333		RPL_TOPICWHOTIME
-					this->_response = ":" + this->_server.getServerName() + " 333 " + (*it)->getName() + " " + (*it)->getTopicSetBy() + " " + std::to_string((*it)->getTopicSetAt()) + "\r\n";
-					this->_respondUser();
+					channel->addUser(&(this->_user), pass);
+					this->_welcomeChannel(channel);
 				}
 				catch(...)
 				{
@@ -68,7 +101,8 @@ void	Message::_JOIN(void)
 			pass = "";
 			if (i < passes.size())
 				pass = passes[i];
-			this->_server.addChannel(names[i], pass, &(this->_user));
+			Channel *channel = this->_server.addChannel(names[i], pass, &(this->_user));
+			this->_welcomeChannel(channel);
 		}
 	}
 	this->_server.printChannels();

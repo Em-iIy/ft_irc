@@ -20,6 +20,8 @@ private:
 	std::string						_param;
 	std::string						_response;
 
+	void	_welcomeChannel(Channel *channel);
+
 	void	_respondUser(void);
 	cmd_e	_checkCommand(void);
 	void	_runCommand(void);

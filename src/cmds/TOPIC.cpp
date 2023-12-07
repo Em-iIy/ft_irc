@@ -34,9 +34,6 @@ void	Message::_TOPIC(void)
 			// 332		RPL_TOPIC
 			this->_response = ":" + this->_server.getServerName() + " 332 " + target->getName() + " :" + topic + "\r\n";
 			this->_respondUser();
-			// 333		RPL_TOPICWHOTIME
-			this->_response = ":" + this->_server.getServerName() + " 333 " + target->getName() + " " + target->getTopicSetBy() + " " + std::to_string(target->getTopicSetAt()) + "\r\n";
-			this->_respondUser();
 		}
 		return ;
 	}
@@ -48,12 +45,8 @@ void	Message::_TOPIC(void)
 		return ;
 	}
 	target->setTopic(this->_params[1]);
-	target->setTopicSetBy(this->_user.getNickname());
-	target->setTopicSetAt(std::time(NULL));
 	// 332		RPL_TOPIC
-	this->_response = ":" + this->_server.getServerName() + " 332 " + target->getName() + " :" + this->_params[1] + "\r\n";
-	this->_respondUser();
-	// 333		RPL_TOPICWHOTIME
-	this->_response = ":" + this->_server.getServerName() + " 333 " + target->getName() + " " + target->getTopicSetBy() + " " + std::to_string(target->getTopicSetAt()) + "\r\n";
+	this->_response = ":" + this->_user.getFullRef() + " TOPIC " + target->getName() + " :" + this->_params[1] + "\r\n";
+	// Needs to be sent to whole channel
 	this->_respondUser();
 }

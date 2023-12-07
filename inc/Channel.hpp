@@ -11,8 +11,6 @@ private:
 	std::string				_name;
 	std::string				_pass;
 	std::string				_topic = "";
-	std::string				_topicSetBy;
-	std::time_t				_topicSetAt;
 	std::list<User *>		_users;
 	std::list<User *>		_opers;
 	cmode_t					_mode = CMODE_NONE;
@@ -28,12 +26,8 @@ public:
 	std::list<User *>	&getOpers(void);
 	cmode_t				&getMode(void);
 	bool				checkMode(cmode_t mode) const;
-	const std::string	&getTopicSetBy(void) const;
-	const std::time_t 	&getTopicSetAt(void) const;
 
 	void				setTopic(const std::string &topic);
-	void				setTopicSetBy(const std::string &nick);
-	void				setTopicSetAt(const std::time_t &time);
 
 	void	addMode(cmode_t mode);
 	void	rmMode(cmode_t mode);

@@ -53,31 +53,11 @@ bool				Channel::checkMode(cmode_t mode) const
 	return (this->_mode & mode);
 }
 
-const std::string	&Channel::getTopicSetBy(void) const
-{
-	return (this->_topicSetBy);
-}
-
-const std::time_t 	&Channel::getTopicSetAt(void) const
-{
-	return (this->_topicSetAt);
-}
-
 
 // Setters
 void				Channel::setTopic(const std::string &topic)
 {
 	this->_topic = topic;
-}
-
-void				Channel::setTopicSetBy(const std::string &nick)
-{
-	this->_topicSetBy = nick;
-}
-
-void				Channel::setTopicSetAt(const std::time_t &time)
-{
-	this->_topicSetAt = time;
 }
 
 
@@ -157,9 +137,9 @@ std::ostream	&operator<<(std::ostream &out, Channel &c)
 	"Topic: " << c.getTopic() << std::endl <<
 	"Users: " << c.getUsers().size() << std::endl;
 	for (std::list<User *>::iterator it = c.getUsers().begin(); it != c.getUsers().end(); ++it)
-		out << (**it).getUsername() << std::endl;
+		out << (**it).getNickname() << std::endl;
 	out << "Operators:" << c.getOpers().size() << std::endl;
 	for (std::list<User *>::iterator it = c.getOpers().begin(); it != c.getOpers().end(); ++it)
-		out << (**it).getUsername() << std::endl;
+		out << (**it).getNickname() << std::endl;
 	return out;
 }

@@ -70,7 +70,7 @@ public:
 	void	addNickname(const std::string &nickname);
 	void	removeNickname(const std::string &nickname);
 
-	void	addChannel(std::string &name, std::string &pass, User *creator);
+	Channel	*addChannel(std::string &name, std::string &pass, User *creator);
 	void	rmChannel(Channel *channel);
 	bool	hasChannel(std::string &name);
 	Channel	*getChannel(std::string &name);
