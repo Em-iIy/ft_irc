@@ -32,14 +32,6 @@ void	Message::parseMsg(std::string &msg)
 	// Remove \r\n from command string
 	rmCRLF(msg);
 	std::string	temp;
-
-	// Remove when commands are updated
-	{
-		std::stringstream			input(msg);
-		std::getline(input, temp, ' ');
-		std::getline(input, this->_param);
-	}
-
 	size_t colon = msg.find(" :");
 	size_t	space = 0;
 	size_t	arg = 0;

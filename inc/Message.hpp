@@ -17,7 +17,6 @@ private:
 	std::string						_command;
 	std::vector<std::string>		_params;
 	std::string						_trailing;
-	std::string						_param;
 	std::string						_response;
 
 	void	_welcomeChannel(Channel *channel);
