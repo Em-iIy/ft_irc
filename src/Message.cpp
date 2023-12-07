@@ -107,6 +107,13 @@ void	Message::_respondUser(void)
 	this->_user.toSend.push_back(this->_response);
 }
 
+void	Message::_respondChannel(Channel *channel)
+{
+	msgLimitSize(this->_response);
+	for (std::list<User *>::iterator it = channel->getUsers().begin(); it != channel->getUsers().end(); ++it)
+		(*it)->toSend.push_back(this->_response);
+}
+
 cmd_e	Message::_checkCommand(void)
 {
 	if (this->_command == "PING")

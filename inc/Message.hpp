@@ -23,6 +23,7 @@ private:
 	void	_welcomeChannel(Channel *channel);
 
 	void	_respondUser(void);
+	void	_respondChannel(Channel *channel);
 	cmd_e	_checkCommand(void);
 	void	_runCommand(void);
 
