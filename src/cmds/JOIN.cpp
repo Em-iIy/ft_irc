@@ -34,6 +34,9 @@ void	Message::_welcomeChannel(Channel *channel)
 	// 366		RPL_ENDOFNAMES
 	this->_response = ":" + this->_server.getServerName() = " 366 " + channel->getName() + " :End of NAMES list\r\n";
 	this->_respondUser();
+	// Announce to the channel the user is joining
+	this->_response = ":" + this->_user.getFullRef() + " JOIN " + channel->getName() + "\r\n";
+	this->_respondChannel(channel);
 }
 
 

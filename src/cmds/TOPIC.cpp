@@ -47,6 +47,5 @@ void	Message::_TOPIC(void)
 	target->setTopic(this->_params[1]);
 	// 332		RPL_TOPIC
 	this->_response = ":" + this->_user.getFullRef() + " TOPIC " + target->getName() + " :" + this->_params[1] + "\r\n";
-	// Needs to be sent to whole channel
-	this->_respondUser();
+	this->_respondChannel(target);
 }
