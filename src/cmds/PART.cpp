@@ -48,5 +48,4 @@ void	Message::_PART(void)
 			}
 		}
 	}
-	this->_server.printChannels();
 }

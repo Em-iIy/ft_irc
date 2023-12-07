@@ -142,7 +142,7 @@ bool				Channel::setPass(std::string pass)
 
 std::ostream	&operator<<(std::ostream &out, Channel &c)
 {
-	out << "Channel " << c.getName() << std::endl <<
+	out << "Channel " << c.getName() << ":" << std::endl <<
 	"Topic: " << c.getTopic() << std::endl <<
 	"Users: " << c.getUsers().size() << std::endl;
 	for (std::list<User *>::iterator it = c.getUsers().begin(); it != c.getUsers().end(); ++it)

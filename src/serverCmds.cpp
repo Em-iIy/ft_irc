@@ -5,6 +5,24 @@
 #include <iostream>
 #include <exception>
 
+// Prints out a list of all the channel names
+static void	channels(Server &serv)
+{
+	std::cout << "Channels:" << std::endl;
+	std::list<Channel *> channels = serv.getChannels();
+	for (std::list<Channel *>::iterator it = channels.begin(); it != channels.end(); ++it)
+		std::cout << (*it)->getName() << std::endl;
+}
+
+// Prints out the information of the given channel
+static void	channel(std::string &param, Server &serv)
+{
+	Channel	*channel = serv.getChannel(param);
+	if (!channel)
+		throw std::runtime_error("Channel not found");
+	std::cout << *channel << std::endl;
+}
+
 // Prints out a list of all the nicknames in use
 static void	nicks(Server &serv)
 {
@@ -87,6 +105,11 @@ void	serverCmd(std::string cmd, Server &serv)
 			users(serv);
 			return ;
 		}
+		if (cmd == "CHANNELS")
+		{
+			channels(serv);
+			return ;
+		}
 		if (cmd == "NICKS")
 		{
 			nicks(serv);
@@ -106,6 +129,11 @@ void	serverCmd(std::string cmd, Server &serv)
 	if (command == "USER")
 	{
 		user(param, serv);
+		return ;
+	}
+	if (command == "CHANNEL")
+	{
+		channel(param, serv);
 		return ;
 	}
 	if (command == "BC")
