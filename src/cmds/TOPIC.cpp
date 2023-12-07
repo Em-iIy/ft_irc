@@ -8,7 +8,7 @@ void	Message::_TOPIC(void)
 	if (!this->_params.size())
 	{
 		// 461		ERR_NEEDMOREPARAMS
-		this->_response = ":" + this->_server.getServerName() + " 461 " + this->_command + " :Not enough parameters\r\n";
+		this->_response = ":" + this->_server.getServerName() + " 461 " + this->_user.getNickname() + " " + this->_command + " :Not enough parameters\r\n";
 		this->_respondUser();
 		return ;
 	}
@@ -16,7 +16,7 @@ void	Message::_TOPIC(void)
 	if (!target)
 	{
 		// 442		ERR_NOTONCHANNEL
-		this->_response = ":" + this->_server.getServerName() + " 442 " + target->getName() + " :You're not on that channel\r\n";
+		this->_response = ":" + this->_server.getServerName() + " 442 " + this->_user.getNickname() + " " + target->getName() + " :You're not on that channel\r\n";
 		this->_respondUser();
 		return ;
 	}
@@ -26,13 +26,13 @@ void	Message::_TOPIC(void)
 		if (topic == "")
 		{
 			// 331		RPL_NOTOPIC
-			this->_response = ":" + this->_server.getServerName() + " 331 " + target->getName() + " :No topic is set\r\n";
+			this->_response = ":" + this->_server.getServerName() + " 331 " + this->_user.getNickname() + " " + target->getName() + " :No topic is set\r\n";
 			this->_respondUser();
 		}
 		else
 		{
 			// 332		RPL_TOPIC
-			this->_response = ":" + this->_server.getServerName() + " 332 " + target->getName() + " :" + topic + "\r\n";
+			this->_response = ":" + this->_server.getServerName() + " 332 " + this->_user.getNickname() + " " + target->getName() + " :" + topic + "\r\n";
 			this->_respondUser();
 		}
 		return ;
@@ -40,7 +40,7 @@ void	Message::_TOPIC(void)
 	if (target->checkMode(CMODE_T) && target->isOper(&this->_user) == false)
 	{
 		// 482		ERR_CHANOPRIVSNEEDED
-		this->_response = ":" + this->_server.getServerName() + " 482 " + target->getName() + " :You're not channel operator\r\n";
+		this->_response = ":" + this->_server.getServerName() + " 482 " + this->_user.getNickname() + " " + target->getName() + " :You're not channel operator\r\n";
 		this->_respondUser();
 		return ;
 	}

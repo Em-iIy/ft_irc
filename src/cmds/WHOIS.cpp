@@ -9,7 +9,7 @@ void	Message::_WHOIS(void)
 	if (this->_params.size() == 0)
 	{
 		// 431		ERR_NONICKNAMEGIVEN
-		this->_response = ":" + this->_server.getServerName() + " 431 :No nickname given\r\n";
+		this->_response = ":" + this->_server.getServerName() + " 431 " + this->_user.getNickname() + " :No nickname given\r\n";
 		this->_respondUser();
 		return ;
 	}
@@ -18,7 +18,7 @@ void	Message::_WHOIS(void)
 		if (this->_params[0] != this->_server.getServerName())
 		{
 			// 402		ERR_NOSUCHSERVER
-			this->_response = ":" + this->_server.getServerName() + " 402 " + this->_params[0] + " :No such server\r\n";
+			this->_response = ":" + this->_server.getServerName() + " 402 " + this->_user.getNickname() + " " + this->_params[0] + " :No such server\r\n";
 			this->_respondUser();
 			return ;
 		}
@@ -35,7 +35,7 @@ void	Message::_WHOIS(void)
 	if (it == users.end())
 	{
 		// 401		ERR_NOSUCHNICK
-		this->_response = ":" + this->_server.getServerName() + " 401 " + target + " :No such nick/channel\r\n";
+		this->_response = ":" + this->_server.getServerName() + " 401 " + this->_user.getNickname() + " " + target + " :No such nick/channel\r\n";
 		this->_respondUser();
 		return ;
 	}

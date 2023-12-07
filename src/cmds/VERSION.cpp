@@ -8,7 +8,7 @@ void	Message::_VERSION(void)
 	if (this->_params.size() != 0 && this->_params[0] != this->_server.getServerName())
 	{
 		// 402		ERR_NOSUCHSERVER
-		this->_response = ":" + this->_server.getServerName() + " 402 " + this->_params[0] + " :No such server\r\n";
+		this->_response = ":" + this->_server.getServerName() + " 402 " + this->_user.getNickname() + " " + this->_params[0] + " :No such server\r\n";
 		this->_respondUser();
 		return ;
 	}

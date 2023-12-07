@@ -12,7 +12,7 @@ void	Message::_PASS(void)
 	if (this->_user.getRegistered())
 	{
 		// 462		ERR_ALREADYREGISTRED
-		this->_response = ":" + this->_server.getServerName() + " 462 :You may not reregister\r\n";
+		this->_response = ":" + this->_server.getServerName() + " 462 " + this->_user.getNickname() + " :You may not reregister\r\n";
 		this->_respondUser();
 		return ;
 	}

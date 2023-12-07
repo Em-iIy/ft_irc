@@ -8,7 +8,7 @@ void	Message::_PING(void)
 	if (this->_params.size() == 0)
 	{
 		// 409		ERR_NOORIGIN
-		this->_response = ":" + this->_server.getServerName() + " 409 :No origin specified\r\n";
+		this->_response = ":" + this->_server.getServerName() + " 409 " + this->_user.getNickname() + " :No origin specified\r\n";
 		this->_respondUser();
 		return ;
 	}
@@ -30,7 +30,7 @@ void	Message::_PING(void)
 	if (dst != this->_server.getServerName())
 	{
 		// 402		ERR_NOSUCHSERVER
-		this->_response = ":" + this->_server.getServerName() + " 402 " + dst + " :No such server\r\n";
+		this->_response = ":" + this->_server.getServerName() + " 402 " + this->_user.getNickname() + " " + dst + " :No such server\r\n";
 		this->_respondUser();
 		return ;
 	}

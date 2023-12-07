@@ -34,7 +34,7 @@ void	Message::_NICK(void)
 	if (this->_params.size() == 0)
 	{
 		// 431 ERR_NONICKNAMEGIVEN
-		this->_response = ":" + this->_server.getServerName() + " 431 :No nickname given\r\n";
+		this->_response = ":" + this->_server.getServerName() + " 431  :No nickname given\r\n";
 		this->_respondUser();
 		return ;
 	}

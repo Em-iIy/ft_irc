@@ -8,7 +8,7 @@ void	Message::_ISON(void)
 	if (this->_params.size() == 0)
 	{
 		// 461		ERR_NEEDMOREPARAMS
-		this->_response = ":" + this->_server.getServerName() + " 461 " + this->_command + " :Not enough parameters\r\n";
+		this->_response = ":" + this->_server.getServerName() + " 461 " + this->_user.getNickname() + " " + this->_command + " :Not enough parameters\r\n";
 		this->_respondUser();
 		return ;
 	}

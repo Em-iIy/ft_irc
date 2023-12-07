@@ -5,14 +5,14 @@ void	Message::_USER_MODE(std::string &target, std::string &mode)
 	if (target != this->_user.getNickname())
 	{
 		// 502		ERR_USERSDONTMATCH
-		this->_response = ":" + this->_server.getServerName() + " 502 :Cannot change mode for other users\r\n";
+		this->_response = ":" + this->_server.getServerName() + " 502 " + this->_user.getNickname() + " :Cannot change mode for other users\r\n";
 		this->_respondUser();
 		return ;
 	}
 	if (mode.length() == 0)
 	{
 		// 221		RPL_UMODEIS
-		this->_response = ":" + this->_server.getServerName() + " 221 " + target + " :" + umodeToStr(this->_user.getMode()) + "\r\n";
+		this->_response = ":" + this->_server.getServerName() + " 221 " + this->_user.getNickname() + " " + target + " :" + umodeToStr(this->_user.getMode()) + "\r\n";
 		this->_respondUser();
 		return ;
 	}
@@ -56,13 +56,13 @@ void	Message::_USER_MODE(std::string &target, std::string &mode)
 			}
 		}
 		// 221		RPL_UMODEIS
-		this->_response = ":" + this->_server.getServerName() + " 221 " + target + " :" + umodeToStr(this->_user.getMode()) + "\r\n";
+		this->_response = ":" + this->_server.getServerName() + " 221 " + this->_user.getNickname() + " " + target + " :" + umodeToStr(this->_user.getMode()) + "\r\n";
 		this->_respondUser();
 	}
 	catch(...)
 	{
 		// 501		ERR_UMODEUNKNOWNFLAG
-		this->_response = ":" + this->_server.getServerName() + " 501 :Unknown MODE flag\r\n";
+		this->_response = ":" + this->_server.getServerName() + " 501 " + this->_user.getNickname() + " :Unknown MODE flag\r\n";
 		this->_respondUser();
 		return ;
 	}
@@ -75,28 +75,28 @@ void	Message::_CHANNEL_MODE(std::string &target, std::string &mode)
 	if (!this->_server.hasChannel(target))
 	{
 		// 403		ERR_NOSUCHCHANNEL
-		this->_response = ":" + this->_server.getServerName() + " 403 " + target + " :No such channel\r\n";
+		this->_response = ":" + this->_server.getServerName() + " 403 " + this->_user.getNickname() + " " + target + " :No such channel\r\n";
 		this->_respondUser();
 		return ;
 	}
 	if (!targetChannel->isUser(&this->_user))
 	{
 		// 442		ERR_NOTONCHANNEL
-		this->_response = ":" + this->_server.getServerName() + " 442 " + target + " :You're not on that channel\r\n";
+		this->_response = ":" + this->_server.getServerName() + " 442 " + this->_user.getNickname() + " " + target + " :You're not on that channel\r\n";
 		this->_respondUser();
 		return ;
 	}
 	if (!targetChannel->isOper(&this->_user))
 	{
 		// 482		ERR_CHANOPRIVSNEEDED
-		this->_response = ":" + this->_server.getServerName() + " 482 " + target + " :You're not channel operator\r\n";
+		this->_response = ":" + this->_server.getServerName() + " 482 " + this->_user.getNickname() + " " + target + " :You're not channel operator\r\n";
 		this->_respondUser();
 		return ;
 	}
 	if (mode.length() == 0)
 	{
 		// 324		RPL_CHANNELMODEIS
-		this->_response = ":" + this->_server.getServerName() + " 324 " + target + " :" + cmodeToStr(this->_server.getChannel(target)->getMode()) + "\r\n";
+		this->_response = ":" + this->_server.getServerName() + " 324 " + this->_user.getNickname() + " " + target + " :" + cmodeToStr(this->_server.getChannel(target)->getMode()) + "\r\n";
 		this->_respondUser();
 		return ;
 	}
@@ -110,7 +110,7 @@ void	Message::_CHANNEL_MODE(std::string &target, std::string &mode)
 			while (i < it->size())
 			{
 				if ((*it)[i] != '+' && (*it)[i] != '-')
-					throw std::runtime_error(":" + this->_server.getServerName() + " 472 :Unknown MODE flag\r\n");
+					throw std::runtime_error(":" + this->_server.getServerName() + " 472 " + this->_user.getNickname() + " :Unknown MODE flag\r\n");
 				while ((*it)[i] == '+' || (*it)[i] == '-')
 					i++;
 				if ((*it)[i - 1] == '+')
@@ -121,14 +121,14 @@ void	Message::_CHANNEL_MODE(std::string &target, std::string &mode)
 				{
 					inMode = cToCmode((*it)[i]);
 					if (inMode == CMODE_NONE)
-						throw std::runtime_error(":" + this->_server.getServerName() + " 472 " + (*it)[i] + " :is unknown mode char to me for " + targetChannel->getName() + "\r\n");
+						throw std::runtime_error(":" + this->_server.getServerName() + " 472 " + this->_user.getNickname() + " " + (*it)[i] + " :is unknown mode char to me for " + targetChannel->getName() + "\r\n");
 					if (modeBool)
 					{
 						if ((inMode == CMODE_K) && (it + 1 != this->_params.end()))
 						{
 							it++;
 							if (!targetChannel->setPass(*(it + 1)))
-								throw std::runtime_error(":" + targetChannel->getName() + " 467 :Channel key already set\r\n");
+								throw std::runtime_error(":" + targetChannel->getName() + " 467 " + this->_user.getNickname() + " :Channel key already set\r\n");
 						}
 					}
 					else
@@ -156,7 +156,7 @@ void	Message::_MODE(void)
 	if (this->_params.size() == 0)
 	{
 		// 461		ERR_NEEDMOREPARAMS
-		this->_response = ":" + this->_server.getServerName() + " 461 " + this->_command + " :Not enough parameters\r\n";
+		this->_response = ":" + this->_server.getServerName() + " 461 " + this->_user.getNickname() + " " + this->_command + " :Not enough parameters\r\n";
 		this->_respondUser();
 		return ;
 	}
