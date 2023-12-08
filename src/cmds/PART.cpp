@@ -32,10 +32,10 @@ void	Message::_PART(void)
 			this->_respondUser();
 			continue ;
 		}
+		channel->rmUser(&(this->_user));
 		// If operator leaves, remove them as such from the channel as well
 		if (channel->isOper(&(this->_user)))
 			channel->rmOper(&(this->_user));
-		channel->rmUser(&(this->_user));
 		// Announce to the channel the user is leaving
 		this->_response = ":" + this->_user.getFullRef() + " PART " + channel->getName();
 		if (this->_params.size() > 1)

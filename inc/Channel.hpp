@@ -14,6 +14,7 @@ private:
 	std::list<User *>		_users;
 	std::list<User *>		_opers;
 	cmode_t					_mode = CMODE_NONE;
+	size_t					_limit = 0;
 
 public:
 	Channel(std::string &name, std::string &pass, User *creator);
@@ -25,7 +26,9 @@ public:
 	std::list<User *>	&getUsers(void);
 	std::list<User *>	&getOpers(void);
 	cmode_t				&getMode(void);
+	size_t				&getLimit(void);
 	bool				checkMode(cmode_t mode) const;
+	User				*getUserFromNick(std::string &nick);
 
 	void				setTopic(const std::string &topic);
 
@@ -36,6 +39,7 @@ public:
 	void	addOper(User *user);
 	void	rmOper(User *user);
 	bool	setPass(std::string pass);
+	void	setLimit(size_t limit);
 	bool	isUser(User *user);
 	bool	isOper(User *user);
 };

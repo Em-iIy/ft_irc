@@ -104,36 +104,72 @@ void	Message::_CHANNEL_MODE(std::string &target, std::string &mode)
 	{
 		for (std::vector<std::string>::iterator it = this->_params.begin() + 1; it != this->_params.end(); ++it)
 		{
-			bool	modeBool; // True for adding, false for removing
-			cmode_t	inMode;
-			size_t	i = 0;
-			while (i < it->size())
+			bool		modeBool; // True for adding, false for removing
+			cmode_t		inMode;
+			size_t		i = 0;
+			std::string	flags = *it;
+
+			while (i < flags.size())
 			{
-				if ((*it)[i] != '+' && (*it)[i] != '-')
-					throw std::runtime_error(":" + this->_server.getServerName() + " 472 " + this->_user.getNickname() + " :Unknown MODE flag\r\n");
-				while ((*it)[i] == '+' || (*it)[i] == '-')
+				if (flags[i] != '+' && flags[i] != '-')
+					throw std::runtime_error(":" + this->_server.getServerName() + " 472 " + this->_user.getNickname() + " " + flags[i] + " :is unknown mode char to me for " + targetChannel->getName() + "\r\n");
+				while (flags[i] == '+' || flags[i] == '-')
 					i++;
-				if ((*it)[i - 1] == '+')
+				if (flags[i - 1] == '+')
 					modeBool = true;
 				else
 					modeBool = false;
-				while ((*it)[i] != '+' && (*it)[i] != '-' && (*it)[i])
+				while (flags[i] != '+' && flags[i] != '-' && flags[i])
 				{
-					inMode = cToCmode((*it)[i]);
+					inMode = cToCmode(flags[i]);
 					if (inMode == CMODE_NONE)
-						throw std::runtime_error(":" + this->_server.getServerName() + " 472 " + this->_user.getNickname() + " " + (*it)[i] + " :is unknown mode char to me for " + targetChannel->getName() + "\r\n");
+						throw std::runtime_error(":" + this->_server.getServerName() + " 472 " + this->_user.getNickname() + " " + flags[i] + " :is unknown mode char to me for " + targetChannel->getName() + "\r\n");
 					if (modeBool)
 					{
-						if ((inMode == CMODE_K) && (it + 1 != this->_params.end()))
+						if (inMode == CMODE_K)
 						{
 							it++;
-							if (!targetChannel->setPass(*(it + 1)))
-								throw std::runtime_error(":" + targetChannel->getName() + " 467 " + this->_user.getNickname() + " :Channel key already set\r\n");
+							if (it == this->_params.end())
+								throw std::runtime_error(":" + this->_server.getServerName() + " 461 " + this->_user.getNickname() + " " + this->_command + " :Not enough parameters\r\n");
+							if (!targetChannel->setPass(*it))
+								throw std::runtime_error(":" + this->_server.getServerName() + " 467 " + targetChannel->getName() + " :Channel key already set\r\n");
 						}
+						else if (inMode == CMODE_O)
+						{
+							it++;
+							if (it == this->_params.end())
+								throw std::runtime_error(":" + this->_server.getServerName() + " 461 " + this->_user.getNickname() + " " + this->_command + " :Not enough parameters\r\n");
+							User *targetUser = targetChannel->getUserFromNick(*it);
+							if (!targetChannel->isUser(targetUser))
+								throw std::runtime_error(":" + this->_server.getServerName() + " 441 " + *it + " " + targetChannel->getName() + " :They aren't on that channel\r\n");
+							if (!targetChannel->isOper(targetUser))
+								targetChannel->addOper(targetUser);
+						}
+						else if (inMode == CMODE_L)
+						{
+							it++;
+							if (it == this->_params.end())
+								throw std::runtime_error(":" + this->_server.getServerName() + " 461 " + this->_user.getNickname() + " " + this->_command + " :Not enough parameters\r\n");
+							targetChannel->setLimit(stoi(*it));
+						}
+						targetChannel->addMode(inMode);
 					}
 					else
 					{
-						continue; // WORK IN PROGRESS
+						if (inMode == CMODE_O)
+						{
+							it++;
+							if (it == this->_params.end())
+								throw std::runtime_error(":" + this->_server.getServerName() + " 461 " + this->_user.getNickname() + " " + this->_command + " :Not enough parameters\r\n");
+							User *targetUser = targetChannel->getUserFromNick(*it);
+							if (!targetChannel->isUser(targetUser))
+								throw std::runtime_error(":" + this->_server.getServerName() + " 441 " + *it + " " + targetChannel->getName() + " :They aren't on that channel\r\n");
+							if (targetChannel->isOper(targetUser))
+								targetChannel->rmOper(targetUser);
+						}
+						else if (inMode == CMODE_L)
+							targetChannel->setLimit(0);
+						targetChannel->rmMode(inMode);
 					}
 					i++;
 				}

@@ -48,6 +48,11 @@ cmode_t				&Channel::getMode(void)
 	return (this->_mode);
 }
 
+size_t				&Channel::getLimit(void)
+{
+	return (this->_limit);
+}
+
 bool				Channel::checkMode(cmode_t mode) const
 {
 	return (this->_mode & mode);
@@ -63,6 +68,8 @@ void				Channel::setTopic(const std::string &topic)
 
 bool	Channel::isUser(User *user)
 {
+	if (!user)
+		return false;
 	for (std::list<User *>::iterator it = this->_users.begin(); it != this->_users.end(); ++it)
 	{
 		if (*it == user)
@@ -73,6 +80,8 @@ bool	Channel::isUser(User *user)
 
 bool	Channel::isOper(User *user)
 {
+	if (!user)
+		return false;
 	for (std::list<User *>::iterator it = this->_opers.begin(); it != this->_opers.end(); ++it)
 	{
 		if (*it == user)
@@ -135,9 +144,24 @@ bool				Channel::setPass(std::string pass)
 {
 	if (this->checkMode(CMODE_K))
 		return false;
-	this->addMode(CMODE_K);
 	this->_pass = pass;
 	return true;
+}
+
+void				Channel::setLimit(size_t limit)
+{
+	this->_limit = limit;
+}
+
+// Returns pointer to user with certain nickname
+User				*Channel::getUserFromNick(std::string &nick)
+{
+	for (std::list<User *>::iterator it = this->_users.begin(); it != this->_users.end(); ++it)
+	{
+		if ((*it)->getNickname() == nick)
+			return (*it);
+	}
+	return (NULL);
 }
 
 std::ostream	&operator<<(std::ostream &out, Channel &c)
@@ -150,5 +174,6 @@ std::ostream	&operator<<(std::ostream &out, Channel &c)
 	out << "Operators:" << c.getOpers().size() << std::endl;
 	for (std::list<User *>::iterator it = c.getOpers().begin(); it != c.getOpers().end(); ++it)
 		out << (**it).getNickname() << std::endl;
+	out << "User limit: " << c.getLimit() << std::endl;
 	return out;
 }
