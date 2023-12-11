@@ -1,5 +1,7 @@
 #include "utils.hpp"
+#include "types.hpp"
 #include <ctime>
+#include <list>
 
 // Removes trailing \r\n from strings
 void	rmCRLF(std::string &str)
@@ -191,4 +193,14 @@ std::vector<std::string>	split(const std::string &str, const std::string &d)
 	}
 	ret.push_back(str.substr(pos));
 	return (ret);
+}
+
+bool	inTempOpers(std::list<User *> opers, User *user)
+{
+	for (std::list<User *>::iterator it = opers.begin(); it != opers.end(); ++it)
+	{
+		if (*it == user)
+			return (true);
+	}
+	return (false);
 }

@@ -49,9 +49,9 @@ cmode_t				&Channel::getMode(void)
 	return (this->_mode);
 }
 
-size_t				&Channel::getLimit(void)
+int				Channel::getLimit(void)
 {
-	return (this->_limit);
+	return (this->_mode & 0xffff);
 }
 
 bool				Channel::checkMode(cmode_t mode) const
@@ -150,17 +150,27 @@ void				Channel::rmMode(cmode_t mode)
 	this->_mode &= ~mode;
 }
 
-bool				Channel::setPass(std::string pass)
+void				Channel::setPass(std::string pass)
 {
-	if (this->checkMode(CMODE_K))
-		return false;
 	this->_pass = pass;
-	return true;
 }
 
-void				Channel::setLimit(size_t limit)
+void				Channel::setLimit(int limit)
 {
-	this->_limit = limit;
+	if (limit > 0xffff)
+		limit = 0xffff;
+	this->_mode &= ~0xffff;
+	this->_mode |= limit;
+}
+
+void				Channel::setMode(cmode_t &mode)
+{
+	this->_mode = mode;
+}
+
+void				Channel::setOpers(std::list<User *> &opers)
+{
+	this->_opers = opers;
 }
 
 // Returns pointer to user with certain nickname
