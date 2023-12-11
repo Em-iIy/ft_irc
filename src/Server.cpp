@@ -140,7 +140,20 @@ bool	Server::_checkDc(int bRead, pollfdIt it)
 	// Set the user for disconnection
 	User	&user = this->_getUser(it->fd);
 	if (user.getRegistered())
-		this->broadcastMsg(":" + user.getFullRef() + " QUIT :User disconnected\r\n");
+	{
+		std::list<Channel *>	&channels = user.getChannels();
+		std::string				msg = " :User disconnected\r\n";
+		std::string				prefix = ":" + user.getFullRef() + " QUIT ";
+		std::string				response;
+		// Add the default quit message or the message from the parameters if provided
+
+		for (std::list<Channel *>::iterator it = channels.begin(); it != channels.end(); ++it)
+		{
+			response = prefix + (*it)->getName() + msg;
+			for (std::list<User *>::iterator itChannel = (*it)->getUsers().begin(); itChannel != (*it)->getUsers().end(); ++itChannel)
+				(*itChannel)->toSend.push_back(response);
+		}
+	}
 	this->_dcPfds.push_back(*it);
 	return (true);
 }
