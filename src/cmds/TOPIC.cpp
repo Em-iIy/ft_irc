@@ -16,7 +16,7 @@ void	Message::_TOPIC(void)
 	if (!target)
 	{
 		// 442		ERR_NOTONCHANNEL
-		this->_response = ":" + this->_server.getServerName() + " 442 " + this->_user.getNickname() + " " + target->getName() + " :You're not on that channel\r\n";
+		this->_response = ":" + this->_server.getServerName() + " 442 " + this->_user.getNickname() + " " + this->_params[0] + " :You're not on that channel\r\n";
 		this->_respondUser();
 		return ;
 	}
