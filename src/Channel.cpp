@@ -1,7 +1,7 @@
 #include "Channel.hpp"
 #include "User.hpp"
 
-Channel::Channel(std::string &name, std::string &pass, User *creator) : _name(name)
+Channel::Channel(std::string &name, std::string &pass, User *creator, Server &server) : _server(server), _name(name)
 {
 	if (!pass.empty())
 	{
@@ -15,6 +15,7 @@ Channel::Channel(std::string &name, std::string &pass, User *creator) : _name(na
 
 Channel::~Channel(void)
 {
+	this->_server.rmChannel(this);
 }
 
 // Getters
@@ -109,11 +110,20 @@ void	Channel::addUser(User *user, std::string &pass)
 	}
 }
 
-void	Channel::rmUser(User *user)
+bool	Channel::rmUser(User *user)
 {
 	this->_users.remove(user);
+	if (this->isOper(user))
+		this->rmOper(user);
 	// also removes channel from users' own list
 	user->rmFromChannel(this);
+	if (!this->getUsers().size())
+	{
+		this->_server.rmChannel(this);
+		delete (this);
+		return (true);
+	}
+	return (false);
 }
 
 void				Channel::addOper(User *user)
@@ -175,5 +185,6 @@ std::ostream	&operator<<(std::ostream &out, Channel &c)
 	for (std::list<User *>::iterator it = c.getOpers().begin(); it != c.getOpers().end(); ++it)
 		out << (**it).getNickname() << std::endl;
 	out << "User limit: " << c.getLimit() << std::endl;
+	out << "Password: " << c.getPass() << std::endl;
 	return out;
 }

@@ -8,6 +8,7 @@
 
 class Channel{
 private:
+	Server					&_server;
 	std::string				_name;
 	std::string				_pass;
 	std::string				_topic = "";
@@ -17,7 +18,7 @@ private:
 	size_t					_limit = 0;
 
 public:
-	Channel(std::string &name, std::string &pass, User *creator);
+	Channel(std::string &name, std::string &pass, User *creator, Server &server);
 	~Channel();
 
 	const std::string	&getName(void);
@@ -35,7 +36,7 @@ public:
 	void	addMode(cmode_t mode);
 	void	rmMode(cmode_t mode);
 	void	addUser(User *user, std::string &pass);
-	void	rmUser(User *user);
+	bool	rmUser(User *user);
 	void	addOper(User *user);
 	void	rmOper(User *user);
 	bool	setPass(std::string pass);

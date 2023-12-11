@@ -17,10 +17,17 @@ static void	channels(Server &serv)
 // Prints out the information of the given channel
 static void	channel(std::string &param, Server &serv)
 {
-	Channel	*channel = serv.getChannel(param);
-	if (!channel)
-		throw std::runtime_error("Channel not found");
-	std::cout << *channel << std::endl;
+	try
+	{
+		Channel	*channel = serv.getChannel(param);
+		if (!channel)
+			throw std::runtime_error("Channel doesn't exist");
+		std::cout << *channel << std::endl;
+	}
+	catch (const std::exception& e)
+	{
+		std::cerr << "Couldn't find channel: " << param << "\treason: " << e.what() << std::endl;
+	}
 }
 
 // Prints out a list of all the nicknames in use
@@ -74,7 +81,7 @@ static void	user(std::string &param, Server &serv)
 	}
 	catch(const std::exception& e)
 	{
-		std::cerr << "Couldn't find user: " << param << "\treason: " << e.what() << '\n';
+		std::cerr << "Couldn't find user: " << param << "\treason: " << e.what() << std::endl;
 	}
 }
 

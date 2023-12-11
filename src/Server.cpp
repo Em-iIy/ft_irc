@@ -301,7 +301,7 @@ void	Server::removeNickname(const std::string &nickname)
 // Returns the new channel pointer
 Channel	*Server::addChannel(std::string &name, std::string &pass, User *creator)
 {
-	Channel *newChannel = new Channel(name, pass, creator);
+	Channel *newChannel = new Channel(name, pass, creator, *this);
 
 	newChannel->addUser(creator, pass);
 	newChannel->addOper(creator);

@@ -176,11 +176,15 @@ void	Message::_CHANNEL_MODE(std::string &target, std::string &mode)
 			}
 		}
 	}
-	catch(std::exception &e)
+	catch(std::runtime_error &e)
 	{
 		this->_response = e.what();
 		this->_respondUser();
 		return ;
+	}
+	catch(std::exception &e)
+	{
+		std::cerr << e.what() << std::endl;
 	}
 }
 

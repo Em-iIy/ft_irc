@@ -34,6 +34,8 @@ User::User(Server &serv, pollfd fd, sockaddr_in sock): _serv(serv), _fd(fd), _so
 User::~User()
 {
 	std::cout << "User #" << this->_fd.fd << " Disconnected." << std::endl;
+	while (this->_channels.size())
+		(*this->_channels.begin())->rmUser(this);
 	close(this->_fd.fd);
 }
 
