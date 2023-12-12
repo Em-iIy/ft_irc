@@ -47,6 +47,9 @@ private:
 	void	_JOIN(void);
 	void	_PART(void);
 	void	_INVITE(void);
+	void	_KICK(void);
+
+	void	_singleKICK(std::string &channelName, std::string &userNick, std::string &comment);
 
 public:
 	Message(std::string &msg, User &user, pollfdIt &it, Server &server);
