@@ -17,6 +17,7 @@ void	Message::_QUIT(void)
 		{
 			this->_response = prefix + (*it)->getName() + msg;
 			this->_respondChannel(*it);
+			(*it)->rmWhitelist(&this->_user);
 		}
 	}
 	// Set the user for disconnection

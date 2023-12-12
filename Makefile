@@ -18,6 +18,7 @@ FILES_SRCS =	main.cpp \
 				Channel.cpp \
 				AWAY.cpp \
 				CAP.cpp \
+				INVITE.cpp \
 				ISON.cpp \
 				JOIN.cpp \
 				MODE.cpp \

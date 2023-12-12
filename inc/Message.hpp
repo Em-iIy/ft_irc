@@ -22,6 +22,7 @@ private:
 	void	_welcomeChannel(Channel *channel);
 
 	void	_respondUser(void);
+	void	_respondTargetUser(User *user);
 	void	_respondChannel(Channel *channel);
 	cmd_e	_checkCommand(void);
 	void	_runCommand(void);
@@ -44,6 +45,7 @@ private:
 	void	_WHOIS(void);
 	void	_JOIN(void);
 	void	_PART(void);
+	void	_INVITE(void);
 
 public:
 	Message(std::string &msg, User &user, pollfdIt &it, Server &server);

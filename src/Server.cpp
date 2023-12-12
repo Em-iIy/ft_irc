@@ -408,3 +408,14 @@ std::list<Channel *>	&Server::getChannels(void)
 {
 	return (this->_channels);
 }
+
+// Returns pointer to user with certain nickname
+User	*Server::getUserFromNick(std::string &nick)
+{
+	for (std::map<sockfd_t, User &>::iterator it = this->_users.begin(); it != this->_users.end(); ++it)
+	{
+		if ((*it).second.getNickname() == nick)
+			return (&(*it).second);
+	}
+	return (NULL);
+}

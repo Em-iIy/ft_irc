@@ -99,6 +99,12 @@ void	Message::_respondUser(void)
 	this->_user.toSend.push_back(this->_response);
 }
 
+void	Message::_respondTargetUser(User *user)
+{
+	msgLimitSize(this->_response);
+	user->toSend.push_back(this->_response);
+}
+
 void	Message::_respondChannel(Channel *channel)
 {
 	msgLimitSize(this->_response);
@@ -138,6 +144,8 @@ cmd_e	Message::_checkCommand(void)
 		return (CMD_PART);
 	if (this->_command == "TOPIC")
 		return (CMD_TOPIC);
+	if (this->_command == "INVITE")
+		return (CMD_INVITE);
 	return (CMD_NOT_FOUND);
 }
 
@@ -194,6 +202,8 @@ void	Message::_runCommand(void)
 	case CMD_PART:
 		this->_PART();
 		break ;
+	case CMD_INVITE:
+		this->_INVITE();
 	default:
 		break;
 	}

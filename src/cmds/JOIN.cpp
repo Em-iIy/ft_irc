@@ -89,6 +89,7 @@ void	Message::_JOIN(void)
 		}
 		catch(const std::runtime_error &e)
 		{
+			// 473		ERR_INVITEONLYCHAN
 			// 471		ERR_CHANNELISFULL
 			// 475		ERR_BADCHANNELKEY
 			this->_response = e.what();

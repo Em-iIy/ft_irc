@@ -64,6 +64,7 @@ enum	cmd_e {
 	CMD_JOIN,
 	CMD_WHOIS,
 	CMD_PART,
+	CMD_INVITE,
 };
 
 // Types

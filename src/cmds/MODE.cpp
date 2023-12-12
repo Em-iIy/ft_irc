@@ -165,8 +165,13 @@ void	Message::_CHANNEL_MODE(std::string &target, std::string &mode)
 							tempMode |= limit;
 							tempMode |= CMODE_L;
 						}
-						else
-							tempMode |= inMode;
+						else if (inMode == CMODE_I)
+						{
+							targetChannel->makeWhitelist();
+							tempMode |= CMODE_I;
+						}
+						else if (inMode == CMODE_T)
+							tempMode |= CMODE_T;
 					}
 					else
 					{

@@ -91,10 +91,27 @@ bool	Channel::isOper(User *user)
 	return false;
 }
 
+bool	Channel::isWhitelisted(User *user)
+{
+	if (!user)
+		return false;
+	for (std::list<User *>::iterator it = this->_whitelist.begin(); it != this->_whitelist.end(); ++it)
+	{
+		if (*it == user)
+			return true;
+	}
+	return false;
+}
+
 void	Channel::addUser(User *user, std::string &pass)
 {
 	if (this->isUser(user))
 		return;
+	if (this->checkMode(CMODE_I) && !this->isWhitelisted(user))
+	{
+		// 473		ERR_INVITEONLYCHAN
+		throw std::runtime_error(":" + this->_server.getServerName() + " 473 " + user->getNickname() + " " + this->_name + " :Cannot join channel (+i)\r\n");
+	}
 	if (this->checkMode(CMODE_L) && this->_users.size() <= (std::size_t)this->getLimit())
 	{
 		// 471		ERR_CHANNELISFULL
@@ -146,6 +163,22 @@ void				Channel::rmOper(User *user)
 	this->_opers.remove(user);
 	if (!(this->_opers.size()) && (this->_users.size() > 0))
 		this->addOper(*(this->_users.begin()));
+}
+
+void				Channel::makeWhitelist(void)
+{
+	this->_whitelist.clear();
+	std::copy(this->_users.begin(), this->_users.end(), std::back_inserter(this->_whitelist));
+}
+
+void				Channel::addWhitelist(User *user)
+{
+	this->_whitelist.push_back(user);
+}
+
+void				Channel::rmWhitelist(User *user)
+{
+	this->_whitelist.remove(user);
 }
 
 void				Channel::addMode(cmode_t mode)

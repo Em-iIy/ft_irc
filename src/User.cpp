@@ -35,7 +35,10 @@ User::~User()
 {
 	std::cout << "User #" << this->_fd.fd << " Disconnected." << std::endl;
 	while (this->_channels.size())
+	{
+		(*this->_channels.begin())->rmWhitelist(this);
 		(*this->_channels.begin())->rmUser(this);
+	}
 	close(this->_fd.fd);
 }
 
