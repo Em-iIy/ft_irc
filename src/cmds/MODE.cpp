@@ -159,7 +159,7 @@ void	Message::_CHANNEL_MODE(std::string &target, std::string &mode)
 							if (it == this->_params.end())
 								throw std::runtime_error(":" + this->_server.getServerName() + " 461 " + this->_user.getNickname() + " " + this->_command + " :Not enough parameters\r\n");
 							int limit = stoi(*it);
-							if (limit > 0xffff)
+							if (limit > 0xffff || limit < 0)
 								limit = 0xffff;
 							tempMode &= ~0xffff;
 							tempMode |= limit;

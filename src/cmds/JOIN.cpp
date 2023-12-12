@@ -87,10 +87,11 @@ void	Message::_JOIN(void)
 			channel->addUser(&(this->_user), pass);
 			this->_welcomeChannel(channel);
 		}
-		catch(...)
+		catch(const std::runtime_error &e)
 		{
+			// 471		ERR_CHANNELISFULL
 			// 475		ERR_BADCHANNELKEY
-			this->_response = ":" + this->_server.getServerName() + " 475 " + this->_user.getNickname() + " " + names[i] + " :Cannot join channel (+k)\r\n";
+			this->_response = e.what();
 			this->_respondUser();
 		}
 	}

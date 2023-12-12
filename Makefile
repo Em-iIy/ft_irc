@@ -73,7 +73,6 @@ endif
 
 # ----------------------------------------Making
 all:
-	echo $(HOST_NAME)
 	@$(MAKE) $(NAME) -j4
 .PHONY: all
 
@@ -89,12 +88,12 @@ $(DIR_OBJS):
 
 # ----------------------------------------Debug
 debug:
-	$(MAKE) re DEBUG_MODE=1
+	$(MAKE) DEBUG_MODE=1
 .PHONY: debug
 
 # ----------------------------------------Logs
 log:
-	$(MAKE) re LOG_MODE=1
+	$(MAKE) LOG_MODE=1
 .PHONY: log
 
 # ----------------------------------------Cleaning

@@ -95,6 +95,11 @@ void	Channel::addUser(User *user, std::string &pass)
 {
 	if (this->isUser(user))
 		return;
+	if (this->checkMode(CMODE_L) && this->_users.size() <= (std::size_t)this->getLimit())
+	{
+		// 471		ERR_CHANNELISFULL
+		throw std::runtime_error(":" + this->_server.getServerName() + " 471 " + user->getNickname() + " " + this->_name + " :Cannot join channel (+l)\r\n");
+	}
 	if (this->_mode & CMODE_K)
 		if (pass == this->_pass)
 		{
@@ -102,7 +107,10 @@ void	Channel::addUser(User *user, std::string &pass)
 			user->addToChannel(this);
 		}
 		else
-			throw std::exception();
+		{
+			// 475		ERR_BADCHANNELKEY
+			throw std::runtime_error(":" + this->_server.getServerName() + " 475 " + user->getNickname() + " " + this->_name + " :Cannot join channel (+k)\r\n");
+		}
 	else
 	{
 		this->_users.push_back(user);
