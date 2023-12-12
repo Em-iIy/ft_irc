@@ -38,6 +38,7 @@ private:
 	void	_PASS(void);
 	void	_PING(void);
 	void	_PONG(void);
+	void	_PRIVMSG(void);
 	void	_QUIT(void);
 	void	_TOPIC(void);
 	void	_USER(void);

@@ -57,6 +57,7 @@ enum	cmd_e {
 	CMD_PASS,
 	CMD_PING,
 	CMD_PONG,
+	CMD_PRIVMSG,
 	CMD_QUIT,
 	CMD_TOPIC,
 	CMD_USER,

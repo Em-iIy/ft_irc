@@ -27,6 +27,7 @@ FILES_SRCS =	main.cpp \
 				PASS.cpp \
 				PING.cpp \
 				PONG.cpp \
+				PRIVMSG.cpp \
 				QUIT.cpp \
 				TOPIC.cpp \
 				USER.cpp \
