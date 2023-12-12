@@ -21,6 +21,7 @@ FILES_SRCS =	main.cpp \
 				INVITE.cpp \
 				ISON.cpp \
 				JOIN.cpp \
+				KICK.cpp \
 				MODE.cpp \
 				NICK.cpp \
 				PART.cpp \

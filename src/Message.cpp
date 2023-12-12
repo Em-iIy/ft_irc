@@ -118,18 +118,28 @@ cmd_e	Message::_checkCommand(void)
 		return (CMD_PING);
 	if (this->_command == "PONG")
 		return (CMD_PONG);
-	if (this->_command == "MODE")
-		return (CMD_MODE);
+	if (this->_command == "JOIN")
+		return (CMD_JOIN);
 	if (this->_command == "AWAY")
 		return (CMD_AWAY);
-	if (this->_command == "NICK")
-		return (CMD_NICK);
+	if (this->_command == "INVITE")
+		return (CMD_INVITE);
+	if (this->_command == "PART")
+		return (CMD_PART);
+	if (this->_command == "KICK")
+		return (CMD_KICK);
+	if (this->_command == "MODE")
+		return (CMD_MODE);
+	if (this->_command == "TOPIC")
+		return (CMD_TOPIC);
 	if (this->_command == "WHOIS")
 		return (CMD_WHOIS);
-	if (this->_command == "VERSION")
-		return (CMD_VERSION);
 	if (this->_command == "ISON")
 		return (CMD_ISON);
+	if (this->_command == "NICK")
+		return (CMD_NICK);
+	if (this->_command == "VERSION")
+		return (CMD_VERSION);
 	if (this->_command == "USER")
 		return (CMD_USER);
 	if (this->_command == "PASS")
@@ -138,14 +148,6 @@ cmd_e	Message::_checkCommand(void)
 		return (CMD_CAP);
 	if (this->_command == "QUIT")
 		return (CMD_QUIT);
-	if (this->_command == "JOIN")
-		return (CMD_JOIN);
-	if (this->_command == "PART")
-		return (CMD_PART);
-	if (this->_command == "TOPIC")
-		return (CMD_TOPIC);
-	if (this->_command == "INVITE")
-		return (CMD_INVITE);
 	return (CMD_NOT_FOUND);
 }
 
@@ -163,14 +165,26 @@ void	Message::_runCommand(void)
 	case CMD_CAP:
 		this->_CAP();
 		break ;
+	case CMD_INVITE:
+		this->_INVITE();
+		break ;
 	case CMD_ISON:
 		this->_ISON();
+		break ;
+	case CMD_JOIN:
+		this->_JOIN();
+		break ;
+	case CMD_KICK:
+		this->_KICK();
 		break ;
 	case CMD_MODE:
 		this->_MODE();
 		break ;
 	case CMD_NICK:
 		this->_NICK();
+		break ;
+	case CMD_PART:
+		this->_PART();
 		break ;
 	case CMD_PASS:
 		this->_PASS();
@@ -196,14 +210,6 @@ void	Message::_runCommand(void)
 	case CMD_WHOIS:
 		this->_WHOIS();
 		break ;
-	case CMD_JOIN:
-		this->_JOIN();
-		break ;
-	case CMD_PART:
-		this->_PART();
-		break ;
-	case CMD_INVITE:
-		this->_INVITE();
 	default:
 		break;
 	}
