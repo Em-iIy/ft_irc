@@ -10,7 +10,7 @@ void	Message::_welcomeChannel(Channel *channel)
 		this->_respondUser();
 	}
 	// 353		RPL_NAMREPLY
-	this->_response = ":" + this->_server.getServerName() + " 353 " + this->_user.getNickname() + " =" + channel->getName() + " :";
+	this->_response = ":" + this->_server.getServerName() + " 353 " + this->_user.getNickname() + " = " + channel->getName() + " :";
 	for (std::list<User *>::iterator it = channel->getUsers().begin(); it != channel->getUsers().end(); ++it)
 	{
 		// Create extra response if list of users exceeds max message size
