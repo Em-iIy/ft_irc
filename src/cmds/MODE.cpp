@@ -12,7 +12,7 @@ void	Message::_USER_MODE(std::string &target, std::string &mode)
 	if (mode.length() == 0)
 	{
 		// 221		RPL_UMODEIS
-		this->_response = ":" + this->_server.getServerName() + " 221 " + this->_user.getNickname() + " " + target + " :" + umodeToStr(this->_user.getMode()) + "\r\n";
+		this->_response = ":" + this->_server.getServerName() + " 221 " + this->_user.getNickname() + " " + umodeToStr(this->_user.getMode()) + "\r\n";
 		this->_respondUser();
 		return ;
 	}
@@ -56,7 +56,7 @@ void	Message::_USER_MODE(std::string &target, std::string &mode)
 			}
 		}
 		// 221		RPL_UMODEIS
-		this->_response = ":" + this->_server.getServerName() + " 221 " + this->_user.getNickname() + " " + target + " :" + umodeToStr(this->_user.getMode()) + "\r\n";
+		this->_response = ":" + this->_server.getServerName() + " 221 " + this->_user.getNickname() + " " + umodeToStr(this->_user.getMode()) + "\r\n";
 		this->_respondUser();
 	}
 	catch(...)
@@ -86,10 +86,15 @@ void	Message::_CHANNEL_MODE(std::string &target, std::string &mode)
 		this->_respondUser();
 		return ;
 	}
-	if (mode.length() == 0)
+	if (mode.empty())
 	{
 		// 324		RPL_CHANNELMODEIS
-		this->_response = ":" + this->_server.getServerName() + " 324 " + this->_user.getNickname() + " " + target + " :" + cmodeToStr(this->_server.getChannel(target)->getMode()) + "\r\n";
+		this->_response = ":" + this->_server.getServerName() + " 324 " + this->_user.getNickname() + " " + target + " " + cmodeToStr(targetChannel->getMode());
+		if (targetChannel->checkMode(CMODE_K))
+			this->_response += " " + targetChannel->getPass();
+		if (targetChannel->checkMode(CMODE_L))
+			this->_response += " " + std::to_string(targetChannel->getLimit());
+		this->_response += "\r\n";
 		this->_respondUser();
 		return ;
 	}
@@ -228,7 +233,7 @@ void	Message::_MODE(void)
 		return ;
 	}
 	std::string	&target = this->_params[0];
-	std::string mode = "";
+	std::string mode;
 	if (this->_params.size() > 1)
 		mode = this->_params[1];
 	// Check whether a channel or user mode is being changed
