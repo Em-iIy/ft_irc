@@ -8,7 +8,7 @@ void	rmCRLF(std::string &str)
 {
 	size_t CRLF = str.find_last_not_of("\r\n");
 
-	if (CRLF == std::string::npos)
+	if (CRLF == std::string::npos && str.length() > 2)
 		return ;
 	str.erase(CRLF + 1);
 }

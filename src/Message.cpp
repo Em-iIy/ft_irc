@@ -12,6 +12,8 @@ Message::Message(std::string &msg, User &user, pollfdIt &it, Server &server) : _
 	this->_params.reserve(ARG_COUNT + 1);
 	// Separate the message into <command> [(vector<string>[14])<params>] [:<trailing>]
 	this->parseMsg(msg);
+	if (this->_command == "")
+		return ;
 	// Check and execute the command
 	this->_runCommand();
 	
@@ -35,7 +37,6 @@ void	Message::parseMsg(std::string &msg)
 	size_t colon = msg.find(" :");
 	size_t	space = 0;
 	size_t	arg = 0;
-
 	space = msg.find(' ', space);
 	// Return in case of command without arguments
 	if (space == std::string::npos)

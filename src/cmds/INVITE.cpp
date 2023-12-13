@@ -46,7 +46,7 @@ void	Message::_INVITE(void)
 	}
 	if (targetChannel->checkMode(CMODE_I) && !targetChannel->isWhitelisted(targetUser))
 		targetChannel->addWhitelist(targetUser);
-	this->_response = ":" + this->_server.getServerName() + " 341 " + this->_user.getNickname() + " " + targetChannel->getName() + " " + targetUser->getNickname() + "\r\n";
+	this->_response = ":" + this->_server.getServerName() + " 341 " + this->_user.getNickname() + " " + targetUser->getNickname() + " " + targetChannel->getName() + "\r\n";
 	this->_respondUser();
 	this->_response = ":" + this->_user.getFullRef() + " INVITE " + targetUser->getNickname() + " " + targetChannel->getName() + "\r\n";
 	this->_respondTargetUser(targetUser);
