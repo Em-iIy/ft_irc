@@ -39,12 +39,15 @@ void	Message::_singleKICK(std::string &channelName, std::string &userNick, std::
 		comment = " :" + comment;
 	this->_response = ":" + this->_user.getFullRef() + " KICK " + channelName + " " + userNick + comment + "\r\n";
 	this->_respondChannel(channel);
-	this->_response = ":" + this->_user.getFullRef() + " PART " + channelName + comment + "\r\n";
+	this->_response = ":" + targetUser->getFullRef() + " PART " + channelName + comment + "\r\n";
 	this->_respondTargetUser(targetUser);
 }
 
 void	Message::_KICK(void)
 {
+	// Must be registered to use this command
+	if (this->_user.getRegistered() == false)
+		return ;
 	if (this->_params.size() < 2)
 	{
 		// 461		ERR_NEEDMOREPARAMS

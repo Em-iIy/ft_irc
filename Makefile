@@ -33,6 +33,7 @@ FILES_SRCS =	main.cpp \
 				TOPIC.cpp \
 				USER.cpp \
 				VERSION.cpp \
+				WHO.cpp \
 				WHOIS.cpp \
 
 FILES_OBJS = $(FILES_SRCS:.cpp=.o)

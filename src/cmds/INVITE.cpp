@@ -3,6 +3,9 @@
 
 void	Message::_INVITE(void)
 {
+	// Must be registered to use this command
+	if (this->_user.getRegistered() == false)
+		return ;
 	if (this->_params.size() < 2)
 	{
 		// 461		ERR_NEEDMOREPARAMS

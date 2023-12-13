@@ -48,8 +48,10 @@ private:
 	void	_PART(void);
 	void	_INVITE(void);
 	void	_KICK(void);
+	void	_WHO(void);
 
 	void	_singleKICK(std::string &channelName, std::string &userNick, std::string &comment);
+	void	_makeWHOResponse(User *user);
 
 public:
 	Message(std::string &msg, User &user, pollfdIt &it, Server &server);

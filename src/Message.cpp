@@ -135,6 +135,8 @@ cmd_e	Message::_checkCommand(void)
 		return (CMD_MODE);
 	if (this->_command == "TOPIC")
 		return (CMD_TOPIC);
+	if (this->_command == "WHO")
+		return (CMD_WHO);
 	if (this->_command == "WHOIS")
 		return (CMD_WHOIS);
 	if (this->_command == "ISON")
@@ -212,6 +214,9 @@ void	Message::_runCommand(void)
 		break ;
 	case CMD_VERSION:
 		this->_VERSION();
+		break ;
+	case CMD_WHO:
+		this->_WHO();
 		break ;
 	case CMD_WHOIS:
 		this->_WHOIS();

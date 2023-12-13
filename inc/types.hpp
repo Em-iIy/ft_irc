@@ -67,6 +67,7 @@ enum	cmd_e {
 	CMD_PART,
 	CMD_INVITE,
 	CMD_KICK,
+	CMD_WHO,
 };
 
 // Types
