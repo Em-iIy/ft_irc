@@ -41,7 +41,7 @@ void	Message::_PRIVMSG(void)
 	else
 	{
 		Channel	*channel = this->_server.getChannel(this->_params[0]);
-		if (!channel)
+		if (!channel || !channel->isUser(&this->_user))
 		{
 			// 404		ERR_CANNOTSENDTOCHAN
 			this->_response = ":" + this->_server.getServerName() + " 404 " + this->_user.getNickname() + " " + this->_params[0] + " :Cannot send to channel\r\n";
