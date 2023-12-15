@@ -162,7 +162,12 @@ void				Channel::rmOper(User *user)
 {
 	this->_opers.remove(user);
 	if (!(this->_opers.size()) && (this->_users.size() > 0))
+	{
 		this->addOper(*(this->_users.begin()));
+		std::string msg = ":" + user->getFullRef() + " MODE " + this->_name + " +o " + (*this->_users.begin())->getNickname() + "\r\n";
+		for (std::list<User *>::iterator it = this->_users.begin(); it != this->_users.end(); ++it)
+			(*it)->toSend.push_back(msg);
+	}
 }
 
 void				Channel::makeWhitelist(void)
