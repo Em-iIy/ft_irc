@@ -12,8 +12,15 @@ void	Message::_TOPIC(void)
 		this->_respondUser();
 		return ;
 	}
-	target = this->_user.getChannel(this->_params[0]);
+	target = this->_server.getChannel(this->_params[0]);
 	if (!target)
+	{
+		// 403		ERR_NOSUCHCHANNEL
+		this->_response = ":" + this->_server.getServerName() + " 403 " + this->_user.getNickname() + " " + this->_params[0] + " :No such channel\r\n";
+		this->_respondUser();
+		return ;
+	}
+	if (target->isUser(&this->_user) == false)
 	{
 		// 442		ERR_NOTONCHANNEL
 		this->_response = ":" + this->_server.getServerName() + " 442 " + this->_user.getNickname() + " " + this->_params[0] + " :You're not on that channel\r\n";

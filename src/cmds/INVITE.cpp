@@ -26,7 +26,14 @@ void	Message::_INVITE(void)
 
 	Channel	*targetChannel = this->_server.getChannel(this->_params[1]);
 
-	if (!targetChannel || !targetChannel->isUser(&this->_user))
+	if (!targetChannel)
+	{
+		// 403		ERR_NOSUCHCHANNEL
+		this->_response = ":" + this->_server.getServerName() + " 403 " + this->_user.getNickname() + " " + this->_params[1] + " :No such channel\r\n";
+		this->_respondUser();
+		return ;
+	}
+	if (!targetChannel->isUser(&this->_user))
 	{
 		// 442		ERR_NOTONCHANNEL
 		this->_response = ":" + this->_server.getServerName() + " 442 " + this->_user.getNickname() + " " + this->_params[1] + " :You're not on that channel\r\n";
@@ -51,6 +58,12 @@ void	Message::_INVITE(void)
 		targetChannel->addWhitelist(targetUser);
 	this->_response = ":" + this->_server.getServerName() + " 341 " + this->_user.getNickname() + " " + targetUser->getNickname() + " " + targetChannel->getName() + "\r\n";
 	this->_respondUser();
+	if (targetUser->checkMode(UMODE_A))
+	{
+		// 301		RPL_AWAY
+		this->_response = ":" + this->_server.getServerName() + " 301 " + this->_user.getNickname() + " " + targetUser->getNickname() + " :" + targetUser->getAwayMsg() + "\r\n";
+		this->_respondUser();
+	}
 	this->_response = ":" + this->_user.getFullRef() + " INVITE " + targetUser->getNickname() + " " + targetChannel->getName() + "\r\n";
 	this->_respondTargetUser(targetUser);
 }

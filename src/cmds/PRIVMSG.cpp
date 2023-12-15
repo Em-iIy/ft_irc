@@ -12,13 +12,6 @@ void	Message::_PRIVMSG(void)
 		this->_respondUser();
 		return ;
 	}
-	if (this->_params.size() == 1)
-	{
-		// 412		ERR_NOTEXTOTSEND
-		this->_response = ":" + this->_server.getServerName() + " 412 " + this->_user.getNickname() + " :No text to send\r\n";
-		this->_respondUser();
-		return ;
-	}
 	if (isChannel(this->_params[0]) == false)
 	{
 		User *user = this->_server.getUserFromNick(this->_params[0]);
@@ -26,6 +19,13 @@ void	Message::_PRIVMSG(void)
 		{
 			// 401		ERR_NOSUCHNICK
 			this->_response = ":" + this->_server.getServerName() + " 401 " + this->_user.getNickname() + " " + this->_params[0] + " :No such nick/channel\r\n";
+			this->_respondUser();
+			return ;
+		}
+		if (this->_params.size() == 1)
+		{
+			// 412		ERR_NOTEXTOTSEND
+			this->_response = ":" + this->_server.getServerName() + " 412 " + this->_user.getNickname() + " :No text to send\r\n";
 			this->_respondUser();
 			return ;
 		}
@@ -41,7 +41,21 @@ void	Message::_PRIVMSG(void)
 	else
 	{
 		Channel	*channel = this->_server.getChannel(this->_params[0]);
-		if (!channel || !channel->isUser(&this->_user))
+		if (!channel)
+		{
+			// 401		ERR_NOSUCHNICK
+			this->_response = ":" + this->_server.getServerName() + " 401 " + this->_user.getNickname() + " " + this->_params[0] + " :No such nick/channel\r\n";
+			this->_respondUser();
+			return ;
+		}
+		if (this->_params.size() == 1)
+		{
+			// 412		ERR_NOTEXTOTSEND
+			this->_response = ":" + this->_server.getServerName() + " 412 " + this->_user.getNickname() + " :No text to send\r\n";
+			this->_respondUser();
+			return ;
+		}
+		if (!channel->isUser(&this->_user))
 		{
 			// 404		ERR_CANNOTSENDTOCHAN
 			this->_response = ":" + this->_server.getServerName() + " 404 " + this->_user.getNickname() + " " + this->_params[0] + " :Cannot send to channel\r\n";
