@@ -32,13 +32,13 @@ void	Message::_PART(void)
 			this->_respondUser();
 			continue ;
 		}
-		if (channel->rmUser(&(this->_user)))
-			continue ;
 		// Announce to the channel the user is leaving
 		this->_response = ":" + this->_user.getFullRef() + " PART " + channel->getName();
 		if (this->_params.size() > 1)
 			this->_response += " :" + this->_params[1];
 		this->_response += "\r\n";
 		this->_respondChannel(channel);
+		if (channel->rmUser(&(this->_user)))
+			continue ;
 	}
 }
