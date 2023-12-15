@@ -112,27 +112,18 @@ void	Channel::addUser(User *user, std::string &pass)
 		// 473		ERR_INVITEONLYCHAN
 		throw std::runtime_error(":" + this->_server.getServerName() + " 473 " + user->getNickname() + " " + this->_name + " :Cannot join channel (+i)\r\n");
 	}
+	if (this->_mode & CMODE_K && pass != this->_pass)
+	{
+		// 475		ERR_BADCHANNELKEY
+		throw std::runtime_error(":" + this->_server.getServerName() + " 475 " + user->getNickname() + " " + this->_name + " :Cannot join channel (+k)\r\n");
+	}
 	if (this->checkMode(CMODE_L) && this->_users.size() <= (std::size_t)this->getLimit())
 	{
 		// 471		ERR_CHANNELISFULL
 		throw std::runtime_error(":" + this->_server.getServerName() + " 471 " + user->getNickname() + " " + this->_name + " :Cannot join channel (+l)\r\n");
 	}
-	if (this->_mode & CMODE_K)
-		if (pass == this->_pass)
-		{
-			this->_users.push_back(user);
-			user->addToChannel(this);
-		}
-		else
-		{
-			// 475		ERR_BADCHANNELKEY
-			throw std::runtime_error(":" + this->_server.getServerName() + " 475 " + user->getNickname() + " " + this->_name + " :Cannot join channel (+k)\r\n");
-		}
-	else
-	{
-		this->_users.push_back(user);
-		user->addToChannel(this);
-	}
+	this->_users.push_back(user);
+	user->addToChannel(this);
 }
 
 bool	Channel::rmUser(User *user)

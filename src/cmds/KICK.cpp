@@ -12,7 +12,7 @@ void	Message::_singleKICK(std::string &channelName, std::string &userNick, std::
 		this->_respondUser();
 		return ;
 	}
-	if (!channel->isUser(targetUser))
+	if (!channel->isUser(&this->_user))
 	{
 		// 442		ERR_NOTONCHANNEL
 		this->_response = ":" + this->_server.getServerName() + " 442 " + this->_user.getNickname() + " " + channelName + " :You're not on that channel\r\n";
