@@ -191,6 +191,15 @@ void	Message::_CHANNEL_MODE(std::string &target, std::string &mode)
 								throw std::runtime_error(":" + this->_server.getServerName() + " 441 " + *it + " " + targetChannel->getName() + " :They aren't on that channel\r\n");
 							tempOpers.remove(targetUser);
 						}
+						else if (inMode == CMODE_K && count < 3)
+						{
+							it++;
+							count++;
+							if (it == this->_params.end())
+								throw std::runtime_error(":" + this->_server.getServerName() + " 461 " + this->_user.getNickname() + " " + this->_command + " :Not enough parameters\r\n");
+							if (*it == tempPass)
+								tempMode &= ~inMode;
+						}
 						else
 							tempMode &= ~inMode;
 					}
