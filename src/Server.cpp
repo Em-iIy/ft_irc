@@ -70,7 +70,7 @@ void	Server::_checkPoll(void)
 void	Server::_pollIn(pollfdIt it)
 {
 	int			fd = it->fd;
-	int			bRead = 1;
+	ssize_t		bRead = 1;
 	char 		buffer[MSG_BUFFERSIZE];
 	std::string	msg;
 
@@ -133,7 +133,7 @@ void	Server::_pollOut(pollfdIt it)
 	user.toSend.clear();
 }
 
-bool	Server::_checkDc(int bRead, pollfdIt it)
+bool	Server::_checkDc(ssize_t bRead, pollfdIt it)
 {
 	if (bRead > 0)
 		return (false);

@@ -89,7 +89,7 @@ std::pair<sockfd_t, sockaddr_in>	Socket::Accept(void)
 
 void		Socket::Send(const sockfd_t &fd, const std::string &msg)
 {
-	size_t bSent = send(fd, msg.c_str(), msg.length(), MSG_NOSIGNAL);
+	ssize_t bSent = send(fd, msg.c_str(), msg.length(), MSG_NOSIGNAL);
 	if (bSent < 0)
 	{
 		perror("send");

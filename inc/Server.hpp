@@ -40,7 +40,7 @@ private:
 	void						_pollIn(pollfdIt it);
 	void						_pollOut(pollfdIt it);
 
-	bool						_checkDc(int bRead, pollfdIt it);
+	bool						_checkDc(ssize_t bRead, pollfdIt it);
 	void						_disconnectPfds(void);
 
 	void						_acceptConn(void);
