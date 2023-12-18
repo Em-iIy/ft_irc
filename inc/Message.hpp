@@ -19,6 +19,7 @@ private:
 	std::string						_trailing;
 	std::string						_response;
 
+	bool	_JOIN0();
 	void	_welcomeChannel(Channel *channel);
 
 	void	_respondUser(void);

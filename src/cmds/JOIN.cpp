@@ -1,5 +1,21 @@
 #include "Message.hpp"
 
+// JOIN 0 leaves makes a user part from all channels they're on
+bool	Message::_JOIN0()
+{
+	if (this->_params.size() != 1 || this->_params[0] != "0")
+		return (false);
+	std::list<Channel *> &channels = this->_user.getChannels();
+	while (channels.size())
+	{
+		Channel *channel = *channels.begin();
+		this->_response = ":" + this->_user.getFullRef() + " PART " + channel->getName() + "\r\n";
+		this->_respondChannel(channel);
+		channel->rmUser(&(this->_user));
+	}
+	return (true);
+}
+
 // Sends Channel info to the user when joining the channel
 void	Message::_welcomeChannel(Channel *channel)
 {
@@ -50,6 +66,8 @@ void	Message::_JOIN(void)
 		this->_respondUser();
 		return ;
 	}
+	if (this->_JOIN0())
+		return ;
 	std::string					pass;
 	// adds requested channel names and passwords to their respective vectors
 	std::vector<std::string>	names = split(this->_params[0], ",");
