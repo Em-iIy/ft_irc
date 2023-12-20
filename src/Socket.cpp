@@ -93,6 +93,6 @@ void		Socket::Send(const sockfd_t &fd, const std::string &msg)
 	if (bSent < 0)
 	{
 		perror("send");
-		throw std::runtime_error("send: fail");
+		throw std::runtime_error("User #" + std::to_string(fd) + " closed socket before message could be sent");
 	}
 }

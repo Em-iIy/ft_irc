@@ -43,7 +43,14 @@ Server::~Server()
 	// Loop through all user pfds
 	for (pollfdIt it = this->_pfds.begin() + 2; it != this->_pfds.end(); it++)
 	{
-		this->_sock.Send(it->fd, ":" + this->getServerName() + " NOTICE all :Goodbye! o/ (Server turned off)\r\n");
+		try
+		{
+			this->_sock.Send(it->fd, ":" + this->getServerName() + " NOTICE all :Goodbye! o/ (Server turned off)\r\n");
+		}
+		catch(const std::exception& e)
+		{
+			std::cerr << e.what() << '\n';
+		}
 		delete &this->_getUser(it->fd);
 	}
 	// Loop through all channels
@@ -127,8 +134,16 @@ void	Server::_pollOut(pollfdIt it)
 	// User is ready to recieve messages
 	User	&user = this->_getUser(it->fd);
 	// send all stored messages
-	for (std::vector<std::string>::iterator msgIt = user.toSend.begin(); msgIt != user.toSend.end(); msgIt++)
-		this->_sock.Send(user.getFd(), *msgIt);
+	try
+	{
+		for (std::vector<std::string>::iterator msgIt = user.toSend.begin(); msgIt != user.toSend.end(); msgIt++)
+			this->_sock.Send(user.getFd(), *msgIt);
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+	}
+	
 	// clear all the messages
 	user.toSend.clear();
 }
