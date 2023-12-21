@@ -96,18 +96,21 @@ void	Message::parseMsg(std::string &msg)
 
 void	Message::_respondUser(void)
 {
+	// Send the response to the user that did the command
 	msgLimitSize(this->_response);
 	this->_user.toSend.push_back(this->_response);
 }
 
 void	Message::_respondTargetUser(User *user)
 {
+	// Send the response to the target user
 	msgLimitSize(this->_response);
 	user->toSend.push_back(this->_response);
 }
 
 void	Message::_respondChannel(Channel *channel)
 {
+	// Send the response to all users in the channnel
 	msgLimitSize(this->_response);
 	for (std::list<User *>::iterator it = channel->getUsers().begin(); it != channel->getUsers().end(); ++it)
 		(*it)->toSend.push_back(this->_response);

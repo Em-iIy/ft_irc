@@ -106,7 +106,10 @@ bool	Channel::isWhitelisted(User *user)
 void	Channel::addUser(User *user, std::string &pass)
 {
 	if (this->isUser(user))
+	{
+		std::cout << "test" << std::endl;
 		return;
+	}
 	if (this->checkMode(CMODE_I) && !this->isWhitelisted(user))
 	{
 		// 473		ERR_INVITEONLYCHAN

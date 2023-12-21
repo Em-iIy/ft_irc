@@ -11,12 +11,16 @@ Server::Server(const std::string &port, const std::string &password)try : _port(
 	// Check if port is within valid
 	if (this->_port < 0 || this->_port > 65536)
 		throw std::out_of_range("");
+	// Check if password isn't an empty string, making it impossible to register
+	if (this->_password == "")
+		throw std::runtime_error("invalid password: can't be an empty string");
+	// Add STDIN to write commands in from the terminal
 	this->_pfds.push_back(initPFD(STDIN_FILENO));
 	this->_pfds.push_back(initPFD(this->_sock.getFd()));
-	// this->_pfds[0].events = POLLIN;
 	this->_sock.Init(this->_port);
 	this->_sock.Bind();
 	this->_sock.Listen(32);
+	// Try to initialize log file (does not neet to exist for server to run)
 	try
 	{
 		this->_log.init("ircserv");
@@ -65,7 +69,6 @@ void	Server::_checkPoll(void)
 		this->_pollOut(it);
 		this->_pollIn(it);
 	}
-	// NOTE: moved connecting and disconnecting users outside the poll checking loop (could make new function alltogether)
 	// If any, add pollfds of new connections to the full list of connections
 	if (this->_newPfds.size())
 		this->_connectPfds();
@@ -152,7 +155,6 @@ bool	Server::_checkDc(ssize_t bRead, pollfdIt it)
 {
 	if (bRead > 0)
 		return (false);
-	// Set the user for disconnection
 	User	&user = this->_getUser(it->fd);
 	if (user.getRegistered())
 	{
@@ -160,7 +162,6 @@ bool	Server::_checkDc(ssize_t bRead, pollfdIt it)
 		std::string				msg = " :User disconnected\r\n";
 		std::string				prefix = ":" + user.getFullRef() + " QUIT ";
 		std::string				response;
-		// Add the default quit message or the message from the parameters if provided
 
 		for (std::list<Channel *>::iterator it = channels.begin(); it != channels.end(); ++it)
 		{
@@ -169,6 +170,7 @@ bool	Server::_checkDc(ssize_t bRead, pollfdIt it)
 				(*itChannel)->toSend.push_back(response);
 		}
 	}
+	// Set the user for disconnection
 	this->_dcPfds.push_back(*it);
 	return (true);
 }
@@ -195,6 +197,7 @@ void	Server::_acceptConn(void)
 {
 	std::pair<sockfd_t, sockaddr_in>	newConn;
 	pollfd 								newSock;
+
 	try
 	{
 		newConn = this->_sock.Accept();
@@ -221,12 +224,15 @@ void	Server::_connectPfds(void)
 
 void	Server::_pingUsers(void)
 {
+	// Check whether it's time to PING users
 	if (std::time(NULL) - this->_pingTimer < PING_FREQ)
 		return ;
 	std::string msg = "PING " + this->getServerName() + "\r\n";
+	// Loop through all users (except for the server socket and STDIN)
 	for (pollfdIt it = this->_pfds.begin() + 2; it != this->_pfds.end(); it++)
 	{
 		User	&user = this->_getUser(it->fd);
+		// Disconnect user if they've been idle for too long
 		if (user.getIdle() > IDLE_TIMEOUT)
 			this->addDcPfd(it);
 		user.toSend.push_back(msg);
@@ -331,8 +337,11 @@ Channel	*Server::addChannel(std::string &name, std::string &pass, User *creator)
 {
 	Channel *newChannel = new Channel(name, pass, creator, *this);
 
+	// Do these 2 lines need to be there?
 	newChannel->addUser(creator, pass);
 	newChannel->addOper(creator);
+
+	// Add newChannel to the list of all channels
 	this->_channels.push_back(newChannel);
 	return (newChannel);
 }

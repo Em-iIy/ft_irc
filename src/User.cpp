@@ -36,6 +36,7 @@ User::~User()
 	std::cout << "User #" << this->_fd.fd << " Disconnected." << std::endl;
 	while (this->_channels.size())
 	{
+		// Remove the user from all the channels they were a part of
 		(*this->_channels.begin())->rmWhitelist(this);
 		(*this->_channels.begin())->rmUser(this);
 	}
@@ -44,7 +45,6 @@ User::~User()
 
 void	User::resetBuffer(void)
 {
-	// this->buffer = std::to_string(this->_fd.fd) + ": ";
 	this->buffer = "";
 }
 
@@ -55,6 +55,7 @@ void	User::appendBuffer(std::string msg)
 
 void	User::registerUser(std::string &username, std::string &hostname, std::string &servername, std::string &realname)
 {
+	// Register all user info, update status and fullref
 	this->_username = username;
 	this->_hostname = hostname;
 	this->_servername = servername;
@@ -78,6 +79,7 @@ void	User::checkRegister(void)
 	if (!(this->_status & STAT_REG_USER))
 		return ;
 	this->_status |= STAT_REG;
+	// Send server welcome messages to the user
 	this->toSend.push_back(":" + this->_serv.getServerName() + " 001 " + this->_nickname + " :Welcome to the Codam Chat Network " + this->_fullRef + "\r\n");
 	this->toSend.push_back(":" + this->_serv.getServerName() + " 002 " + this->_nickname + " :Your host is " + this->_serv.getServerName() + ", running version " + this->_serv.getVersion() + "\r\n");
 	this->toSend.push_back(":" + this->_serv.getServerName() + " 003 " + this->_nickname + " :This server was created " + this->_serv.getStartDate() + "\r\n");
@@ -87,7 +89,6 @@ void	User::checkRegister(void)
 void	User::updateFullRef(void)
 {
 	this->_fullRef = this->_nickname + "!" + this->_username + "@" + this->_serv.getHostName();
-	// this->_fullRef = this->_nickname + "!" + this->_username + "@" + inet_ntoa(this->_sock.sin_addr);
 }
 
 
@@ -243,8 +244,6 @@ void				User::capEnd(void)
 
 void				User::addToChannel(Channel *channel)
 {
-	DEBUG(this->_fd.fd);
-	std::cout << channel->getName() << std::endl;
 	this->_channels.push_back(channel);
 }
 

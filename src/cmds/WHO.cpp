@@ -10,6 +10,7 @@ void	Message::_makeWHOResponse(User *user)
 	else
 		this->_response += "* ";
 	this->_response += user->getUsername() + " " + user->getHostname() + " " + user->getServername() + " " + user->getNickname() + " ";
+	// G stands for Gone and H stands for Here
 	if (user->checkMode(UMODE_A))
 		this->_response += "G";
 	else
@@ -32,6 +33,7 @@ void	Message::_WHO(void)
 		return ;
 	}
 	std::string &target = this->_params[0];
+	// Check whether the target is a user or a channel
 	if (isChannel(target))
 	{
 		Channel *channel = this->_server.getChannel(target);
