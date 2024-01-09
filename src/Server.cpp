@@ -69,7 +69,8 @@ void	Server::_checkPoll(void)
 {
 	for (pollfdIt it = this->_pfds.begin(); it != this->_pfds.end(); it++)
 	{
-		this->_pollOut(it);
+		if (this->_pollOut(it) == true)
+			continue ;
 		this->_pollIn(it);
 	}
 	// If any, add pollfds of new connections to the full list of connections
@@ -131,27 +132,29 @@ void	Server::_pollIn(pollfdIt it)
 	}
 }
 
-void	Server::_pollOut(pollfdIt it)
+int	Server::_pollOut(pollfdIt it)
 {
 	if (!(it->revents & POLLOUT))
-		return ;
+		return (false);
 	if (it->fd == STDIN_FILENO)
-		return ;
+		return (false);
 	// User is ready to recieve messages
 	User	&user = this->_getUser(it->fd);
-	// send all stored messages
+	// Send top message
+	if (user.toSend.size() == 0)
+		return (false);
 	try
 	{
-		for (std::vector<std::string>::iterator msgIt = user.toSend.begin(); msgIt != user.toSend.end(); msgIt++)
-			this->_sock.Send(user.getFd(), *msgIt);
+		this->_sock.Send(user.getFd(), *user.toSend.begin());
 	}
 	catch(const std::exception& e)
 	{
 		std::cerr << e.what() << '\n';
 	}
 	
-	// clear all the messages
-	user.toSend.clear();
+	// clear top message
+	user.toSend.erase(user.toSend.begin());
+	return (true);
 }
 
 bool	Server::_checkDc(ssize_t bRead, pollfdIt it)

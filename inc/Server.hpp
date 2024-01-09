@@ -38,7 +38,7 @@ private:
 
 	void						_checkPoll(void);
 	void						_pollIn(pollfdIt it);
-	void						_pollOut(pollfdIt it);
+	int						_pollOut(pollfdIt it);
 
 	bool						_checkDc(ssize_t bRead, pollfdIt it);
 	void						_disconnectPfds(void);
