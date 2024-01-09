@@ -47,14 +47,17 @@ Server::~Server()
 	// Loop through all user pfds
 	for (pollfdIt it = this->_pfds.begin() + 2; it != this->_pfds.end(); it++)
 	{
-		try
-		{
-			this->_sock.Send(it->fd, ":" + this->getServerName() + " NOTICE all :Goodbye! o/ (Server turned off)\r\n");
-		}
-		catch(const std::exception& e)
-		{
-			std::cerr << e.what() << '\n';
-		}
+		#ifdef DEBUG_MODE
+			// Avoids using send() without calling poll() when not debugging
+			try
+			{
+				this->_sock.Send(it->fd, ":" + this->getServerName() + " NOTICE all :Goodbye! o/ (Server turned off)\r\n");
+			}
+			catch(const std::exception& e)
+			{
+				std::cerr << e.what() << '\n';
+			}
+		#endif
 		delete &this->_getUser(it->fd);
 	}
 	// Loop through all channels
