@@ -1,5 +1,4 @@
 #include "Message.hpp"
-#include <sstream>
 
 // A-Z a-z 0-9 -_[]{}\`|
 static bool	nickRules(char c)

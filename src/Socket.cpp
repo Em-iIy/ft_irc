@@ -1,7 +1,4 @@
 #include "Socket.hpp"
-#include <sys/ioctl.h>
-#include <fcntl.h>
-#include <arpa/inet.h>
 
 Socket::Socket(void)
 {

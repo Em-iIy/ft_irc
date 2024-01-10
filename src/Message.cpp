@@ -1,6 +1,5 @@
 #include "Message.hpp"
 #include "utils.hpp"
-#include <sstream>
 #include <vector>
 #include <algorithm>
 #include <exception>

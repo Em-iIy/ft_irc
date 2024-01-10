@@ -1,8 +1,5 @@
 #include "Config.hpp"
 #include "utils.hpp"
-#include <limits.h>
-#include <unistd.h>
-
 
 Config::Config()
 {

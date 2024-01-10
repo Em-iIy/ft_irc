@@ -18,6 +18,8 @@ Channel::~Channel(void)
 	this->_server.rmChannel(this);
 }
 
+
+
 // Getters
 const std::string	&Channel::getName(void)
 {
@@ -49,15 +51,22 @@ cmode_t				&Channel::getMode(void)
 	return (this->_mode);
 }
 
-int				Channel::getLimit(void)
+int					Channel::getLimit(void)
 {
 	return (this->_mode & 0xffff);
 }
 
-bool				Channel::checkMode(cmode_t mode) const
+// Returns pointer to user with certain nickname
+User				*Channel::getUserFromNick(std::string &nick)
 {
-	return (this->_mode & mode);
+	for (std::list<User *>::iterator it = this->_users.begin(); it != this->_users.end(); ++it)
+	{
+		if ((*it)->getNickname() == nick)
+			return (*it);
+	}
+	return (NULL);
 }
+
 
 
 // Setters
@@ -65,6 +74,30 @@ void				Channel::setTopic(const std::string &topic)
 {
 	this->_topic = topic;
 }
+
+void				Channel::setPass(std::string pass)
+{
+	this->_pass = pass;
+}
+
+void				Channel::setLimit(int limit)
+{
+	if (limit > 0xffff)
+		limit = 0xffff;
+	this->_mode &= ~0xffff;
+	this->_mode |= limit;
+}
+
+void				Channel::setMode(cmode_t &mode)
+{
+	this->_mode = mode;
+}
+
+void				Channel::setOpers(std::list<User *> &opers)
+{
+	this->_opers = opers;
+}
+
 
 
 bool	Channel::isUser(User *user)
@@ -103,13 +136,15 @@ bool	Channel::isWhitelisted(User *user)
 	return false;
 }
 
+bool				Channel::checkMode(cmode_t mode) const
+{
+	return (this->_mode & mode);
+}
+
 void	Channel::addUser(User *user, std::string &pass)
 {
 	if (this->isUser(user))
-	{
-		std::cout << "test" << std::endl;
 		return;
-	}
 	if (this->checkMode(CMODE_I) && !this->isWhitelisted(user))
 	{
 		// 473		ERR_INVITEONLYCHAN
@@ -188,40 +223,6 @@ void				Channel::addMode(cmode_t mode)
 void				Channel::rmMode(cmode_t mode)
 {
 	this->_mode &= ~mode;
-}
-
-void				Channel::setPass(std::string pass)
-{
-	this->_pass = pass;
-}
-
-void				Channel::setLimit(int limit)
-{
-	if (limit > 0xffff)
-		limit = 0xffff;
-	this->_mode &= ~0xffff;
-	this->_mode |= limit;
-}
-
-void				Channel::setMode(cmode_t &mode)
-{
-	this->_mode = mode;
-}
-
-void				Channel::setOpers(std::list<User *> &opers)
-{
-	this->_opers = opers;
-}
-
-// Returns pointer to user with certain nickname
-User				*Channel::getUserFromNick(std::string &nick)
-{
-	for (std::list<User *>::iterator it = this->_users.begin(); it != this->_users.end(); ++it)
-	{
-		if ((*it)->getNickname() == nick)
-			return (*it);
-	}
-	return (NULL);
 }
 
 std::ostream	&operator<<(std::ostream &out, Channel &c)

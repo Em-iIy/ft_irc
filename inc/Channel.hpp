@@ -1,10 +1,10 @@
 #pragma once
 
+#include "types.hpp"
 #include <iostream>
 #include <list>
 #include <clocale>
 #include <ctime>
-#include "types.hpp"
 
 class Channel{
 private:
@@ -28,10 +28,18 @@ public:
 	std::list<User *>	&getOpers(void);
 	cmode_t				&getMode(void);
 	int					getLimit(void);
-	bool				checkMode(cmode_t mode) const;
 	User				*getUserFromNick(std::string &nick);
 
 	void				setTopic(const std::string &topic);
+	void				setPass(std::string pass);
+	void				setLimit(int limit);
+	void				setMode(cmode_t &mode);
+	void				setOpers(std::list<User *> &opers);
+
+	bool	isUser(User *user);
+	bool	isOper(User *user);
+	bool	isWhitelisted(User *user);
+	bool	checkMode(cmode_t mode) const;
 
 	void	addMode(cmode_t mode);
 	void	rmMode(cmode_t mode);
@@ -42,13 +50,7 @@ public:
 	void	makeWhitelist(void);
 	void	addWhitelist(User *user);
 	void	rmWhitelist(User *user);
-	void	setPass(std::string pass);
-	void	setLimit(int limit);
-	void	setMode(cmode_t &mode);
-	void	setOpers(std::list<User *> &opers);
-	bool	isUser(User *user);
-	bool	isOper(User *user);
-	bool	isWhitelisted(User *user);
+	
 };
 
 std::ostream	&operator<<(std::ostream &out, Channel &c);

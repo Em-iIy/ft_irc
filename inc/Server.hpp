@@ -9,12 +9,12 @@
 #include "Channel.hpp"
 #include <vector>
 #include <map>
-#include <poll.h>
+#include <list>
+#include <algorithm>
 #include <iostream>
 #include <exception>
-#include <algorithm>
-#include <list>
 #include <ctime>
+#include <poll.h>
 
 #define IDLE_TIMEOUT	600
 #define PING_FREQ		60
@@ -38,7 +38,7 @@ private:
 
 	void						_checkPoll(void);
 	void						_pollIn(pollfdIt it);
-	int						_pollOut(pollfdIt it);
+	int							_pollOut(pollfdIt it);
 
 	bool						_checkDc(ssize_t bRead, pollfdIt it);
 	void						_disconnectPfds(void);
@@ -73,7 +73,6 @@ public:
 	Channel	*addChannel(std::string &name, std::string &pass, User *creator);
 	void	rmChannel(Channel *channel);
 	bool	hasChannel(std::string &name);
-	Channel	*getChannel(std::string &name);
 	void	printChannels(void); // for testing purposes
 
 	const Config		&getConfig(void) const;
@@ -89,4 +88,5 @@ public:
 	std::map<sockfd_t, User &>	&getUsers(void);
 	std::list<Channel *>		&getChannels(void);
 	User						*getUserFromNick(std::string &nick);
+	Channel						*getChannel(std::string &name);
 };

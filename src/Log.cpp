@@ -2,7 +2,6 @@
 #include "utils.hpp"
 #include <exception>
 #include <iostream>
-#include <ctime>
 
 Log::Log(void) 
 {
