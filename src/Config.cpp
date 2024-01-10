@@ -15,7 +15,7 @@ Config::Config()
 	#endif
 	this->_serverName = "cc.tv"; // Codam Chat tv :)
 	this->_date = date();
-	this->_version = "0.2";
+	this->_version = "1.0";
 	this->_comments = "This version number is arbitrary";
 	#ifdef DEBUG_MODE
 		this->_debug = DEBUG_MODE;
